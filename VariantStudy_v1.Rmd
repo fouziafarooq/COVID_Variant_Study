@@ -1,0 +1,79 @@
+---
+title: "COVID-19_VariantStudy_v1"
+author: "Fouzia Farooq"
+date: "5/11/2022"
+output: pdf_document
+---
+
+```{r}
+library(dplyr)
+library(readr)
+library(lubridate)
+```
+
+NOTES: json file was converted to csv in python (deepnote.com), then copied the code into BBtext and ran at the command line. 
+Then ran the following code. 
+Dates are fractions of a year after "year." We a creating a seperate dataframe into a csv that we will bring in R and use lubridate to read the date properly. 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+usa <- read_delim('data/nextstrain_ncov_open_global_all-time_metadata.tsv', col_types = cols(date = col_date("%m/%d/%y"),
+                                                                                             division = "f"))
+covid.data <- read_delim('data/nextstrain_ncov_gisaid_global_all-time_metadata.tsv', col_types = cols(date = col_date("%Y-%m-%d")))
+```
+
+
+<!-- ```{r} -->
+<!-- table(covid.data$country) -->
+<!-- usa <- covid.data %>% dplyr::filter(country=="USA") %>% dplyr::filter(date>=as.Date("2021-04-29") & date<=as.Date("2021-05-05")) -->
+<!-- table(usa$date) -->
+<!-- prop.table(table(usa$Nextstrain_clade)) -->
+<!-- table(usa$clade_membership, usa$variant, useNA = "always") -->
+<!-- usa <- usa %>% dplyr::mutate(variant = case_when(clade_membership %in% c("19A", "19B", "20A", "20B", "20C", "20G") ~ "Pre_alpha", -->
+<!--                                                  clade_membership %in% c("20I (Alpha, V1)") ~ "Alpha", -->
+<!--                                                  clade_membership %in% c("20J (Gamma, V3)") ~ "Gamma", -->
+<!--                                                  clade_membership %in% c("21A (Delta)", "21I (Delta)", "21J (Delta)") ~ "Delta", -->
+<!--                                                  clade_membership %in% c("21C (Epsilon)") ~ "Epsilon", -->
+<!--                                                  clade_membership %in% c("21F (Iota)") ~ "Iota", -->
+<!--                                                  clade_membership %in% c("21G (Lambda)") ~ "Lambda", -->
+<!--                                                  clade_membership %in% c("21H (Mu)") ~ "Mu", -->
+<!--                                                  clade_membership %in% c("21K (Omicron)", "21L (Omicron)", "22C (Omicron)") ~ "Omicron")) -->
+
+<!-- ``` -->
+
+GISAID: 
+```{r}
+frequency <- read.csv('data/Nextstrain_frequenices.csv')
+gisaid <- read.csv('data/metadata_gisaid_20220516.csv')
+pivots <- read.csv('data/Nextstrain_pivotdates.csv', header = FALSE)
+gisaid.df <- gisaid %>% dplyr::select(strain, date, country, clade_membership)
+
+gisaid.df2 <- left_join(frequency, gisaid.df)
+
+clade.freq.week <- gisaid.df2 %>% group_by(country, week, clade_membership) %>% summarize(freq = sum(frequency))
+
+pivot_df <- data.frame(week = 0:(length(pivots$V1)-1), pivot = pivots$V1)
+pivot_df <- pivot_df %>% dplyr::mutate(date = as.Date(date_decimal(pivot)))
+
+gisaid_clade <- left_join(clade.freq.week, pivot_df)
+```
+
+OPENSOURCE
+```{r}
+frequency <- read.csv('data/Nextstrain_opensource_frequenices.csv')
+covid_opensource <- read.csv('data/nextstrain_ncov_open_global_all-time_metadata_20200516.csv')
+pivots <- read.csv('data/Nextstrain_opensource_pivotdates.csv', header = FALSE)
+opensource.df <- covid_opensource %>% dplyr::select(strain, date, country, clade_membership)
+
+opensource.df2 <- left_join(frequency, covid_opensource)
+
+clade.freq.week <- opensource.df2 %>% group_by(week, clade_membership) %>% summarize(freq = sum(frequency))
+
+pivot_df <- data.frame(week = 0:(length(pivots$V1)-1), pivot = pivots$V1)
+pivot_df <- pivot_df %>% dplyr::mutate(date = as.Date(date_decimal(pivot)))
+
+opensource_clade <- left_join(clade.freq.week, pivot_df)
+```
+
