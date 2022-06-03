@@ -1,0 +1,501 @@
+year,month,Country,Strain_ff
+2020,1,China,alpha
+2020,2,China,alpha
+2020,3,China,alpha
+2020,4,China,alpha
+2020,5,China,alpha
+2020,6,China,alpha
+2020,7,China,alpha
+2020,8,China,alpha
+2020,9,China,alpha
+2020,10,China,alpha
+2020,11,China,alpha
+2020,12,China,alpha
+2021,1,China,alpha
+2021,2,China,beta
+2021,3,China,beta
+2021,4,China,delta
+2021,5,China,delta
+2021,6,China,delta
+2021,7,China,delta
+2021,8,China,delta
+2021,9,China,delta
+2021,10,China,delta
+2021,11,China,delta
+2021,12,China,omicron
+,,China,
+2020,1,United Kingdom,alpha
+2020,2,United Kingdom,alpha
+2020,3,United Kingdom,alpha
+2020,4,United Kingdom,alpha
+2020,5,United Kingdom,alpha
+2020,6,United Kingdom,alpha
+2020,7,United Kingdom,alpha
+2020,8,United Kingdom,delta
+2020,9,United Kingdom,delta
+2020,10,United Kingdom,delta
+2020,11,United Kingdom,delta
+2020,12,United Kingdom,delta
+2021,1,United Kingdom,omicron
+2021,2,United Kingdom,omicron
+2021,3,United Kingdom,omicron
+2021,4,United Kingdom,omicron
+2021,5,United Kingdom,omicron
+2021,6,United Kingdom,omicron
+2021,7,United Kingdom,omicron
+2021,8,United Kingdom,omicron
+2021,9,United Kingdom,omicron
+2021,10,United Kingdom,omicron
+2021,11,United Kingdom,omicron
+2021,12,United Kingdom,omicron
+,,United Kingdom,omicron
+2020,1,Chile,alpha
+2020,2,Chile,alpha
+2020,3,Chile,alpha
+2020,4,Chile,alpha
+2020,5,Chile,alpha
+2020,6,Chile,alpha
+2020,7,Chile,alpha
+2020,8,Chile,delta
+2020,9,Chile,delta
+2020,10,Chile,delta
+2020,11,Chile,omicron
+2020,12,Chile,omicron
+2021,1,Chile,omicron
+2021,2,Chile,omicron
+2021,3,Chile,omicron
+2021,4,Chile,omicron
+2021,5,Chile,omicron
+2021,6,Chile,
+2021,7,Chile,
+2021,8,Chile,
+2021,9,Chile,
+2021,10,Chile,
+2021,11,Chile,
+2021,12,Chile,
+,,Chile,
+2020,1,Canada,alpha
+2020,2,Canada,alpha
+2020,3,Canada,alpha
+2020,4,Canada,alpha
+2020,5,Canada,alpha
+2020,6,Canada,alpha
+2020,7,Canada,alpha
+2020,8,Canada,delta
+2020,9,Canada,delta
+2020,10,Canada,delta
+2020,11,Canada,delta
+2020,12,Canada,delta
+2021,1,Canada,delta
+2021,2,Canada,delta
+2021,3,Canada,omicron
+2021,4,Canada,omicron
+2021,5,Canada,omicron
+2021,6,Canada,
+2021,7,Canada,
+2021,8,Canada,
+2021,9,Canada,
+2021,10,Canada,
+2021,11,Canada,
+2021,12,Canada,
+,,Canada,
+2020,1,"Madrid, Spain",alpha
+2020,2,"Madrid, Spain",alpha
+2020,3,"Madrid, Spain",alpha
+2020,4,"Madrid, Spain",alpha
+2020,5,"Madrid, Spain",beta
+2020,6,"Madrid, Spain",beta
+2020,7,"Madrid, Spain",beta
+2020,8,"Madrid, Spain",beta
+2020,9,"Madrid, Spain",delta
+2020,10,"Madrid, Spain",delta
+2020,11,"Madrid, Spain",delta
+2020,12,"Madrid, Spain",gamma
+2021,1,"Madrid, Spain",gamma
+2021,2,"Madrid, Spain",omicron
+2021,3,"Madrid, Spain",omicron
+2021,4,"Madrid, Spain",omicron
+2021,5,"Madrid, Spain",
+2021,6,"Madrid, Spain",
+2021,7,"Madrid, Spain",
+2021,8,"Madrid, Spain",
+2021,9,"Madrid, Spain",
+2021,10,"Madrid, Spain",
+2021,11,"Madrid, Spain",
+2021,12,"Madrid, Spain",
+,,"Madrid, Spain",
+2020,1,Mexico,alpha
+2020,2,Mexico,alpha
+2020,3,Mexico,alpha
+2020,4,Mexico,alpha
+2020,5,Mexico,beta
+2020,6,Mexico,beta
+2020,7,Mexico,beta
+2020,8,Mexico,beta
+2020,9,Mexico,delta
+2020,10,Mexico,delta
+2020,11,Mexico,delta
+2020,12,Mexico,gamma
+2021,1,Mexico,gamma
+2021,2,Mexico,omicron
+2021,3,Mexico,omicron
+2021,4,Mexico,omicron
+2021,5,Mexico,
+2021,6,Mexico,
+2021,7,Mexico,
+2021,8,Mexico,
+2021,9,Mexico,
+2021,10,Mexico,
+2021,11,Mexico,
+2021,12,Mexico,
+,,Mexico,
+2020,1,Colombia,alpha
+2020,2,Colombia,alpha
+2020,3,Colombia,alpha
+2020,4,Colombia,alpha
+2020,5,Colombia,beta
+2020,6,Colombia,beta
+2020,7,Colombia,beta
+2020,8,Colombia,beta
+2020,9,Colombia,delta
+2020,10,Colombia,delta
+2020,11,Colombia,delta
+2020,12,Colombia,gamma
+2021,1,Colombia,gamma
+2021,2,Colombia,omicron
+2021,3,Colombia,omicron
+2021,4,Colombia,omicron
+2021,5,Colombia,
+2021,6,Colombia,
+2021,7,Colombia,
+2021,8,Colombia,
+2021,9,Colombia,
+2021,10,Colombia,
+2021,11,Colombia,
+2021,12,Colombia,
+,,Colombia,
+2020,1,"Washington State, USA",alpha
+2020,2,"Washington State, USA",alpha
+2020,3,"Washington State, USA",alpha
+2020,4,"Washington State, USA",alpha
+2020,5,"Washington State, USA",beta
+2020,6,"Washington State, USA",beta
+2020,7,"Washington State, USA",beta
+2020,8,"Washington State, USA",beta
+2020,9,"Washington State, USA",delta
+2020,10,"Washington State, USA",delta
+2020,11,"Washington State, USA",delta
+2020,12,"Washington State, USA",gamma
+2021,1,"Washington State, USA",gamma
+2021,2,"Washington State, USA",omicron
+2021,3,"Washington State, USA",omicron
+2021,4,"Washington State, USA",omicron
+2021,5,"Washington State, USA",
+2021,6,"Washington State, USA",
+2021,7,"Washington State, USA",
+2021,8,"Washington State, USA",
+2021,9,"Washington State, USA",
+2021,10,"Washington State, USA",
+2021,11,"Washington State, USA",
+2021,12,"Washington State, USA",
+,,"Washington State, USA",
+2020,1,India,alpha
+2020,2,India,alpha
+2020,3,India,alpha
+2020,4,India,alpha
+2020,5,India,beta
+2020,6,India,beta
+2020,7,India,beta
+2020,8,India,beta
+2020,9,India,delta
+2020,10,India,delta
+2020,11,India,delta
+2020,12,India,gamma
+2021,1,India,gamma
+2021,2,India,omicron
+2021,3,India,omicron
+2021,4,India,omicron
+2021,5,India,
+2021,6,India,
+2021,7,India,
+2021,8,India,
+2021,9,India,
+2021,10,India,
+2021,11,India,
+2021,12,India,
+,,India,
+2020,1,Multi-Country Africa,alpha
+2020,2,Multi-Country Africa,alpha
+2020,3,Multi-Country Africa,alpha
+2020,4,Multi-Country Africa,alpha
+2020,5,Multi-Country Africa,beta
+2020,6,Multi-Country Africa,beta
+2020,7,Multi-Country Africa,beta
+2020,8,Multi-Country Africa,beta
+2020,9,Multi-Country Africa,delta
+2020,10,Multi-Country Africa,delta
+2020,11,Multi-Country Africa,delta
+2020,12,Multi-Country Africa,gamma
+2021,1,Multi-Country Africa,gamma
+2021,2,Multi-Country Africa,omicron
+2021,3,Multi-Country Africa,omicron
+2021,4,Multi-Country Africa,omicron
+2021,5,Multi-Country Africa,
+2021,6,Multi-Country Africa,
+2021,7,Multi-Country Africa,
+2021,8,Multi-Country Africa,
+2021,9,Multi-Country Africa,
+2021,10,Multi-Country Africa,
+2021,11,Multi-Country Africa,
+2021,12,Multi-Country Africa,
+,,Multi-Country Africa,
+2020,1,Kenya,alpha
+2020,2,Kenya,alpha
+2020,3,Kenya,alpha
+2020,4,Kenya,alpha
+2020,5,Kenya,beta
+2020,6,Kenya,beta
+2020,7,Kenya,beta
+2020,8,Kenya,beta
+2020,9,Kenya,delta
+2020,10,Kenya,delta
+2020,11,Kenya,delta
+2020,12,Kenya,gamma
+2021,1,Kenya,gamma
+2021,2,Kenya,omicron
+2021,3,Kenya,omicron
+2021,4,Kenya,omicron
+2021,5,Kenya,
+2021,6,Kenya,
+2021,7,Kenya,
+2021,8,Kenya,
+2021,9,Kenya,
+2021,10,Kenya,
+2021,11,Kenya,
+2021,12,Kenya,
+,,Kenya,
+2020,1,Multi-Country,alpha
+2020,2,Multi-Country,alpha
+2020,3,Multi-Country,alpha
+2020,4,Multi-Country,alpha
+2020,5,Multi-Country,beta
+2020,6,Multi-Country,beta
+2020,7,Multi-Country,beta
+2020,8,Multi-Country,beta
+2020,9,Multi-Country,delta
+2020,10,Multi-Country,delta
+2020,11,Multi-Country,delta
+2020,12,Multi-Country,gamma
+2021,1,Multi-Country,gamma
+2021,2,Multi-Country,omicron
+2021,3,Multi-Country,omicron
+2021,4,Multi-Country,omicron
+2021,5,Multi-Country,
+2021,6,Multi-Country,
+2021,7,Multi-Country,
+2021,8,Multi-Country,
+2021,9,Multi-Country,
+2021,10,Multi-Country,
+2021,11,Multi-Country,
+2021,12,Multi-Country,
+,,Multi-Country,
+2020,1,"Puerto Rico, USA",alpha
+2020,2,"Puerto Rico, USA",alpha
+2020,3,"Puerto Rico, USA",alpha
+2020,4,"Puerto Rico, USA",alpha
+2020,5,"Puerto Rico, USA",beta
+2020,6,"Puerto Rico, USA",beta
+2020,7,"Puerto Rico, USA",beta
+2020,8,"Puerto Rico, USA",beta
+2020,9,"Puerto Rico, USA",delta
+2020,10,"Puerto Rico, USA",delta
+2020,11,"Puerto Rico, USA",delta
+2020,12,"Puerto Rico, USA",gamma
+2021,1,"Puerto Rico, USA",gamma
+2021,2,"Puerto Rico, USA",omicron
+2021,3,"Puerto Rico, USA",omicron
+2021,4,"Puerto Rico, USA",omicron
+2021,5,"Puerto Rico, USA",
+2021,6,"Puerto Rico, USA",
+2021,7,"Puerto Rico, USA",
+2021,8,"Puerto Rico, USA",
+2021,9,"Puerto Rico, USA",
+2021,10,"Puerto Rico, USA",
+2021,11,"Puerto Rico, USA",
+2021,12,"Puerto Rico, USA",
+,,"Puerto Rico, USA",
+2020,1,"Rome, Italy",alpha
+2020,2,"Rome, Italy",alpha
+2020,3,"Rome, Italy",alpha
+2020,4,"Rome, Italy",alpha
+2020,5,"Rome, Italy",beta
+2020,6,"Rome, Italy",beta
+2020,7,"Rome, Italy",beta
+2020,8,"Rome, Italy",beta
+2020,9,"Rome, Italy",delta
+2020,10,"Rome, Italy",delta
+2020,11,"Rome, Italy",delta
+2020,12,"Rome, Italy",gamma
+2021,1,"Rome, Italy",gamma
+2021,2,"Rome, Italy",omicron
+2021,3,"Rome, Italy",omicron
+2021,4,"Rome, Italy",omicron
+2021,5,"Rome, Italy",
+2021,6,"Rome, Italy",
+2021,7,"Rome, Italy",
+2021,8,"Rome, Italy",
+2021,9,"Rome, Italy",
+2021,10,"Rome, Italy",
+2021,11,"Rome, Italy",
+2021,12,"Rome, Italy",
+,,"Rome, Italy",
+2020,1,"Hong Kong, China",alpha
+2020,2,"Hong Kong, China",alpha
+2020,3,"Hong Kong, China",alpha
+2020,4,"Hong Kong, China",alpha
+2020,5,"Hong Kong, China",beta
+2020,6,"Hong Kong, China",beta
+2020,7,"Hong Kong, China",beta
+2020,8,"Hong Kong, China",beta
+2020,9,"Hong Kong, China",delta
+2020,10,"Hong Kong, China",delta
+2020,11,"Hong Kong, China",delta
+2020,12,"Hong Kong, China",gamma
+2021,1,"Hong Kong, China",gamma
+2021,2,"Hong Kong, China",omicron
+2021,3,"Hong Kong, China",omicron
+2021,4,"Hong Kong, China",omicron
+2021,5,"Hong Kong, China",
+2021,6,"Hong Kong, China",
+2021,7,"Hong Kong, China",
+2021,8,"Hong Kong, China",
+2021,9,"Hong Kong, China",
+2021,10,"Hong Kong, China",
+2021,11,"Hong Kong, China",
+2021,12,"Hong Kong, China",
+,,"Hong Kong, China",
+2020,1,Turkey,alpha
+2020,2,Turkey,alpha
+2020,3,Turkey,alpha
+2020,4,Turkey,alpha
+2020,5,Turkey,beta
+2020,6,Turkey,beta
+2020,7,Turkey,beta
+2020,8,Turkey,beta
+2020,9,Turkey,delta
+2020,10,Turkey,delta
+2020,11,Turkey,delta
+2020,12,Turkey,gamma
+2021,1,Turkey,gamma
+2021,2,Turkey,omicron
+2021,3,Turkey,omicron
+2021,4,Turkey,omicron
+2021,5,Turkey,
+2021,6,Turkey,
+2021,7,Turkey,
+2021,8,Turkey,
+2021,9,Turkey,
+2021,10,Turkey,
+2021,11,Turkey,
+2021,12,Turkey,
+,,Turkey,
+2020,1,"Barcelona, Spain",alpha
+2020,2,"Barcelona, Spain",alpha
+2020,3,"Barcelona, Spain",alpha
+2020,4,"Barcelona, Spain",beta
+2020,5,"Barcelona, Spain",beta
+2020,6,"Barcelona, Spain",beta
+2020,7,"Barcelona, Spain",beta
+2020,8,"Barcelona, Spain",beta
+2020,9,"Barcelona, Spain",delta
+2020,10,"Barcelona, Spain",gamma
+2020,11,"Barcelona, Spain",gamma
+2020,12,"Barcelona, Spain",gamma
+2021,1,"Barcelona, Spain",gamma
+2021,2,"Barcelona, Spain",omicron
+2021,3,"Barcelona, Spain",omicron
+2021,4,"Barcelona, Spain",omicron
+2021,5,"Barcelona, Spain",
+2021,6,"Barcelona, Spain",
+2021,7,"Barcelona, Spain",
+2021,8,"Barcelona, Spain",
+2021,9,"Barcelona, Spain",
+2021,10,"Barcelona, Spain",
+2021,11,"Barcelona, Spain",
+2021,12,"Barcelona, Spain",
+,,"Barcelona, Spain",
+2020,1,"New Brunswick, USA",alpha
+2020,2,"New Brunswick, USA",alpha
+2020,3,"New Brunswick, USA",alpha
+2020,4,"New Brunswick, USA",alpha
+2020,5,"New Brunswick, USA",alpha
+2020,6,"New Brunswick, USA",alpha
+2020,7,"New Brunswick, USA",alpha
+2020,8,"New Brunswick, USA",beta
+2020,9,"New Brunswick, USA",delta
+2020,10,"New Brunswick, USA",delta
+2020,11,"New Brunswick, USA",delta
+2020,12,"New Brunswick, USA",gamma
+2021,1,"New Brunswick, USA",gamma
+2021,2,"New Brunswick, USA",omicron
+2021,3,"New Brunswick, USA",omicron
+2021,4,"New Brunswick, USA",omicron
+2021,5,"New Brunswick, USA",
+2021,6,"New Brunswick, USA",
+2021,7,"New Brunswick, USA",
+2021,8,"New Brunswick, USA",
+2021,9,"New Brunswick, USA",
+2021,10,"New Brunswick, USA",
+2021,11,"New Brunswick, USA",
+2021,12,"New Brunswick, USA",
+,,"New Brunswick, USA",
+2020,1,South Africa,alpha
+2020,2,South Africa,alpha
+2020,3,South Africa,alpha
+2020,4,South Africa,alpha
+2020,5,South Africa,beta
+2020,6,South Africa,beta
+2020,7,South Africa,beta
+2020,8,South Africa,beta
+2020,9,South Africa,delta
+2020,10,South Africa,delta
+2020,11,South Africa,delta
+2020,12,South Africa,gamma
+2021,1,South Africa,omicron
+2021,2,South Africa,omicron
+2021,3,South Africa,omicron
+2021,4,South Africa,omicron
+2021,5,South Africa,
+2021,6,South Africa,
+2021,7,South Africa,
+2021,8,South Africa,
+2021,9,South Africa,
+2021,10,South Africa,
+2021,11,South Africa,
+2021,12,South Africa,
+,,South Africa,
+2020,1,"Chicago, USA",alpha
+2020,2,"Chicago, USA",alpha
+2020,3,"Chicago, USA",alpha
+2020,4,"Chicago, USA",alpha
+2020,5,"Chicago, USA",alpha
+2020,6,"Chicago, USA",beta
+2020,7,"Chicago, USA",beta
+2020,8,"Chicago, USA",beta
+2020,9,"Chicago, USA",delta
+2020,10,"Chicago, USA",delta
+2020,11,"Chicago, USA",delta
+2020,12,"Chicago, USA",gamma
+2021,1,"Chicago, USA",gamma
+2021,2,"Chicago, USA",gamma
+2021,3,"Chicago, USA",omicron
+2021,4,"Chicago, USA",omicron
+2021,5,"Chicago, USA",
+2021,6,"Chicago, USA",
+2021,7,"Chicago, USA",
+2021,8,"Chicago, USA",
+2021,9,"Chicago, USA",
+2021,10,"Chicago, USA",
+2021,11,"Chicago, USA",
+2021,12,"Chicago, USA",
+,,"Chicago, USA",
