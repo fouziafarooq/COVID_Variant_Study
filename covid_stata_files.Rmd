@@ -1,0 +1,30 @@
+---
+title: "covid__stata_files"
+author: "Fouzia Farooq"
+date: "5/24/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(haven)
+```
+
+
+```{r}
+compiled_ipd_data <- read_dta('data/Compiled_IPD_Data_211201.dta')
+brazil <- read_sav('data/BancoREBRACO_Final_09.04.21.sav')
+adg_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
+adg_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
+estimates_strata1 <- read_dta('data/Compiled_Site_Estimates_210519_strata1.dta') # doesn't have dates.  Looks like analyzed file not raw data. 
+```
+
+```{r}
+sort(colnames(compiled_ipd_data))
+df1 <- compiled_ipd_data %>% dplyr::select(site_id, covid_sympdate, date_onset_or_test)
+
+```
+
