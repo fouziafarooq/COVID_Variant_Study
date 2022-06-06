@@ -76,9 +76,9 @@ view(data_naomit%>%select(covid_sympdate, site_id, country, date_character, stra
 ## Categorizing the variables---------------------------------------------------------------------------------------------------
 
 ls(data)
-view(data_naomit%>%select(preeclampsiam))
+view(data_naomit%>%select(bact_inf, bact_inf1))
 
-
+###MATERNAL MORBIDITY---------------------------------------------------------------------------------------------------------------------
 ##PREECLAMPSIA---------------------------------------------------------------------------------------------------------------------------
 preeclampsia <- data_naomit%>% select(strain, pre_or_eclampsia, pre_or_eclampsiam, pre_or_eclampsia1, pre_or_eclampsia0, preeclampsia, 
                                      preeclampsia0, preeclampsia1, preeclampsiam)
@@ -110,9 +110,47 @@ preeclampsiam_t<- data.frame(preeclampsiam  %>% group_by(strain)%>% summarise(co
 
 preclampsia_count <- list(pre_or_eclampsia_t, pre_or_eclampsiam_t, pre_or_eclampsia1_t, pre_or_eclampsia0_t, preeclampsia_t, preeclampsia0_t, preeclampsia1_t,
                 preeclampsiam_t)
+
 preclampsia_count <- data.frame(preclampsia_count %>% reduce(full_join, by = "strain"))
 
-preclampsia_count$total = rowSums(preclampsia_count[,c(2:9)])
+preclampsia_count$preclampsia_total = rowSums(preclampsia_count[,c(2:9)])
 preclampsia_count
 
 sum(preeclampsia==1)
+
+##INFECTION------------------------------------------------------------------------------------------
+
+
+
+
+
+###NEONATAL MORBIDITY---------------------------------------------------------------------------------
+##stillbirth
+view(data_naomit%>%select(stillbirth_280, stillbirth_281, stillbirth_28m))
+
+stillbirth <- data_naomit%>% select(stillbirth_280, stillbirth_281, stillbirth_28m)
+
+stillbirth280 <- data_naomit%>%select(strain, country, stillbirth_280)
+stillbirth280_t <- data.frame(stillbirth280 %>% group_by(strain)%>% 
+                                summarise(counting1=(sum(stillbirth_280==1))))
+stillbirth280_t
+
+stillbirth281 <- data_naomit%>%select(strain, country, stillbirth_281)
+stillbirth281_t <- data.frame(stillbirth281 %>% group_by(strain)%>% 
+                                summarise(counting2=(sum(stillbirth_281==1))))
+stillbirth281_t
+
+stillbirth28m <- data_naomit%>%select(strain, country, stillbirth_28m)
+stillbirth28m_t <- data.frame(stillbirth28m %>% group_by(strain)%>% 
+                                summarise(counting3=(sum(stillbirth_28m==1))))
+
+stillbirth_count <- list(stillbirth280_t, stillbirth281_t, stillbirth28m_t)
+
+stillbirth_count <- data.frame(stillbirth_count %>% reduce(full_join, by = "strain"))
+
+stillbirth_count
+stillbirth_count$stillbirth_total = rowSums(preclampsia_count[,c(2:4)])
+stillbirth_count
+
+
+
