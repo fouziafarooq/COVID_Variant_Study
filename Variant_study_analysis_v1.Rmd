@@ -5,8 +5,10 @@ date: "6/3/2022"
 output: pdf_document
 ---
 
+
 ```{r, include=FALSE}
 library(dplyr)
+library(tidyr)
 library(readr)
 library(lubridate)
 library(ggplot2)
@@ -108,6 +110,8 @@ df5 <- left_join(df4, pivot_df, by="week")
 df6 <- df5 %>% dplyr::mutate(date_ym = format(date, format= "%y-%m"))
 df7 <- df6 %>% group_by(country, date_ym) %>% dplyr::mutate(max_date = max(date))
 df8 <- df7 %>% dplyr::filter(date == max_date)
+sort(colnames(compiled_ipd_data))
+check.df <- compiled_ipd_data %>% dplyr::select(site_id, person_id, mat_age, preterm_labor)
 ```
 
 
@@ -120,84 +124,13 @@ class(study_cases$date)
 variants_cases <- left_join(df8, cases, by=c("country", "date_ym"))
 ```
 
-Creates the older map: 
-```{r}
-fill_colors <- factor(1,2)
-palette1 <- c("#999999", "000000")
-variants_cases %>% ggplot() +
-  geom_bar(stat="identity",
-           mapping = aes(x = date_ym, fill = variant, y=nor)) +
-  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "gray70", "Beta" = "darkseagreen1",
-                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
-                               "Iota" = "cyan3", "Lambda" = "lightsteelblue1", "Mu" = "peachpuff1", "Omicron" = "plum2",
-                               "Theta" = "tomato", "present" = rgb(0,0,0, alpha=0.5), "absent" = rgb(0,0,0,alpha = 0))) + 
-  theme_light() + 
-  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
-        axis.text.y = element_text(size = 6)) + 
-  geom_rect(mapping=aes(xmin=pandemic_month-0.5,
-                        xmax=pandemic_month+0.5,
-                        ymin=0.48,
-                        ymax=0.52,
-                        fill = ifelse(Events>0, "present", "absent"))) +
-  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
-  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
-   
-# ggsave(filename = 'data_out/covid_variant_country_20220524.pdf', width = 6, height = 25, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
-  
-```
-
-Map with overlayed CC study dates and RFA study dates: OLD #2
-```{r}
-
-studies_df <- cases %>% dplyr::filter(Events>=1) %>% 
-  group_by(country, City, study_type) %>%
-  summarize(min_month = min(pandemic_month),
-            max_month = max(pandemic_month)) %>%
-  group_by(country) %>%
-  mutate(country_study_number = 1:n(),
-         country_total_studies = n())
-# see https://stackoverflow.com/questions/36893957/dplyr-generate-row-number-row-position-in-group-by
-
-gap_betw_studies <- 0.15
-
-ggplot() +
-  geom_bar(data = df8, stat="identity",
-           mapping = aes(x = date_ym, fill = variant, y=nor)) +
-  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
-                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
-                               "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
-                               "Theta" = "tomato")) + 
-  theme_light() + 
-  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
-        axis.text.y = element_text(size = 6)) + 
-  xlab("Year-Month") + 
-  ylab("Relative Frequency") +
-  geom_rect(data = studies_df,
-            mapping=aes(xmin=min_month-0.5,
-                        xmax=max_month+0.5,
-                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) - 0.005,
-                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.005)) +
-  geom_text(data = studies_df,
-            mapping=aes(x = 0.5*(min_month + max_month),
-                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
-                        label = ifelse(is.na(City),
-                                       study_type,
-                                       paste(City, study_type))),
-            size = 1.5) +
-  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
-  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
-
-# ggsave(filename = 'data_out/covid_variant_country_20220525.pdf', width = 6, height = 30, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
-
-# write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
-```
 
 ************************
 STARTING STUDY ANALYSIS:
 ************************
 ```{r}
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
-df10 <- df9 %>% dplyr::filter(site_id==c(4,5,17,10,15,19,20,24,34,38)) %>% 
+df10 <- df9 %>% dplyr::filter(site_id %in% c(4,5,17,10,15,19,20,24,34, 35, 38)) %>% 
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city_country, country, mat_age, date_onset_or_test, covid_sympdate, covid_pos,
                                edd_date, fetuses, parity, gravidity, weight_pre, diab_prepreg, hyperten_prepreg, matdeath,
@@ -206,7 +139,11 @@ df10 <- df9 %>% dplyr::filter(site_id==c(4,5,17,10,15,19,20,24,34,38)) %>%
 # use date_onset_or_test --> If tested for covid, it is date of first positive test.  
 #puerto rico, canada, mexico, madrid spain, hong kong, italy, kenya
 
+check.df <- df9 %>% dplyr::select(site_id, mat_age, preterm_labor)
+
 df10 <- df10 %>% dplyr::mutate(date_ym = format(date_onset_or_test,format="%y-%m"))
+unique(df10$country)
+unique(compiled_ipd_data$site_id)
 ```
 
 ```{r}
@@ -273,7 +210,7 @@ ggplot() +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
-ggsave(filename = 'data_out/covid_variant_country_20220627.pdf', width = 6, height = 30, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
+# ggsave(filename = 'data_out/covid_variant_country_20220627.pdf', width = 6, height = 30, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
 
 # write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
 ```
@@ -293,6 +230,7 @@ df8.1 <- df8 %>% group_by(country, date_ym) %>%
 df8_wide <- df8.1 %>% 
   dplyr::select(-c(freq, week, date, max_date, pivot)) %>% 
   pivot_wider(names_from = variant, values_from = nor, values_fill = 0, names_prefix = "freq_") # pivot wider and adds a prefix "freq" to the variable in "values_from".
+# Pivot wider comes from tidyr.
 ```
 
 Merge the frequency dataset (wide) on our study dataset (IPD dataset)
@@ -300,15 +238,72 @@ Merge the frequency dataset (wide) on our study dataset (IPD dataset)
 df11 <- left_join(df10, df8_wide, by=c('country', 'date_ym'))
 ```
 
-Summarize data
+First pivot longer. (have a single column for the outcomes)
 ```{r}
-table(df11$preterm_labor)
-table(df11$ diab_prepreg)
-df12 <- df11 %>% group_by(country, dominant_variant) %>% summarize(count_condition=sum(diab_prepreg==1),
-                                                           n=n())
+colnames(df12)
+df12 <- df11 %>% pivot_longer(cols = c(diab_prepreg, hyperten_prepreg, matdeath, covid_hosp, covid_icu,
+                                       preeclampsia, eclampsia, pre_or_eclampsia, place_abrupt, preterm_labor,
+                                       haemorrhage, hpd_any),
+                              names_to = "outcome", values_to = "events")
+# There are lots of "88" in the outcomes --> converting to NA
+df12 <- df12 %>% mutate(events = if_else(events==88, as.numeric(NA), events))
+df13 <- df12 %>% dplyr::filter(!is.na(events))
 ```
 
-USING *AGGREGATE* DATA:
+Groupby and summarize
+```{r}
+df14 <- df13 %>% group_by(country, dominant_variant, outcome) %>%
+  summarize(events = sum(events, na.rm = FALSE),
+            tot_n = n(),
+            incidence = events/tot_n)
+
+write.xlsx(as.data.frame(df14), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_country", row.names = FALSE)
+
+df14.1 <- df13 %>% group_by(dominant_variant, outcome) %>%
+  summarize(events = sum(events, na.rm = FALSE),
+            tot_n = n(),
+            incidence = events/tot_n)
+
+write.xlsx(as.data.frame(df14.1), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_outcome", row.names = FALSE, append=TRUE)
+```
+
+```{r}
+# This is more useful
+
+df14.1 %>% 
+  filter(dominant_variant!="Beta") %>% # beta numbers are very low. 
+  ggplot() +
+  geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
+           width = 0.65,
+           position="dodge")
+
+df14.1 %>% 
+  filter(dominant_variant!="Beta") %>% 
+  ggplot() +
+  geom_col(aes(x=outcome, y=incidence, fill= dominant_variant), 
+           width = 0.7, 
+           position="dodge") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+
+Making data wider again for regression analysis
+```{r}
+ipd_wide14.1 <- df14 %>% pivot_wider(names_from = outcome, values_from = events)
+```
+
+
+
+
+For modeling, using wide ipd dataset. 
+```{r}
+summary(mod1 <- glm(preterm_labor ~ variant_mod, family = "poisson", data=ipd_wide14.1))
+
+```
+
+
+USING *AGGREGATE* DATA: older file. 
 ```{r}
 agd_df <- agd_long %>% dplyr::filter(grepl("calmonth", Strata)) # pulls out the rows that start with "calmonth" in the strata col. 
 agd_df <- agd_df %>% separate(Strata, c("calmonth", "calmonth_date"), "_")
@@ -343,18 +338,19 @@ agd_df3.1 <- agd_df3.1 %>% dplyr::mutate(variant_mod = if_else(dominant_variant=
 agd_df3.1$variant_mod <- factor(agd_df3.1$variant_mod, levels=c("other_variant", "Pre_alpha")) # factorized this variable
 levels(agd_df3.1$variant_mod)
 
+# wide dataset
 agd_wide3.1 <- agd_df3.1 %>% pivot_wider(names_from = Outcome, values_from = Events)
 
 agd_results <- agd_df3.1 %>% group_by(country, dominant_variant, Outcome) %>% summarize(count_condition=sum(Events),
                                                                        tot_n = sum(Total),
                                                                        incidence = count_condition/tot_n) %>% 
   ungroup()
-write.xlsx(as.data.frame(agd_results), file='data_out/variants_agd_results_20220610.xlsx', sheetName="dominant_strain", row.names = FALSE)
+# write.xlsx(as.data.frame(agd_results), file='data_out/variants_agd_results_20220610.xlsx', sheetName="dominant_strain", row.names = FALSE)
 
-agd_results2 <- agd_df3.2 %>% group_by(country, variant_mod, Outcome) %>% summarize(count_condition=sum(Events),
+agd_results2 <- agd_df3.1 %>% group_by(country, variant_mod, Outcome) %>% summarize(count_condition=sum(Events),
                                                                        tot_n = sum(Total),
                                                                        incidence = count_condition/tot_n) 
-write.xlsx(as.data.frame(agd_results2), file='data_out/variants_agd_results_20220610.xlsx', sheetName="prealpha_vs.other", append=TRUE, row.names = FALSE)
+# write.xlsx(as.data.frame(agd_results2), file='data_out/variants_agd_results_20220610.xlsx', sheetName="prealpha_vs.other", append=TRUE, row.names = FALSE)
 
 ```
 
