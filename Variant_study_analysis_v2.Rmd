@@ -6,6 +6,7 @@ output: html_document
 ---
 This file is for Jenny by FF.  Contains same code as "Variant_study_analyis_v1.Rmd"
 Test push to github.
+another push.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
