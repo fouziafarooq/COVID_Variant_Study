@@ -35,6 +35,8 @@ country_id_agd <- read.csv('data/country_id_agd.csv') # created by FF
 
 # Nextstrain frequency file: 
 df8 <- read.csv('data/nextstrain_frequency_data_written_ff_20220610.csv') # created by FF using nextstrain dataset.
+study_cases <- read_xlsx('data/variant_study_case_control_COVID_data_ff_20220524.xlsx')
+
 ```
 
 ************************
@@ -68,6 +70,7 @@ df10.3 <- df10.2 %>% group_by(country) %>% arrange(country, date_ym)
 df10.4 <- df10.3 %>% group_by(country, city_country, date_ym) %>% tally()
 df10.4 <- df10.4 %>% rename(Events='n', City = "city_country") %>% mutate(study_type = "RFA",
                                                    Study_type_full = "Risk Factor Analysis")
+df10.4 <- df10.4 %>% dplyr::filter(!is.na(date_ym))
 df10.4 <- df10.4 %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
 df10.5 <- df10.4 %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
 
@@ -152,7 +155,7 @@ df11 <- left_join(df10, df8_wide, by=c('country', 'date_ym'))
 
 First pivot longer. (have a single column for the outcomes)
 ```{r}
-colnames(df12)
+
 df12 <- df11 %>% pivot_longer(cols = c(diab_prepreg, hyperten_prepreg, matdeath, covid_hosp, covid_icu,
                                        preeclampsia, eclampsia, pre_or_eclampsia, place_abrupt, preterm_labor,
                                        haemorrhage, hpd_any),
@@ -187,7 +190,9 @@ df14.1 %>%
   ggplot() +
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
            width = 0.65,
-           position="dodge")
+           position="dodge") + 
+  scale_x_discrete(limits = c("no_strain", "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
+  xlab("Dominant Strain")
 
 df14.1 %>% 
   filter(dominant_variant!="Beta") %>% 
@@ -196,8 +201,6 @@ df14.1 %>%
            width = 0.7, 
            position="dodge") + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-
 ```
 
 Making data wider again for regression analysis
@@ -205,100 +208,3 @@ Making data wider again for regression analysis
 ipd_wide14.1 <- df14 %>% pivot_wider(names_from = outcome, values_from = events)
 ```
 
-
-
-
-For modeling, using wide ipd dataset. 
-```{r}
-summary(mod1 <- glm(preterm_labor ~ variant_mod, family = "poisson", data=ipd_wide14.1))
-
-```
-
-
-USING *AGGREGATE* DATA: older file. 
-```{r}
-agd_df <- agd_long %>% dplyr::filter(grepl("calmonth", Strata)) # pulls out the rows that start with "calmonth" in the strata col. 
-agd_df <- agd_df %>% separate(Strata, c("calmonth", "calmonth_date"), "_")
-agd_df <- agd_df %>% mutate(date_ym = as.Date(paste0(substring(calmonth_date, 1,4), "-", substring(calmonth_date, 5), "-01"),
-                                              format="%Y-%m-%d")) # substring pulls out the first 4 characters of the string first. 
-agd_df <- agd_df %>% mutate(date_ym = format(date_ym, format = "%y-%m"))
-
-agd_df <- rename(agd_df, site_id = "Site")
-```
-
-Merge the frequency dataset (wide) on our study dataset (Aggregate dataset)
-```{r}
-# country_id_agd <- agd_df %>% dplyr::select(site_id, Site_name) %>% distinct()
-# write.csv(country_id_agd, 'data/country_id_agd.csv', row.names = FALSE) # I wrote this out and will update, so don't need this code.
-
-agd_df2 <- left_join(agd_df, country_id_agd, by="site_id")
-agd_df2 <- agd_df2 %>% dplyr::select(-Site_name.y)
-
-agd_df3 <- left_join(agd_df2, df8_wide, by=c('country', 'date_ym'))
-```
-
-Summarize data
-```{r}
-#  "Events" column is actually the outcome and the "Total" is the denominator for that Strata
-# So for example, if the Outcome is "Preterm Birth" and the Strata is "20203", then "Events" is the number of preterm births among livebirths with COVID-19 onset in March 2020, and "Total" is the total number of livebirths with COVID-19 onset in March 2020
-
-#TODO calmonth_date has "m" that needs to be deleted - these are missing. We don't know what calmonth the outcome happened. 
-table(agd_df3$Outcome)
-
-agd_df3.1 <- agd_df3 %>% dplyr::filter(country==c("USA", "Canada", "Mexico", "Spain", "Hong Kong", "Italy", "Kenya"))
-agd_df3.1 <- agd_df3.1 %>% dplyr::mutate(variant_mod = if_else(dominant_variant=="Pre_alpha", "Pre_alpha", "other_variant")) 
-agd_df3.1$variant_mod <- factor(agd_df3.1$variant_mod, levels=c("other_variant", "Pre_alpha")) # factorized this variable
-levels(agd_df3.1$variant_mod)
-
-# wide dataset
-agd_wide3.1 <- agd_df3.1 %>% pivot_wider(names_from = Outcome, values_from = Events)
-
-agd_results <- agd_df3.1 %>% group_by(country, dominant_variant, Outcome) %>% summarize(count_condition=sum(Events),
-                                                                       tot_n = sum(Total),
-                                                                       incidence = count_condition/tot_n) %>% 
-  ungroup()
-# write.xlsx(as.data.frame(agd_results), file='data_out/variants_agd_results_20220610.xlsx', sheetName="dominant_strain", row.names = FALSE)
-
-agd_results2 <- agd_df3.1 %>% group_by(country, variant_mod, Outcome) %>% summarize(count_condition=sum(Events),
-                                                                       tot_n = sum(Total),
-                                                                       incidence = count_condition/tot_n) 
-# write.xlsx(as.data.frame(agd_results2), file='data_out/variants_agd_results_20220610.xlsx', sheetName="prealpha_vs.other", append=TRUE, row.names = FALSE)
-
-```
-
-```{r}
-p1 <- agd_wide3.1 %>% 
-  ggplot() +
-  geom_histogram(aes(x=ICUadmit1/Total, fill=dominant_variant)) 
-
-p2 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=prdeath1/Total, fill=dominant_variant)) # maternal death
-
-p3 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=haemorrhage1/Total, fill=dominant_variant))
-
-p4 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=extremesga1/Total, fill=dominant_variant))
-
-p5 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=preterm1/Total, fill=dominant_variant))
-
-p6 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=c_intrap1/Total, fill=dominant_variant))
-
-p1/p2/p3/p4/p5/p6
-
-
-ggsave('data_out/variant_rates_20220610.pdf', plot=last_plot(), height = 13, width=4)
-```
-
-For modeling, using wide aggregated dataset. 
-```{r}
-summary(mod1 <- glm(preterm1 ~ variant_mod + country, family = "poisson", data=agd_wide3.2))
-
-```
