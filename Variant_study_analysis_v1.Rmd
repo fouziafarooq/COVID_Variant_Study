@@ -319,56 +319,22 @@ df14.1 %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+```{r}
+# Generates the wide format table with incidences of each outcome in each strain for each study site. 
+df14.outcomes.wide <- df14 %>% 
+  # dplyr::filter(!is.na(dominant_variant)) %>%
+  pivot_wider(names_from = c(outcome), values_from = c(events, tot_n, incidence))
+# write.csv(df14.outcomes.wide, file='data_out/VariantStudy_incidence_20220720.csv', na = "",row.names=FALSE)
+```
 
 ***META ANALYSIS WITH IPD DATA***
 I first should filter data to pre_alpha and alpha, pre_alpha and delta, pre_alpha and omicron etc. Run seperate analyses on each set then(?) Need to ask e about this. 
 
-<!-- ```{r} -->
-<!-- # HARDCODED HERE -->
-<!-- # outcomes: haemorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu -->
-<!-- # Reshaping data -->
-
-
-<!-- df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events) -->
-<!-- df14.alpha <- df14.negpos.outcome %>%  -->
-<!--   dplyr::filter(dominant_variant %in% c("Pre_alpha", "Alpha")) %>% -->
-<!--   group_by(site_name, dominant_variant, outcome) %>% -->
-<!--   dplyr::filter(outcome=="pre_or_eclampsia") %>%  -->
-<!--   summarise(pos = sum(events),  -->
-<!--             neg = sum(neg)) %>% -->
-<!--   pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>% -->
-<!--   drop_na() # drops countries that don't have one or the other dominant strain. -->
-
-<!-- dat <- escalc(measure="RR", ai=pos_Alpha, bi=neg_Alpha, ci=pos_Pre_alpha, di=neg_Pre_alpha, data=df14.alpha, -->
-<!--               slab=paste(site_name), add=1/2) # calculates log relative risk (?) and it's variances.  -->
-
-<!-- ### fit random-effects model -->
-<!-- res <- rma(yi, vi, data=dat) -->
-<!-- res -->
-
-<!-- ### forest plot with extra annotations -->
-<!-- forest(res, atransf=exp, at=log(c(.05, .25, 1, 4)), xlim=c(-16,6), -->
-<!--        ilab=cbind(pos_Alpha, neg_Alpha, pos_Pre_alpha, neg_Pre_alpha), ilab.xpos=c(-9.5,-8,-6,-4.5),  -->
-<!--                      cex=.75, header="Site name", mlab="") -->
-<!-- op <- par(cex=.75, font=2) -->
-<!-- text(c(-9.5,-8,-6,-4.5), 15, c("Alpha+", "Alpha-", "Prealpha+", "Prealpha-")) -->
-<!-- text(c(-8.75,-5.25),     16, c("Dominant_strain", "Reference_strain")) -->
-<!-- par(op) -->
-
-<!-- ### add text with Q-value, dfs, p-value, and I^2 statistic -->
-<!-- text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model (Q = ", -->
-<!--                                             .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p), -->
-<!--                                             ", p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", I^2, " = ", -->
-<!--                                             .(formatC(res$I2, digits=1, format="f")), "%)"))) -->
-
-<!-- #TODO Ask emily: unbalanced groups when we group over months for different strains.  i.e. prealpha period was say 6 months but omicron was only 3 months.  -->
-
-<!-- ``` -->
-
 ```{r}
+
 # outcomes: heamorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu
 # Reshaping data
-meta_fun <- function(outcome.var, strain.var) {
+meta_fun <- function(outcome.var, strain.var, strain.var2) {
   
   df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
   df14.alpha <- df14.negpos.outcome %>% 
@@ -385,11 +351,13 @@ meta_fun <- function(outcome.var, strain.var) {
   
   dat <- escalc(measure="RR", ai=pos_treatment_strain, bi=neg_treatment_strain, ci=pos_Pre_alpha, di=neg_Pre_alpha, data=df14.alpha,
                 slab=paste(site_name), add=1/2) # calculates log relative risk (?) and it's variances. 
+  #TODO Add 0.5 to the other set of events also when adding where events = 0.
   
   ### fit random-effects model
+  #res <- rma.glmm(yi, vi, data=dat)
   res <- rma(yi, vi, data=dat)
   res
-  
+ #  write.csv(dat, file='data_out/VarinatStudy_MetaTable.csv')
   pdf(file=paste0('plots/VariantStudy_MetaForestPlot.', strain.var, '.', outcome.var, '.pdf'))
   
   ### forest plot with extra annotations
@@ -425,11 +393,8 @@ meta_fun <- function(outcome.var, strain.var) {
 
 ```{r}
 # outcomes: haemorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, covid_icu, covid_hosp, matdeath, place_abrupt, hpd_any, hyperten_prepreg
-meta.fun.call <- meta_fun(outcome.var = "hyperten_prepreg", strain.var = "Alpha")
+meta.fun.call <- meta_fun(outcome.var = "preterm_labor", strain.var = "Alpha")
 ```
-
-
-
 
 
 ***RANDOM REGRESSIONS WITH IPD DATA***
