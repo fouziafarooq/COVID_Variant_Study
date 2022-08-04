@@ -307,17 +307,6 @@ df14.1 <- df13 %>% group_by(dominant_variant, outcome) %>%
 #write.xlsx(as.data.frame(df14.1), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_outcome", row.names = FALSE, append=TRUE)
 ```
 
-Metagen package:
-# ```{r}
-#   X <-metagen(logOR, logSE,
-#               studlab=paste(ID), data=df14,
-#               fixed= FALSE, random=TRUE,
-#               subset=NULL, sm="OR",
-#               method.tau="REML",
-#               subgroup =df14$site_name,
-#               title="Variant")
-# summary(X)
-# ```
 
 ```{r}
 # This is more useful
@@ -374,7 +363,7 @@ Functions for continuity correction and calc logRR and SEs.
   }
 ```
 
-*Meetagen package FUNCTION*
+Setting up for metagen:
 ```{r}
 df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
 strain_vec <- unique(df14.negpos.outcome$dominant_variant) # creates a vector of all different strain names.
@@ -406,17 +395,30 @@ for (ref.strain in strain_vec) {
     
   }
 }
+```
 
+*METAGEN FUNCTION*
+```{r}
 # FUNCTION CREATED:
 metagen_fun <- function(refstr, teststr) {
   df14.strainpair <- df14.alpha %>%
     dplyr::filter(ref.strain==refstr &
                   test.strain==teststr)
+  colnames(df14.strainpair)[colnames(df14.strainpair) == "pos_reference"] <- paste0(refstr, "+")
+  colnames(df14.strainpair)[colnames(df14.strainpair) == "neg_reference"] <- paste0(refstr, "-")
+  colnames(df14.strainpair)[colnames(df14.strainpair) == "pos_test"] <- paste0(teststr, "+")
+  colnames(df14.strainpair)[colnames(df14.strainpair) == "neg_test"] <- paste0(teststr, "-")
+    
   if(nrow(df14.strainpair)==0){ # when a certain pair of strains is not present, we wnat it to skip, e.g. Delta-Epsilon is missing when dominant strain defined as >=70% prevalence. 
     print("     No such strain pair found - better skip this one!")
     return()
   }
 
+  #dplyr::rename(paste0(ref.str, "_pos") = "pos_reference")#, #+ or - symbols in names do not work
+                  # paste0(teststr, "_pos") = "pos_test",
+                  # paste0(refstr, "_neg") = "neg_reference",
+                  # paste0(teststr, "_neg") = "neg_test")
+  
   # Can we now use "dat" file that has the logRR and generate RR and SEs that we can feed into to metagen package. 
   # to="all" says add 1/2 to all the 2X2 cells (when events =0 for a set)
   
@@ -433,12 +435,19 @@ metagen_fun <- function(refstr, teststr) {
 # manual process in STATA - replaced 0 with the inverse of the opposite arm. can try this code. Making the continuity correction smaller helps but not always. Pooled absolute risks and pooled relative risks that were illogical, absolute risk was high for one group but relative risk was lower for that group.   If there are 0 events for delta and alpha, what to do with that estimate. 
   # summary (mymeta)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20220803_domvarv1/VariantStudy_MetaForestPlot_", refstr, "_", teststr, ".pdf"), width=8.5, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/20220804_domvar_mixed_70/VariantStudy_MetaForestPlot_", refstr, "_", teststr, ".pdf"), width=10, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
-  forest(mymeta, sortvar=logRR, comb.random, leftcols = "studlab", colgap.forest.left = "30mm" ,
-         fs.hetstat = 9, header=TRUE, overall=FALSE, col.diamond = "#33CC66", col.study= "#333333" )
+  forest(mymeta, sortvar=logRR, comb.random, 
+         leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"), paste0(refstr, "-")),
+         colgap.forest.left = "1mm",
+         fontsize = 10, 
+         fs.hetstat = 9, 
+         header=TRUE, 
+         overall=FALSE, 
+         col.diamond = "#33CC66", 
+         col.study= "#333333" )
   # grid.text("Variant study by outcome", .5, .89, gp=gpar(cex=1)) # only works in R version 3.
-  
+
   dev.off()
 }
 ```
