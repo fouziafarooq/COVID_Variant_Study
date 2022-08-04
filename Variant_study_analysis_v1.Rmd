@@ -18,7 +18,8 @@ library(xlsx)
 library(patchwork)
 library(haven)
 library(meta)
-library(metafor)
+# library(metafor)
+# library(esc)
 ```
 
 NOTES: json file was converted to csv in python (deepnote.com), then copied the code into BBtext and ran at the command line. 
@@ -157,7 +158,7 @@ STARTING STUDY ANALYSIS:
 NOTE: The reason some of the RFA studies show up on covid_variant_country_20220717.pdf is b/c they have aggregate data but not ipd data.  on the 20220718 file, those have been removed (like the UK and Canada).  I am just plotting data from complied_ipd_data_old and compiled_ipd_data_new.  
 ```{r}
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
-df10 <- df9 %>% dplyr::filter(site_id %in% c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,2201,2202,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38)) %>% 
+df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>% 
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city, country, site_name, mat_age, date_onset_or_test, covid_sympdate, covid_pos,
                                edd_date, fetuses, parity, gravidity, weight_pre, diab_prepreg, hyperten_prepreg, matdeath,
@@ -250,19 +251,27 @@ ggsave(filename = 'data_out/covid_variant_country_20220718.pdf', width = 6, heig
 Making frequency dataset wider and then we will join it onto compiled_ipd data
 ```{r}
 df8.1 <- df8 %>% group_by(country, date_ym) %>%
-  arrange(desc(freq)) %>% 
+  arrange(desc(freq)) %>% # we first ordered the frequency and the highest is on top. 
   mutate(dominant_variant = if_else(first(freq)==0,
                                     "no_strain", 
-                                    first(variant))) %>% 
+                                    # first(variant))) %>% 
+                                      ifelse(!is.na(first(nor)) & first(nor)>=0.70, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
+                                           first(variant), 
+                                           "mixed"))) %>% 
+  mutate(dominant_variant_v1 = if_else(first(freq)==0,
+                                    "no_strain", 
+                                    first(variant))) %>%
   ungroup() %>%
   arrange(country, date_ym) # first arranges the strains in descending order then pulls out the strain name for the first one b/c now it has the greatest frequency. Then we ungrouped and rearranged so we can see by country and date order. 
-  
+
 
 df8_wide <- df8.1 %>% 
   dplyr::select(-c(freq, week, date, max_date, pivot)) %>% 
   pivot_wider(names_from = variant, values_from = nor, values_fill = 0, names_prefix = "freq_") # pivot wider and adds a prefix "freq" to the variable in "values_from".
 # Pivot wider comes from tidyr.
 ```
+
+
 
 Merge the frequency dataset (wide) on our study dataset (IPD dataset)
 ```{r}
@@ -319,7 +328,7 @@ df14 %>%
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
            width = 0.65,
            position="dodge") + 
-  scale_x_discrete(limits = c("no_strain", "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
+  scale_x_discrete(limits = c("no_strain", 'mixed', "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
   xlab("Dominant Strain")
 
 df14.1 %>% 
@@ -339,235 +348,116 @@ df14.outcomes.wide <- df14 %>%
 # write.csv(df14.outcomes.wide, file='data_out/VariantStudy_incidence_20220720.csv', na = "",row.names=FALSE)
 ```
 
-***Meta-analysis that is not automated.***
+
+Functions for continuity correction and calc logRR and SEs. 
 ```{r}
-# outcomes: heamorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu
-# Reshaping data
-# outcomes: heamorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu
-# Reshaping data
-
+  ### used this link to calc: https://www.medcalc.org/manual/relative-risk-odds-ratio.php
+  ### function for calculating RR (not logRR)
+  rr_ff <- function(pos1, pos2, neg1, neg2, adj=0.5){
+    useadj <- pos1==0 | neg1==0 | pos2==0 | neg2==0
+    
+    a <- pos1+useadj*adj
+    b <- neg1+useadj*adj
+    c <- pos2+useadj*adj
+    d <- neg2+useadj*adj
+    return((a/(a+b))/((c/(c+d))))
+  }
   
-  df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
-  df14.alpha <- df14.negpos.outcome %>% 
-    dplyr::filter(dominant_variant %in% c("Pre_alpha", "Alpha")) %>%
-    group_by(site_name, dominant_variant, outcome) %>%
-    dplyr::filter(outcome=="matdeath") %>% 
-    summarise(pos = sum(events), 
-              neg = sum(neg)) %>%
-    mutate(dominant_variant = if_else(dominant_variant=="Pre_alpha",
-                                      "Pre_alpha",
-                                      "treatment_strain")) %>%
-    pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
-    drop_na() # drops countries that don't have one or the other dominant strain.
-
-  
-  dat <- escalc(measure="RR", ai=getElement(df14.alpha, "pos_treatment_strain"), bi=neg_treatment_strain, ci=pos_Pre_alpha, di=neg_Pre_alpha, data=df14.alpha,
-                slab=paste(site_name), add=1/2, to="all") # calculates log relative risk (?) and it's variances. 
-  #TODO Add 0.5 to the other set of events also when adding where events = 0.  add=1/2 does add 0.5 to all 2X2 cells when even a single cell is 0. to="all" says add to all the 2X2 cells. 
-  
-  ### fit random-effects model
-  #res <- rma.glmm(yi, vi, data=dat)
-  res <- rma(yi, vi, data=dat)
-  res
- #  write.csv(dat, file='data_out/VarinatStudy_MetaTable.csv')
-  pdf(file=paste0('plots/VariantStudy_MetaForestPlot.', strain.var, '.', outcome.var, '.pdf'))
-  
-  ### forest plot with extra annotations
-  forest(res, atransf=exp, at=log(c(.05, .25, 1, 4)), xlim=c(-16,6),
-         ilab=cbind(pos_treatment_strain, neg_treatment_strain, pos_Pre_alpha, neg_Pre_alpha),
-         ilab.xpos=c(-9.5,-8,-6,-4.5), 
-         cex=.75, 
-         header=paste0("Site name          ", "outcome: ", outcome.var, ".     ",strain.var, " (+/-) vs. Prealpha (+-)      ", mlab=""))
-         op <- par(cex=.75, font=2) 
-         #cex=.75, header="Site name", mlab="")
-         
-
-  #text(c(-9.5,-8,-6,-4.5), 15, c(paste0(strain.var, "+"), paste0(strain.var, "-"), "Prealpha+", "Prealpha-"))
-  #text(c(-8.75,-5.25),     16, c("Dominant", "Reference"))
-  text(x=c(-9.5,-8,-6,-4.5), y=15, c("+", "-", "+", "-"))
-  text(x=c(-8.75,-5.25),     y=16, c("Dominant", "Reference"))
-  #text(x =  30, y = 16, "Dataset",  pos=4)
-  #text(x = 165, y = 16, "Accuracy", pos = 2, font = 4)
-  par(op)
-  
-  ### add text with Q-value, dfs, p-value, and I^2 statistic
-  text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model (Q = ",
-                                              .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p),
-                                              ", p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", I^2, " = ",
-                                              .(formatC(res$I2, digits=1, format="f")), "%)")))
-  
-  dev.off()
-
-
-#TODO Ask emily: unbalanced groups when we group over months for different strains.  i.e. prealpha period was say 6 months but omicron was only 3 months. 
+  ### this calculates SE for logRR not just RR - so this is logSE
+  se_logrr_ff <- function(pos1, pos2, neg1, neg2, adj=0.5){
+    useadj <- pos1==0 | neg1==0 | pos2==0 | neg2==0
+    a <- pos1+useadj*adj
+    b <- neg1+useadj*adj
+    c <- pos2+useadj*adj
+    d <- neg2+useadj*adj
+    return(sqrt((1/a)+(1/c)-(1/(a+b))-(1/(c+d))))
+  }
 ```
 
-*Trying to setup subgroup = outcome here using non-function code.*
+*Meetagen package FUNCTION*
 ```{r}
 df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
-df14.alpha <- df14.negpos.outcome %>% 
-  dplyr::filter(dominant_variant %in% c("Pre_alpha", "Alpha")) %>%
-  group_by(site_name, dominant_variant, outcome) %>%
-   dplyr::filter(outcome %in% c("matdeath", "preterm_labor")) %>% 
-  summarise(pos = sum(events), 
-            neg = sum(neg)) %>%
-  mutate(dominant_variant = if_else(dominant_variant=="Pre_alpha",
-                                    "Pre_alpha",
-                                    "treatment_strain")) %>%
-  pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
-  drop_na() # drops countries that don't have one or the other dominant strain.
+strain_vec <- unique(df14.negpos.outcome$dominant_variant) # creates a vector of all different strain names.
+strain_vec <- strain_vec[!is.na(strain_vec)] # removes NAs
+strain_vec <- strain_vec[strain_vec!="no_strain"]
+df14.alpha <- data.frame(matrix(nrow = 0, ncol=10))
 
-
-dat <- escalc(measure="RR", ai=getElement(df14.alpha, "pos_treatment_strain"), bi=neg_treatment_strain, ci=pos_Pre_alpha, di=neg_Pre_alpha, data=df14.alpha,
-              slab=paste(site_name), add=1/2, to="all") # calculates log relative risk (?) and it's variances. 
-#TODO Add 0.5 to the other set of events also when adding where events = 0.  add=1/2 does add 0.5 to all 2X2 cells when even a single cell is 0. to="all" says add to all the 2X2 cells. 
-
-### fit random-effects model
-#res <- rma.glmm(yi, vi, data=dat)
-res <- rma(yi, vi, data=dat)
-res
-
-### a little helper function to add Q-test, I^2, and tau^2 estimate info
-mlabfun <- function(text, res) {
-   list(bquote(paste(.(text),
-      " (Q = ", .(formatC(res$QE, digits=2, format="f")),
-      ", df = ", .(res$k - res$p),
-      ", p ", .(metafor:::.pval(res$QEp, digits=2, showeq=TRUE, sep=" ")), "; ",
-      I^2, " = ", .(formatC(res$I2, digits=1, format="f")), "%, ",
-      tau^2, " = ", .(formatC(res$tau2, digits=2, format="f")), ")")))}
-
-
-#  write.csv(dat, file='data_out/VarinatStudy_MetaTable.csv')
-pdf(file=paste0('plots/VariantStudy_MetaForestPlot.', strain.var, '.', outcome.var, '.pdf'))
-
-### forest plot with extra annotations
-forest(res, atransf=exp, at=log(c(.05, .25, 1, 4)), xlim=c(-16,6),
-       ilab=cbind(pos_treatment_strain, neg_treatment_strain, pos_Pre_alpha, neg_Pre_alpha),
-       ilab.xpos=c(-9.5,-8,-6,-4.5), 
-       cex=.75, 
-       order=outcome,
-       mlab=mlabfun("RE Model for All Studies", res),
-       header=paste0("Site name          ", "outcome:all, Alpha  (+/-) vs. Prealpha (+-)      ", mlab=""))
-op <- par(cex=.75, font=2) 
-#cex=.75, header="Site name", mlab="")
-
-
-#text(c(-9.5,-8,-6,-4.5), 15, c(paste0(strain.var, "+"), paste0(strain.var, "-"), "Prealpha+", "Prealpha-"))
-#text(c(-8.75,-5.25),     16, c("Dominant", "Reference"))
-# text(x=c(-9.5,-8,-6,-4.5), y=15, c("+", "-", "+", "-"))
-# text(x=c(-8.75,-5.25),     y=16, c("Dominant", "Reference"))
-#text(x =  30, y = 16, "Dataset",  pos=4)
-#text(x = 165, y = 16, "Accuracy", pos = 2, font = 4)
-
-### add text for the subgroups
-text(-16, c(24,16,5), pos=4, c("Maternal Death",
-                               "Preterm labor"))
-par(op)
-
-### add text with Q-value, dfs, p-value, and I^2 statistic
-text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model (Q = ",
-                                            .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p),
-                                            ", p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", I^2, " = ",
-                                            .(formatC(res$I2, digits=1, format="f")), "%)")))
-
-dev.off()
-
-
-#TODO Ask emily: unbalanced groups when we group over months for different strains.  i.e. prealpha period was say 6 months but omicron was only 3 months. 
-```
-
-```{r}
-# outcomes: heamorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu
-# Reshaping data
-# outcomes: heamorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, eclampsia, covid_icu
-# Reshaping data
-meta_fun <- function(outcome.var, strain.var, ref.strain) {
-  
-  df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
-  df14.alpha <- df14.negpos.outcome %>% 
-    dplyr::filter(dominant_variant %in% c(ref.strain, strain.var)) %>%
-    group_by(site_name, dominant_variant, outcome) %>%
-    dplyr::filter(outcome==outcome.var) %>% 
-    summarise(pos = sum(events), 
-              neg = sum(neg)) %>%
-    mutate(dominant_variant = if_else(dominant_variant==ref.strain,
-                                      ref.strain,
-                                      strain.var)) %>%
-    pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
-    drop_na() # drops countries that don't have one or the other dominant strain.
-  
-  dat <- escalc(measure="RR", 
-                ai=getElement(df14.alpha, paste0("pos_", strain.var)), 
-                bi=getElement(df14.alpha, paste0("neg_", strain.var)), 
-                ci=getElement(df14.alpha, paste0("pos_", ref.strain)), 
-                di=getElement(df14.alpha, paste0("neg_", ref.strain)), 
-                data=df14.alpha,
-                slab=paste(site_name), add=1/2, to="all") # calculates log relative risk (?) and it's variances. 
-  #TODO Add 0.5 to the other set of events also when adding where events = 0.  add=1/2 does add 0.5 to all 2X2 cells when even a single cell is 0. to="all" says add to all the 2X2 cells. 
-  
-  write.csv(x=dat, file=paste0('data_out/VariantStudy_MetaForestPlot.', ref.strain, "_", strain.var, '.', outcome.var, '.csv'))
+for (ref.strain in strain_vec) {
+  for (test.strain in strain_vec) {
+    if(ref.strain==test.strain) {
+      next # skips this iteration when the two strains are the same. 
+    }
+    df14.alpha.rows <- df14.negpos.outcome %>% 
+      dplyr::filter(dominant_variant %in% c(ref.strain, test.strain)) %>%
+      group_by(site_name, dominant_variant, outcome) %>%
+      #  dplyr::filter(outcome %in% c("matdeath", "preterm_labor")) %>% 
+      summarise(pos = sum(events), 
+                neg = sum(neg)) %>%
+      mutate(dominant_variant = if_else(dominant_variant==ref.strain,
+                                        "reference",
+                                        "test")) %>%
+      pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
+      drop_na() %>% # drops countries that don't have one or the other dominant strain.
+      mutate(ref.strain=ref.strain, test.strain=test.strain) %>%
+       mutate(logRR = log(rr_ff(pos_reference, pos_test, neg_reference, neg_test)),
+           logSE = se_logrr_ff(pos_reference, pos_test, neg_reference, neg_test))
     
-  ### fit random-effects model
-  #res <- rma.glmm(yi, vi, data=dat)
-  res <- rma(yi, vi, data=dat)
-  res
- #  write.csv(dat, file='data_out/VarinatStudy_MetaTable.csv')
-  pdf(file=paste0('plots/VariantStudy_MetaForestPlot.', ref.strain, "_", strain.var, '.', outcome.var, '.pdf'))
-  
-  ### forest plot with extra annotations
-  forest(res, atransf=exp, at=log(c(.05, .25, 1, 4)), xlim=c(-16,6),
-         ilab=cbind(getElement(df14.alpha, paste0("pos_", strain.var)), 
-                    getElement(df14.alpha, paste0("neg_", strain.var)), 
-                    getElement(df14.alpha, paste0("pos_", ref.strain)), 
-                    getElement(df14.alpha, paste0("neg_", ref.strain))),
-         ilab.xpos=c(-9.5,-8,-6,-4.5), 
-         cex=.75, 
-         header=paste0("Site name          ", "outcome: ", outcome.var, ".     ",strain.var, " (+/-) vs. ", ref.strain, " (+/-)"      , mlab=""))
-         op <- par(cex=.75, font=2) 
-         #cex=.75, header="Site name", mlab="")
-         
+    df14.alpha <- rbind(df14.alpha, df14.alpha.rows)
+    
+  }
+}
 
-  #text(c(-9.5,-8,-6,-4.5), 15, c(paste0(strain.var, "+"), paste0(strain.var, "-"), "Prealpha+", "Prealpha-"))
-  #text(c(-8.75,-5.25),     16, c("Dominant", "Reference"))
-  text(x=c(-9.5,-8,-6,-4.5), y=15, c("+", "-", "+", "-"))
-  text(x=c(-8.75,-5.25),     y=16, c("Dominant", "Reference"))
-  #text(x =  30, y = 16, "Dataset",  pos=4)
-  #text(x = 165, y = 16, "Accuracy", pos = 2, font = 4)
-  par(op)
+# FUNCTION CREATED:
+metagen_fun <- function(refstr, teststr) {
+  df14.strainpair <- df14.alpha %>%
+    dplyr::filter(ref.strain==refstr &
+                  test.strain==teststr)
+  if(nrow(df14.strainpair)==0){ # when a certain pair of strains is not present, we wnat it to skip, e.g. Delta-Epsilon is missing when dominant strain defined as >=70% prevalence. 
+    print("     No such strain pair found - better skip this one!")
+    return()
+  }
+
+  # Can we now use "dat" file that has the logRR and generate RR and SEs that we can feed into to metagen package. 
+  # to="all" says add 1/2 to all the 2X2 cells (when events =0 for a set)
   
-  ### add text with Q-value, dfs, p-value, and I^2 statistic
-  text(-16, -1, pos=4, cex=0.75, bquote(paste("RE Model (Q = ",
-                                              .(formatC(res$QE, digits=2, format="f")), ", df = ", .(res$k - res$p),
-                                              ", p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", I^2, " = ",
-                                              .(formatC(res$I2, digits=1, format="f")), "%)")))
+  
+  ### metagen 
+  mymeta <-metagen(logRR, logSE,
+                   studlab=paste(site_name), data=df14.strainpair,
+                   fixed= FALSE, random=TRUE,
+                   subset=NULL, sm="RR",
+                   method.tau="ML", # Default Restricted maximum likelihood estimator (REML) did not always converge so using ML. 
+                   subgroup =df14.strainpair$outcome,
+                   title="Variant")
+# added in the continuity correction by hand - codded it. 
+# manual process in STATA - replaced 0 with the inverse of the opposite arm. can try this code. Making the continuity correction smaller helps but not always. Pooled absolute risks and pooled relative risks that were illogical, absolute risk was high for one group but relative risk was lower for that group.   If there are 0 events for delta and alpha, what to do with that estimate. 
+  # summary (mymeta)
+  #generate forest plot:HERE
+  pdf(file=paste0("plots/20220803_domvarv1/VariantStudy_MetaForestPlot_", refstr, "_", teststr, ".pdf"), width=8.5, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  
+  forest(mymeta, sortvar=logRR, comb.random, leftcols = "studlab", colgap.forest.left = "30mm" ,
+         fs.hetstat = 9, header=TRUE, overall=FALSE, col.diamond = "#33CC66", col.study= "#333333" )
+  # grid.text("Variant study by outcome", .5, .89, gp=gpar(cex=1)) # only works in R version 3.
   
   dev.off()
+}
+```
 
+```{r}
+for (ref.strain in strain_vec) {
+  for (test.strain in strain_vec) {
+    if(ref.strain==test.strain) {
+      next # skips this iteration when the two strains are the same. 
+    }
+    print(paste(ref.strain, test.strain))
+    metagen_fun(ref.strain, test.strain)
   }
-#TODO Ask emily: unbalanced groups when we group over months for different strains.  i.e. prealpha period was say 6 months but omicron was only 3 months. 
-```
-
-***META ANALYSIS WITH IPD DATA***
-I first should filter data to pre_alpha and alpha, pre_alpha and delta, pre_alpha and omicron etc. Run seperate analyses on each set then(?) Need to ask e about this. 
-
-
-```{r}
-# outcomes: haemorrhage, diab_prepreg, preterm_labor, pre_or_eclampsia, covid_icu, covid_hosp, matdeath, place_abrupt, hpd_any, hyperten_prepreg
-meta.fun.call <- meta_fun(outcome.var = "preterm_labor", ref.strain = "Omicron", strain.var = "Delta")
+}
 ```
 
 
-***RANDOM REGRESSIONS WITH IPD DATA***
-Making data wider again for regression analysis
-```{r}
-ipd_wide14.1 <- df14 %>% pivot_wider(names_from = outcome, values_from = events)
-```
 
-For modeling, using wide ipd dataset. 
-```{r}
-summary(mod1 <- glm(preterm_labor ~ variant_mod, family = "poisson", data=ipd_wide14.1))
 
-```
 
 
 ########################################################
