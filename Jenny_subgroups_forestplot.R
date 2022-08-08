@@ -61,6 +61,19 @@ colnames(df14.alpha)[which(names(df14.alpha) == "outcome")] <- "Outcome"
   # to="all" says add 1/2 to all the 2X2 cells (when events =0 for a set)
   ### metagen 
   
+  
+  df14.alpha$logRR[df14.alpha$pos_Prealpha == 0 & df14.alpha$pos_Alpha == 0] <- NA
+  df14.alpha$logSE[df14.alpha$pos_Prealpha == 0 & df14.alpha$pos_Alpha == 0] <- NA
+  colnames(df14.alpha)[which(names(df14.alpha) == "pos_Alpha")] <- "Alpha+"
+  colnames(df14.alpha)[which(names(df14.alpha) == "neg_Alpha")] <- "Alpha-"
+  colnames(df14.alpha)[which(names(df14.alpha) == "pos_Prealpha")] <- "Prealpha+"
+  colnames(df14.alpha)[which(names(df14.alpha) == "neg_Prealpha")] <- "Prealpha-"
+
+  
+  
+  
+  
+  
   df14.alpha
   mymeta <-metagen(logRR, logSE,
                    studlab=paste(site_name), data=df14.alpha,
@@ -74,8 +87,9 @@ colnames(df14.alpha)[which(names(df14.alpha) == "outcome")] <- "Outcome"
   pdf(file='plots/VariantStudy_MetaForestPlot_alpha-prealpha.pdf', width=13, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
 
-  forest(mymeta, sortvar=logRR, comb.random, leftcols = c("studlab", "pos_Prealpha", "pos_Alpha", "neg_Prealpha", "neg_Alpha"), 
-         colgap.forest.left = "5mm" , fontsize = 12,
+  
+  forest(mymeta, sortvar=logRR, comb.random, leftcols = c("studlab", "Prealpha+", "Alpha+", "Prealpha-", "Alpha-"), 
+         colgap.forest.left = "5mm" , fontsize = 13,
          fs.hetstat = 9, header=TRUE, overall=FALSE, col.diamond = "#33CC66", col.study= "#333333", 
          , col.by = "gray0")
   # grid.text("Variant study by outcome", .5, .89, gp=gpar(cex=1)) # only works in R version 3.
