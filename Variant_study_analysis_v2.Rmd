@@ -47,9 +47,6 @@ df8 <- read.csv('data/nextstrain_frequency_data_written_ff_20220610.csv') # crea
 
 ```
 
-************************
-STARTING STUDY ANALYSIS:
-************************
 
 ```{r}
 table(compiled_ipd_data_old$site_id)
@@ -76,20 +73,90 @@ compiled_ipd_data <- compiled_ipd_data %>% dplyr::filter(twin2!=1 | tripletnum==
 table(compiled_ipd_data$tripletnum, useNA = "always")
 ```
 
+
+************************
+STARTING STUDY ANALYSIS:
+************************
 NOTE: The reason some of the RFA studies show up on covid_variant_country_20220717.pdf is b/c they have aggregate data but not ipd data.  on the 20220718 file, those have been removed (like the UK and Canada).  I am just plotting data from complied_ipd_data_old and compiled_ipd_data_new.  
+*File with IPD_vars.xlsx saved in folder on the computer*
 ```{r}
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
-df10 <- df9 %>% dplyr::filter(site_id %in% c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,2201,2202,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38)) %>% 
+df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>% 
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city, country, site_name, mat_age, date_onset_or_test, covid_sympdate, covid_pos,
-                               edd_date, fetuses, parity, gravidity, weight_pre, diab_prepreg, hyperten_prepreg, matdeath,
-                              matdeath_date, covid_hosp, covid_icu, preeclampsia, eclampsia, pre_or_eclampsia, 
-                              place_abrupt, preterm_labor, haemorrhage, hpd_any) 
-# use date_onset_or_test --> If tested for covid, it is date of first positive test.  
-#puerto rico, canada, mexico, madrid spain, hong kong, italy, kenya
+                edd_date, fetuses, parity, gravidity, weight_pre, # maternal outcomes: 
+                matdeath,
+                matdeath_date, covid_hosp1, ICUadmit1, covid_icu, critcare1, ventilation1, pneumonia1,
+                prdeath1, place_abrupt1, preterm_labor, haemorrhage1, embolicdz1,
+                preeclampsia1, eclampsia1, pre_or_eclampsia1, hpd_any1, hpd_postcovid1, c_section1, c_intrap1,
+                # fetal outcomes: 
+                stillbirth_site1, stillbirth_281, perinatal_death281, lowbirthweight1, 
+                verylowbirthweight1, sab_site1, tab_site1, preterm1, verypreterm1, neonatal_death1, earlyneo_death1, 
+                perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1) 
 
-check.df <- df9 %>% dplyr::select(site_id, mat_age, preterm_labor)
+# use date_onset_or_test --> If tested for covid, it is date of first positive test. 
 
+### Maternal outcomes: 
+# covid_hosp1 = COVID-19 related hospitalization events
+# ICUadmit1 = ICU admission events
+# critcare1 = critical care events
+# ventilation1 = Ventilation events
+# pneumonia1 = Pneumonia events
+# prdeath1 = Pregnancy-related death events
+# place_abrupt1 = Maternal morbidity events - place_abrupt
+# preterm_labor1 = Maternal morbidity events - preterm_labor
+# haemorrhage1 = Maternal morbdity events - haemorrhage
+# embolicdz1 = Maternal morbidity events - embolicdz
+# preeclampsia1 = Maternal morbdity events - preeclampsia
+# eclampsia1 = Maternal morbdity events - eclampsia
+# pre_or_eclampsia1 = Maternal morbidity events - preeclampsia/eclampsia
+# hpd_any1 = Maternal morbdity events - hpd_any
+# hpd_postcovid1 = Maternal morbdity events - hpd_postcovid
+# c_section1 = All C-Sections (among all stillbirths + livebirths)
+# c_intrap1 = Intrapartum C-section Events (among all stillbirths + livebirths)
+
+### Fetal outcomes: 
+
+# stillbirth_site1 = Pregnancy endpoint is stillbirth (as defined by site)
+# stillbirth_281 = Stillbirths at/after 28 weeks events
+# sab_site1 = Pregnancy endpoint is SAB (defined by site)
+# tab_site1 = Pregnancy endpoint is TAB (defined by site)
+# lowbirthweight1 = Low birthweight events (<2500 grams)
+# verylowbirthweight1 = Very low birthweight events (<1500 grams)
+# verypreterm1 = Moderate/very preterm events (<34 weeks GA at birth)
+# preterm1 = Preterm events (<37 weeks GA at birth)
+# neonatal_death1 = Neonatal death events (<28 days)
+# earlyneo_death1 = Early neonatal death events (<7 days)
+# perinatal_death281 = Perinatal death events (deaths <7 days & SB at 28w)
+# perinatal_deathsite1 = Perinatal death events (deaths <7 days & SB defined by site)
+# nicu1 = NICU admission at birth - events
+# sga1 = SGA events (<10th percentile)
+# extremesga1 = Extreme sga events (<3rd percentile)
+```
+
+Creating maternal and fetal composite outcomes:
+```{r}
+df10 <- df10 %>% 
+  dplyr::mutate(mat_composite_outcome = if_else((covid_hosp1==1 | ICUadmit1==1 | covid_icu==1 | critcare1==1| 
+                                          ventilation1==1 | pneumonia1==1 | prdeath1==1 | place_abrupt1==1 |
+                                          preterm_labor==1 | haemorrhage1==1 | embolicdz1==1 | 
+                                          preeclampsia1==1 | eclampsia1==1 | pre_or_eclampsia1==1 | 
+                                          hpd_any1==1 | hpd_postcovid1==1 | c_section1==1 | c_intrap1==1), 1, 0))
+
+
+str(df10$covid_hosp1)
+df10 <- df10 %>% 
+  dplyr::mutate(fetal_composite_outcome = if_else((stillbirth_site1==1 | stillbirth_281==1 | lowbirthweight1==1 |
+                                                   verylowbirthweight1==1 |sab_site1==1 | tab_site1==1 | preterm1==1 |
+                                                   verypreterm1==1 | neonatal_death1==1 |earlyneo_death1==1  | 
+                                                   perinatal_death281==1 | perinatal_deathsite1==1 | nicu1==1 | 
+                                                   sga1==1 | extremesga1==1), 1, 0))
+
+table(df10$fetal_composite_outcome)
+```
+
+Date format:
+```{r}
 df10 <- df10 %>% dplyr::mutate(date_ym = format(date_onset_or_test,format="%y-%m"))
 unique(df10$country)
 unique(compiled_ipd_data$site_id)
@@ -172,19 +239,27 @@ ggsave(filename = 'data_out/covid_variant_country_20220718.pdf', width = 6, heig
 Making frequency dataset wider and then we will join it onto compiled_ipd data
 ```{r}
 df8.1 <- df8 %>% group_by(country, date_ym) %>%
-  arrange(desc(freq)) %>% 
+  arrange(desc(freq)) %>% # we first ordered the frequency and the highest is on top. 
   mutate(dominant_variant = if_else(first(freq)==0,
                                     "no_strain", 
-                                    first(variant))) %>% 
+                                    # first(variant))) %>% 
+                                      ifelse(!is.na(first(nor)) & first(nor)>=0.70, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
+                                           first(variant), 
+                                           "mixed"))) %>% 
+  mutate(dominant_variant_v1 = if_else(first(freq)==0,
+                                    "no_strain", 
+                                    first(variant))) %>%
   ungroup() %>%
   arrange(country, date_ym) # first arranges the strains in descending order then pulls out the strain name for the first one b/c now it has the greatest frequency. Then we ungrouped and rearranged so we can see by country and date order. 
-  
+
 
 df8_wide <- df8.1 %>% 
   dplyr::select(-c(freq, week, date, max_date, pivot)) %>% 
   pivot_wider(names_from = variant, values_from = nor, values_fill = 0, names_prefix = "freq_") # pivot wider and adds a prefix "freq" to the variable in "values_from".
 # Pivot wider comes from tidyr.
 ```
+
+
 
 Merge the frequency dataset (wide) on our study dataset (IPD dataset)
 ```{r}
@@ -194,9 +269,14 @@ df11 <- left_join(df10, df8_wide, by=c('country', 'date_ym'))
 First pivot longer. (have a single column for the outcomes)
 ```{r}
 
-df12 <- df11 %>% pivot_longer(cols = c(diab_prepreg, hyperten_prepreg, matdeath, covid_hosp, covid_icu,
-                                       preeclampsia, eclampsia, pre_or_eclampsia, place_abrupt, preterm_labor,
-                                       haemorrhage, hpd_any),
+df12 <- df11 %>% pivot_longer(cols = c(matdeath,covid_hosp1, ICUadmit1, covid_icu, critcare1, ventilation1, pneumonia1,
+                prdeath1, place_abrupt1, preterm1, preterm_labor, haemorrhage1, embolicdz1,
+                preeclampsia1, eclampsia1, pre_or_eclampsia1, hpd_any1, hpd_postcovid1, c_section1, c_intrap1,
+                mat_composite_outcome,
+                # fetal outcomes: 
+                stillbirth_site1, stillbirth_281, lowbirthweight1, verylowbirthweight1, 
+                sab_site1, tab_site1, verypreterm1, neonatal_death1, earlyneo_death1, 
+                perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1, fetal_composite_outcome),
                               names_to = "outcome", values_to = "events")
 # There are lots of "88" in the outcomes --> converting to NA
 df12 <- df12 %>% mutate(events = if_else(events==88, as.numeric(NA), events))
@@ -220,6 +300,7 @@ df14.1 <- df13 %>% group_by(dominant_variant, outcome) %>%
 #write.xlsx(as.data.frame(df14.1), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_outcome", row.names = FALSE, append=TRUE)
 ```
 
+
 ```{r}
 # This is more useful
 
@@ -229,7 +310,7 @@ df14 %>%
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
            width = 0.65,
            position="dodge") + 
-  scale_x_discrete(limits = c("no_strain", "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
+  scale_x_discrete(limits = c("no_strain", 'mixed', "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
   xlab("Dominant Strain")
 
 df14.1 %>% 
@@ -249,7 +330,7 @@ df14.outcomes.wide <- df14 %>%
 # write.csv(df14.outcomes.wide, file='data_out/VariantStudy_incidence_20220720.csv', na = "",row.names=FALSE)
 ```
 
-***META ANALYSIS WITH IPD DATA***
+
 Functions for continuity correction and calc logRR and SEs. 
 ```{r}
   ### used this link to calc: https://www.medcalc.org/manual/relative-risk-odds-ratio.php
@@ -275,7 +356,7 @@ Functions for continuity correction and calc logRR and SEs.
   }
 ```
 
-Setting up for metagen:
+Setting up for metagen - for loop:
 ```{r}
 df14.negpos.outcome <- df14 %>% mutate(neg = tot_n - events)
 strain_vec <- unique(df14.negpos.outcome$dominant_variant) # creates a vector of all different strain names.
@@ -300,8 +381,12 @@ for (ref.strain in strain_vec) {
       pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
       drop_na() %>% # drops countries that don't have one or the other dominant strain.
       mutate(ref.strain=ref.strain, test.strain=test.strain) %>%
-       mutate(logRR = log(rr_ff(pos_reference, pos_test, neg_reference, neg_test)),
-           logSE = se_logrr_ff(pos_reference, pos_test, neg_reference, neg_test))
+      mutate(logRR = if_else(pos_reference==0 & pos_test==0,
+                             as.numeric(NA),
+                             log(rr_ff(pos_reference, pos_test, neg_reference, neg_test))),
+             logSE = if_else(pos_reference==0 & pos_test==0,
+                             as.numeric(NA),
+                             se_logrr_ff(pos_reference, pos_test, neg_reference, neg_test)))
     
     df14.alpha <- rbind(df14.alpha, df14.alpha.rows)
     
@@ -325,15 +410,6 @@ metagen_fun <- function(refstr, teststr) {
     print("     No such strain pair found - better skip this one!")
     return()
   }
-
-  #dplyr::rename(paste0(ref.str, "_pos") = "pos_reference")#, #+ or - symbols in names do not work
-                  # paste0(teststr, "_pos") = "pos_test",
-                  # paste0(refstr, "_neg") = "neg_reference",
-                  # paste0(teststr, "_neg") = "neg_test")
-  
-  # Can we now use "dat" file that has the logRR and generate RR and SEs that we can feed into to metagen package. 
-  # to="all" says add 1/2 to all the 2X2 cells (when events =0 for a set)
-  
   
   ### metagen 
   mymeta <-metagen(logRR, logSE,
@@ -347,17 +423,19 @@ metagen_fun <- function(refstr, teststr) {
 # manual process in STATA - replaced 0 with the inverse of the opposite arm. can try this code. Making the continuity correction smaller helps but not always. Pooled absolute risks and pooled relative risks that were illogical, absolute risk was high for one group but relative risk was lower for that group.   If there are 0 events for delta and alpha, what to do with that estimate. 
   # summary (mymeta)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20220804_domvar_mixed_70/VariantStudy_MetaForestPlot_", refstr, "_", teststr, ".pdf"), width=10, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/20220816_domvar_mixed_70/VariantStudy_MetaForestPlot_ref_", refstr, "_test_", teststr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
-         leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"), paste0(refstr, "-")),
+         leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
+                    paste0(refstr, "-")),
+         lab.NA.effect = "NA",
          colgap.forest.left = "1mm",
          fontsize = 10, 
          fs.hetstat = 9, 
          header=TRUE, 
          overall=FALSE, 
          col.diamond = "#33CC66", 
-         col.study= "#333333" )
+         col.study= "#333333")
   # grid.text("Variant study by outcome", .5, .89, gp=gpar(cex=1)) # only works in R version 3.
 
   dev.off()
