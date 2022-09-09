@@ -162,26 +162,80 @@ df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
 df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>% 
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city, country, site_name, mat_age, date_onset_or_test, covid_sympdate, covid_pos,
-                edd_date, fetuses, parity, gravidity, weight_pre, matdeath,
-                matdeath_date, covid_hosp, covid_icu, preeclampsia, eclampsia, pre_or_eclampsia,
-                place_abrupt, preterm_labor, haemorrhage, hpd_any, c_section1, 
-                stillbirth_site1, stillbirth_281, nicu1, lowbirthweight1, verylowbirthweight1, 
-                sab_site1, c_intrap1, verypreterm1) 
-# csection1 = All C-Sections (among all stillbirths + livebirths)
+                edd_date, fetuses, parity, gravidity, weight_pre, # maternal outcomes: 
+                matdeath,
+                matdeath_date, covid_hosp1, ICUadmit1, covid_icu, critcare1, ventilation1, pneumonia1,
+                prdeath1, place_abrupt1, preterm_labor, haemorrhage1, embolicdz1,
+                preeclampsia1, eclampsia1, pre_or_eclampsia1, hpd_any1, hpd_postcovid1, c_section1, c_intrap1,
+                # fetal outcomes: 
+                stillbirth_site1, stillbirth_281, lowbirthweight1, verylowbirthweight1, 
+                sab_site1, tab_site1, preterm1, verypreterm1, neonatal_death1, earlyneo_death1, 
+                perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1) 
+
+
+# use date_onset_or_test --> If tested for covid, it is date of first positive test. 
+
+### Maternal outcomes: 
+# covid_hosp1 = COVID-19 related hospitalization events
+# ICUadmit1 = ICU admission events
+# critcare1 = critical care events
+# ventilation1 = Ventilation events
+# pneumonia1 = Pneumonia events
+# prdeath1 = Pregnancy-related death events
+# place_abrupt1 = Maternal morbidity events - place_abrupt
+# preterm_labor1 = Maternal morbidity events - preterm_labor
+# haemorrhage1 = Maternal morbdity events - haemorrhage
+# embolicdz1 = Maternal morbidity events - embolicdz
+# preeclampsia1 = Maternal morbdity events - preeclampsia
+# eclampsia1 = Maternal morbdity events - eclampsia
+# pre_or_eclampsia1 = Maternal morbidity events - preeclampsia/eclampsia
+# hpd_any1 = Maternal morbdity events - hpd_any
+# hpd_postcovid1 = Maternal morbdity events - hpd_postcovid
+# c_section1 = All C-Sections (among all stillbirths + livebirths)
+# c_intrap1 = Intrapartum C-section Events (among all stillbirths + livebirths)
+
+### Fetal outcomes: 
+
 # stillbirth_site1 = Pregnancy endpoint is stillbirth (as defined by site)
 # stillbirth_281 = Stillbirths at/after 28 weeks events
-# use date_onset_or_test --> If tested for covid, it is date of first positive test.  
-# nicu1
+# sab_site1 = Pregnancy endpoint is SAB (defined by site)
+# tab_site1 = Pregnancy endpoint is TAB (defined by site)
 # lowbirthweight1 = Low birthweight events (<2500 grams)
 # verylowbirthweight1 = Very low birthweight events (<1500 grams)
-# sab_site1 = Pregnancy endpoint is SAB (defined by site)
-# c_intrap1 = Intrapartum C-section Events (among all stillbirths + livebirths)
 # verypreterm1 = Moderate/very preterm events (<34 weeks GA at birth)
+# preterm1 = Preterm events (<37 weeks GA at birth)
+# neonatal_death1 = Neonatal death events (<28 days)
+# earlyneo_death1 = Early neonatal death events (<7 days)
+# perinatal_death281 = Perinatal death events (deaths <7 days & SB at 28w)
+# perinatal_deathsite1 = Perinatal death events (deaths <7 days & SB defined by site)
+# nicu1 = NICU admission at birth - events
+# sga1 = SGA events (<10th percentile)
+# extremesga1 = Extreme sga events (<3rd percentile)
+```
+
+Creating maternal and fetal composite outcomes:
+```{r}
+df10 <- df10 %>% 
+  dplyr::mutate(mat_composite_outcome = if_else((covid_hosp1==1 | ICUadmit1==1 | covid_icu==1 | critcare1==1| 
+                                          ventilation1==1 | pneumonia1==1 | prdeath1==1 | place_abrupt1==1 |
+                                          preterm_labor==1 | haemorrhage1==1 | embolicdz1==1 | 
+                                          preeclampsia1==1 | eclampsia1==1 | pre_or_eclampsia1==1 | 
+                                          hpd_any1==1 | hpd_postcovid1==1 | c_section1==1 | c_intrap1==1), 1, 0))
 
 
+str(df10$covid_hosp1)
+df10 <- df10 %>% 
+  dplyr::mutate(fetal_composite_outcome = if_else((stillbirth_site1==1 | stillbirth_281==1 | lowbirthweight1==1 |
+                                                   verylowbirthweight1==1 |sab_site1==1 | tab_site1==1 | preterm1==1 |
+                                                   verypreterm1==1 | neonatal_death1==1 |earlyneo_death1==1  | 
+                                                   perinatal_death281==1 | perinatal_deathsite1==1 | nicu1==1 | 
+                                                   sga1==1 | extremesga1==1), 1, 0))
 
-check.df <- df9 %>% dplyr::select(site_id, mat_age, preterm_labor)
+table(df10$fetal_composite_outcome)
+```
 
+Date format:
+```{r}
 df10 <- df10 %>% dplyr::mutate(date_ym = format(date_onset_or_test,format="%y-%m"))
 unique(df10$country)
 unique(compiled_ipd_data$site_id)
@@ -294,10 +348,14 @@ df11 <- left_join(df10, df8_wide, by=c('country', 'date_ym'))
 First pivot longer. (have a single column for the outcomes)
 ```{r}
 
-df12 <- df11 %>% pivot_longer(cols = c(matdeath, covid_hosp, covid_icu, preeclampsia, eclampsia, pre_or_eclampsia,
-                place_abrupt, preterm_labor, haemorrhage, hpd_any, c_section1, 
-                stillbirth_site1, stillbirth_281, nicu1, lowbirthweight1, verylowbirthweight1, 
-                sab_site1, c_intrap1, verypreterm1),
+df12 <- df11 %>% pivot_longer(cols = c(matdeath,covid_hosp1, ICUadmit1, covid_icu, critcare1, ventilation1, pneumonia1,
+                prdeath1, place_abrupt1, preterm1, preterm_labor, haemorrhage1, embolicdz1,
+                preeclampsia1, eclampsia1, pre_or_eclampsia1, hpd_any1, hpd_postcovid1, c_section1, c_intrap1,
+                mat_composite_outcome,
+                # fetal outcomes: 
+                stillbirth_site1, stillbirth_281, lowbirthweight1, verylowbirthweight1, 
+                sab_site1, tab_site1, verypreterm1, neonatal_death1, earlyneo_death1, 
+                perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1, fetal_composite_outcome),
                               names_to = "outcome", values_to = "events")
 # There are lots of "88" in the outcomes --> converting to NA
 df12 <- df12 %>% mutate(events = if_else(events==88, as.numeric(NA), events))
@@ -444,7 +502,7 @@ metagen_fun <- function(refstr, teststr) {
 # manual process in STATA - replaced 0 with the inverse of the opposite arm. can try this code. Making the continuity correction smaller helps but not always. Pooled absolute risks and pooled relative risks that were illogical, absolute risk was high for one group but relative risk was lower for that group.   If there are 0 events for delta and alpha, what to do with that estimate. 
   # summary (mymeta)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20220810_domvar_mixed_70/VariantStudy_MetaForestPlot_", refstr, "_", teststr, ".pdf"), width=10, height=22) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/20220816_domvar_mixed_70/VariantStudy_MetaForestPlot_ref_", refstr, "_test_", teststr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
          leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
@@ -474,10 +532,6 @@ for (ref.strain in strain_vec) {
   }
 }
 ```
-
-
-
-
 
 
 ########################################################
