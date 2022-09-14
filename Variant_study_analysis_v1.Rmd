@@ -18,6 +18,10 @@ library(xlsx)
 library(patchwork)
 library(haven)
 library(meta)
+library(tibble)
+library(superheat)
+library(stringr)
+#library(reshape)
 # library(metafor)
 # library(esc)
 ```
@@ -45,6 +49,8 @@ compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated
 agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
 country_id <- read.csv('data/country_id_ipd.csv') # FF created this file
 # country_id_agd <- read.csv('data/country_id_agd.csv')
+sort(colnames(compiled_ipd_data_new))
+check.df <- compiled_ipd_data_new %>% select(gest_age_pcr, gestage_covid_month1)
 ```
 
 ```{r}
@@ -63,6 +69,7 @@ compiled_ipd_data_old_2$neo_death_cause2_77 <- as.numeric(compiled_ipd_data_old_
 compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
 table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
 compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
+
 ```
 
 Drop twin and triplet rows that are 2nd/3rd.  Keep the woman though
@@ -168,11 +175,11 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>%
                 prdeath1, place_abrupt1, preterm_labor, haemorrhage1, embolicdz1,
                 preeclampsia1, eclampsia1, pre_or_eclampsia1, hpd_any1, hpd_postcovid1, c_section1, c_intrap1,
                 # fetal outcomes: 
-                stillbirth_site1, stillbirth_281, lowbirthweight1, verylowbirthweight1, 
-                sab_site1, tab_site1, preterm1, verypreterm1, neonatal_death1, earlyneo_death1, 
+                stillbirth_site1, stillbirth_281, perinatal_death281, lowbirthweight1, 
+                verylowbirthweight1, sab_site1, tab_site1, preterm1, verypreterm1, neonatal_death1, earlyneo_death1, 
                 perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1) 
 
-
+sort(colnames(df9))
 # use date_onset_or_test --> If tested for covid, it is date of first positive test. 
 
 ### Maternal outcomes: 
@@ -533,6 +540,95 @@ for (ref.strain in strain_vec) {
 }
 ```
 
+Heatmap
+```{r}
+heatmap_df <- read_excel('data/COVID-19_Alpha_ref_variant_outcomes_Pooled_est.xlsx', na="NA")#,
+                         #col_types = c("text", "numeric", "numeric", "numeric", "numeric", 
+                          #             "numeric", "numeric", "numeric", "numeric"))
+# heatmap_df2 <- heatmap_df %>% dplyr::select(Outcome, Prealpha, Delta, Epsilon, Mixed)
+
+# heatmap_long <- heatmap_df2 %>% pivot_longer(cols = c("Prealpha", "Delta", "Epsilon", "Mixed"), 
+  #                                            names_to = "Strain",
+    #                                          values_to = "RR")
+outcome_vec = heatmap_df$Outcome
+
+heatmap_long <- heatmap_df %>% 
+  pivot_longer(-Outcome, 
+               names_to = c("Strain", ".value"), 
+               names_sep = "_")
+
+
+heatmap_long2 <- heatmap_long %>% 
+ # dplyr::mutate(RR = str_split(RRCI, pattern=fixed(" (")))
+  #dplyr::mutate(RRCI_mod = gsub(pattern="[;()]"), replacement="", x=RRCI) %>%
+  tidyr::separate(col=RRCI, sep=" ", into=c("RR", "LCI", "UCI"))
+
+heatmap_long2$LCI <- gsub("[(]", "", heatmap_long2$LCI)
+heatmap_long2$LCI <- gsub(";", "", heatmap_long2$LCI)
+heatmap_long2$UCI <- gsub("[)]", "", heatmap_long2$UCI)
+
+heatmap_long2 <- heatmap_long2 %>% 
+  mutate(RR_CI_lab = paste0(RR, " (", LCI, ", ", UCI, "), n=", N)) %>%
+  mutate(RR = as.numeric(RR), N=as.numeric(N)) %>%
+  mutate(Strain = factor(Strain, levels = c("Prealpha", "Delta", "Epsilon", "Omicron", "Mixed"), ordered = TRUE)) %>%
+  mutate(Outcome=factor(Outcome, levels = outcome_vec), ordered=TRUE)
+
+heatmap_long2 <- heatmap_long2 %>% dplyr::filter(N>1)
+
+
+heatmap_long2 %>% ggplot() +
+  aes(x = Strain, y=Outcome, fill=RR) +
+  geom_tile()+
+  geom_text(aes(label=RR_CI_lab), size=2) + 
+  scale_fill_gradient(low = "#FFFF69",
+                    high = "#FD530A",
+                    guide = "colorbar")
+
+
+```
+
+Heatmap: conditional formatting
+```{r}
+heatmap_long3 <- heatmap_long2 %>% 
+  mutate(RR_sig = case_when((RR>1 & LCI>1 & UCI>1) ~ "RR>1,CIsig",
+                   (RR<1 & LCI <1 & UCI<1) ~ "RR<1,CIsig",
+                   ((RR>1|RR==1) & (LCI<1 | UCI<1)) ~ "RR>1,CInotsig",
+                   ((RR<1|RR==1) & (LCI<1 | UCI<1)) ~ "RR<1,CInotsig"))
+
+heatmap_long3$RR_sig <- factor(heatmap_long3$RR_sig, 
+                               levels=c("RR>1,CIsig", "RR<1,CIsig", "RR>1,CInotsig", "RR<1,CInotsig"), 
+                               ordered = TRUE)
+```
+
+Tile map/Heatmap with 4 categories. 
+```{r}
+library(RColorBrewer)
+myColorScale <- brewer.pal(4,"Set2")
+names(myColorScale) <- levels(heatmap_long3$RR_sig)
+levels(heatmap_long3$RR_sig)
+
+
+colScale <- c("RR>1,CIsig" = "brown2", 
+              "RR<1,CIsig" = "aquamarine4", 
+              "RR>1,CInotsig"= "lightpink", 
+              "RR<1,CInotsig" = "aquamarine") 
+
+heatmap_long3 %>% ggplot() +
+  aes(x = Strain, y=Outcome, fill=RR_sig) +
+  geom_tile()+
+  scale_fill_manual(values = colScale) +
+  geom_text(aes(label=RR_CI_lab), size=2)
+
+
+# scale_fill_gradientn(colors = "RR_sig")
+                       
+  # scale_colour_manual(name="RR_sig", values=levels("RR_sig"))
+
+
+#  scale_fill_gradient(low = "#FFFF69",
+ #                   high = "#FD530A",
+  #                  guide = "colorbar")
+```
 
 ########################################################
 # DON'T NEED THIS BELOW CODE FOR NOW WITH THE IPD DATA # 
