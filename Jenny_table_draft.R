@@ -12,8 +12,9 @@ library(readr)
 library(lubridate)
 
 
-setwd("/Users/yeonheekim/Desktop")
-data<- read_dta("Compiled_IPD_Data_211201.dta")
+# setwd("/Users/yeonheekim/Desktop")
+data <- read_dta('data/Compiled_IPD_Data_211201.dta')
+# data<- read_dta("Compiled_IPD_Data_211201.dta")
 
 data<-data%>% 
   mutate(country =
@@ -29,8 +30,8 @@ data<-data%>%
                      site_id == 19 ~ "Rome, Italy",
                      site_id == 20 ~ "Blank", 
                      site_id == 21 ~ "Turkey", 
-                     site_id == 2201 ~ "Barcelona, Spain", 
-                     site_id == 2202 ~ "Barcelona, Spain",
+                     site_id == 2201 ~ "Barcelona (Cohort I), Spain", 
+                     site_id == 2202 ~ "Barcelona (Cohort II), Spain",
                      site_id == 25 ~ "New Jersey, USA",
                      site_id == 28 ~ "South Africa", 
                      site_id == 29 ~ "Illinois, USA"))
@@ -82,7 +83,7 @@ view(data_naomit%>%select(bact_inf, bact_inf1))
 ##PREECLAMPSIA---------------------------------------------------------------------------------------------------------------------------
 preeclampsia <- data_naomit%>% select(strain, pre_or_eclampsia, pre_or_eclampsiam, pre_or_eclampsia1, pre_or_eclampsia0, preeclampsia, 
                                      preeclampsia0, preeclampsia1, preeclampsiam)
-preeclampsia[preclampsia == 88] <- 0
+preeclampsia[preeclampsia == 88] <- 0
 
 pre_or_eclampsia<- data_naomit%>%select(strain, country, pre_or_eclampsia)
 pre_or_eclampsia_t<- data.frame(pre_or_eclampsia %>% group_by(strain)%>% summarise(counting1=(sum(pre_or_eclampsia==1))))
