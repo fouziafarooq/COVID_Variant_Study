@@ -1,0 +1,84 @@
+---
+title: "Extra code"
+author: "Fouzia Farooq"
+date: "7/5/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Took these two chucks out of the variant_study_analysis_v1.Rmd on 07/05/2022. This was below "Joining the case-comparison and RFA dates" chunck.
+
+Creates the older map: 
+```{r}
+fill_colors <- factor(1,2)
+palette1 <- c("#999999", "000000")
+variants_cases %>% ggplot() +
+  geom_bar(stat="identity",
+           mapping = aes(x = date_ym, fill = variant, y=nor)) +
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "gray70", "Beta" = "darkseagreen1",
+                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
+                               "Iota" = "cyan3", "Lambda" = "lightsteelblue1", "Mu" = "peachpuff1", "Omicron" = "plum2",
+                               "Theta" = "tomato", "present" = rgb(0,0,0, alpha=0.5), "absent" = rgb(0,0,0,alpha = 0))) + 
+  theme_light() + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
+        axis.text.y = element_text(size = 6)) + 
+  geom_rect(mapping=aes(xmin=pandemic_month-0.5,
+                        xmax=pandemic_month+0.5,
+                        ymin=0.48,
+                        ymax=0.52,
+                        fill = ifelse(Events>0, "present", "absent"))) +
+  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
+   
+# ggsave(filename = 'data_out/covid_variant_country_20220524.pdf', width = 6, height = 25, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
+  
+```
+
+Map with overlayed CC study dates and RFA study dates: OLD #2
+```{r}
+
+studies_df <- cases %>% dplyr::filter(Events>=1) %>% 
+  group_by(country, City, study_type) %>%
+  summarize(min_month = min(pandemic_month),
+            max_month = max(pandemic_month)) %>%
+  group_by(country) %>%
+  mutate(country_study_number = 1:n(),
+         country_total_studies = n())
+# see https://stackoverflow.com/questions/36893957/dplyr-generate-row-number-row-position-in-group-by
+
+gap_betw_studies <- 0.15
+
+ggplot() +
+  geom_bar(data = df8, stat="identity",
+           mapping = aes(x = date_ym, fill = variant, y=nor)) +
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
+                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
+                               "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
+                               "Theta" = "tomato")) + 
+  theme_light() + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
+        axis.text.y = element_text(size = 6)) + 
+  xlab("Year-Month") + 
+  ylab("Relative Frequency") +
+  geom_rect(data = studies_df,
+            mapping=aes(xmin=min_month-0.5,
+                        xmax=max_month+0.5,
+                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) - 0.005,
+                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.005)) +
+  geom_text(data = studies_df,
+            mapping=aes(x = 0.5*(min_month + max_month),
+                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
+                        label = ifelse(is.na(City),
+                                       study_type,
+                                       paste(City, study_type))),
+            size = 1.5) +
+  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
+
+# ggsave(filename = 'data_out/covid_variant_country_20220525.pdf', width = 6, height = 30, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
+
+# write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
+```
