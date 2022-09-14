@@ -63,6 +63,8 @@ compiled_ipd_data_old_2$neo_death_cause_77 <- as.numeric(compiled_ipd_data_old_2
 compiled_ipd_data_old_2$neo_death_cause2_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause2_77)
 compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
 table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
+
+# Joining compiled IPD files
 compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
 ```
 
@@ -454,3 +456,92 @@ for (ref.strain in strain_vec) {
 }
 ```
 
+Heatmap
+```{r}
+heatmap_df <- read_excel('data/COVID-19_Alpha_ref_variant_outcomes_Pooled_est.xlsx', na="NA")#,
+                         #col_types = c("text", "numeric", "numeric", "numeric", "numeric", 
+                          #             "numeric", "numeric", "numeric", "numeric"))
+# heatmap_df2 <- heatmap_df %>% dplyr::select(Outcome, Prealpha, Delta, Epsilon, Mixed)
+
+# heatmap_long <- heatmap_df2 %>% pivot_longer(cols = c("Prealpha", "Delta", "Epsilon", "Mixed"), 
+  #                                            names_to = "Strain",
+    #                                          values_to = "RR")
+outcome_vec = heatmap_df$Outcome
+
+heatmap_long <- heatmap_df %>% 
+  pivot_longer(-Outcome, 
+               names_to = c("Strain", ".value"), 
+               names_sep = "_")
+
+
+heatmap_long2 <- heatmap_long %>% 
+ # dplyr::mutate(RR = str_split(RRCI, pattern=fixed(" (")))
+  #dplyr::mutate(RRCI_mod = gsub(pattern="[;()]"), replacement="", x=RRCI) %>%
+  tidyr::separate(col=RRCI, sep=" ", into=c("RR", "LCI", "UCI"))
+
+heatmap_long2$LCI <- gsub("[(]", "", heatmap_long2$LCI)
+heatmap_long2$LCI <- gsub(";", "", heatmap_long2$LCI)
+heatmap_long2$UCI <- gsub("[)]", "", heatmap_long2$UCI)
+
+heatmap_long2 <- heatmap_long2 %>% 
+  mutate(RR_CI_lab = paste0(RR, " (", LCI, ", ", UCI, "), n=", N)) %>%
+  mutate(RR = as.numeric(RR), N=as.numeric(N)) %>%
+  mutate(Strain = factor(Strain, levels = c("Prealpha", "Delta", "Epsilon", "Omicron", "Mixed"), ordered = TRUE)) %>%
+  mutate(Outcome=factor(Outcome, levels = outcome_vec), ordered=TRUE)
+
+heatmap_long2 <- heatmap_long2 %>% dplyr::filter(N>1)
+
+
+heatmap_long2 %>% ggplot() +
+  aes(x = Strain, y=Outcome, fill=RR) +
+  geom_tile()+
+  geom_text(aes(label=RR_CI_lab), size=2) + 
+  scale_fill_gradient(low = "#FFFF69",
+                    high = "#FD530A",
+                    guide = "colorbar")
+
+
+```
+
+Heatmap: conditional formatting
+```{r}
+heatmap_long3 <- heatmap_long2 %>% 
+  mutate(RR_sig = case_when((RR>1 & LCI>1 & UCI>1) ~ "RR>1,CIsig",
+                   (RR<1 & LCI <1 & UCI<1) ~ "RR<1,CIsig",
+                   ((RR>1|RR==1) & (LCI<1 | UCI<1)) ~ "RR>1,CInotsig",
+                   ((RR<1|RR==1) & (LCI<1 | UCI<1)) ~ "RR<1,CInotsig"))
+
+heatmap_long3$RR_sig <- factor(heatmap_long3$RR_sig, 
+                               levels=c("RR>1,CIsig", "RR<1,CIsig", "RR>1,CInotsig", "RR<1,CInotsig"), 
+                               ordered = TRUE)
+```
+
+Tile map/Heatmap with 4 categories. 
+```{r}
+library(RColorBrewer)
+myColorScale <- brewer.pal(4,"Set2")
+names(myColorScale) <- levels(heatmap_long3$RR_sig)
+levels(heatmap_long3$RR_sig)
+
+
+colScale <- c("RR>1,CIsig" = "brown2", 
+              "RR<1,CIsig" = "aquamarine4", 
+              "RR>1,CInotsig"= "lightpink", 
+              "RR<1,CInotsig" = "aquamarine") 
+
+heatmap_long3 %>% ggplot() +
+  aes(x = Strain, y=Outcome, fill=RR_sig) +
+  geom_tile()+
+  scale_fill_manual(values = colScale) +
+  geom_text(aes(label=RR_CI_lab), size=2)
+
+
+# scale_fill_gradientn(colors = "RR_sig")
+                       
+  # scale_colour_manual(name="RR_sig", values=levels("RR_sig"))
+
+
+#  scale_fill_gradient(low = "#FFFF69",
+ #                   high = "#FD530A",
+  #                  guide = "colorbar")
+```
