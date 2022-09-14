@@ -1,0 +1,227 @@
+---
+title: "COVID-19_VariantStudy_v1"
+author: "Fouzia Farooq"
+date: "5/11/2022"
+output: pdf_document
+---
+
+```{r}
+library(dplyr)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(readxl)
+```
+
+NOTES: json file was converted to csv in python (deepnote.com), then copied the code into BBtext and ran at the command line. 
+Then ran the following code. 
+Dates are fractions of a year after "year." We a creating a seperate dataframe into a csv that we will bring in R and use lubridate to read the date properly. 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- ```{r} -->
+<!-- usa <- read_delim('data/nextstrain_ncov_open_global_all-time_metadata.tsv', col_types = cols(date = col_date("%m/%d/%y"), -->
+<!--                                                                                              division = "f")) -->
+<!-- covid.data <- read_delim('data/nextstrain_ncov_gisaid_global_all-time_metadata.tsv', col_types = cols(date = col_date("%Y-%m-%d"))) -->
+<!-- ``` -->
+
+
+<!-- GISAID:  -->
+<!-- ```{r} -->
+<!-- frequency <- read.csv('data/Nextstrain_frequenices.csv') -->
+<!-- gisaid <- read.csv('data/metadata_gisaid_20220516.csv') -->
+<!-- pivots <- read.csv('data/Nextstrain_pivotdates.csv', header = FALSE) -->
+
+<!-- gisaid.df <- gisaid %>% dplyr::select(strain, date, country, clade_membership) -->
+
+<!-- gisaid.df2 <- left_join(frequency, gisaid.df) -->
+
+<!-- clade.freq.week <- gisaid.df2 %>% group_by(country, week, clade_membership) %>% summarize(freq = sum(frequency)) -->
+
+<!-- pivot_df <- data.frame(week = 0:(length(pivots$V1)-1), pivot = pivots$V1) -->
+<!-- pivot_df <- pivot_df %>% dplyr::mutate(date = as.Date(date_decimal(pivot))) -->
+
+<!-- gisaid_clade <- left_join(clade.freq.week, pivot_df) -->
+<!-- ``` -->
+
+<!-- Study cases data:  -->
+<!-- ```{r} -->
+<!--   cases <- study_cases %>% dplyr::mutate(year = as.integer(substring(Strata, 10, 13)), -->
+<!--                       month = as.integer(substring(Strata, 14,15))) -->
+<!--   cases <- cases %>% dplyr::mutate(pandemic_month = month + (year-2020)*12) -->
+<!-- ``` -->
+
+OPENSOURCE
+```{r}
+frequency <- read.csv('data/Nextstrain_opensource_frequenices.csv')
+covid_opensource <- read.csv('data/nextstrain_ncov_open_global_all-time_metadata_20220517.csv')
+pivots <- read.csv('data/Nextstrain_opensource_pivotdates.csv', header = FALSE)
+# study_cases <- read.csv('data/casesbymonth_220329_ff.csv', header = TRUE, na.strings = "") # old file
+study_cases <- read_xlsx('data/variant_study_case_control_COVID_data_ff_20220524.xlsx') # case-comparison country study dates
+```
+
+```{r}
+opensource.df <- covid_opensource %>% dplyr::select(strain, date, country, clade_membership)
+
+opensource.df2 <- left_join(frequency, covid_opensource)
+
+
+pivot_df <- data.frame(week = 0:(length(pivots$V1)-1), pivot = pivots$V1)
+pivot_df <- pivot_df %>% dplyr::mutate(date = as.Date(date_decimal(pivot))) #converting the dates in decimal in nextstrain dataset to readable dates.
+
+df <- left_join(opensource.df2, pivot_df, by="week")
+```
+
+
+```{r}
+df2 <- df  %>% dplyr::mutate(variant = case_when(clade_membership %in% 
+                                                   c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E (EU1)") ~ "Pre_alpha",
+                                                 clade_membership %in% 
+                                                   c("20I (Alpha, V1)") ~ "Alpha",
+                                                 clade_membership %in%
+                                                   c("20H (Beta, V2)") ~ "Beta", 
+                                                 clade_membership %in%
+                                                   c("21B (Kappa)") ~ "Kappa", 
+                                                 clade_membership %in%
+                                                   c("21D (Eta)") ~ "Eta",
+                                                 clade_membership %in% 
+                                                   c("21E (Theta)") ~ "Theta",
+                                                 clade_membership %in% 
+                                                   c("20J (Gamma, V3)") ~ "Gamma",
+                                                 clade_membership %in% 
+                                                   c("21A (Delta)", "21I (Delta)", "21J (Delta)") ~ "Delta",
+                                                 clade_membership %in% 
+                                                   c("21C (Epsilon)") ~ "Epsilon",
+                                                 clade_membership %in% 
+                                                   c("21F (Iota)") ~ "Iota",
+                                                 clade_membership %in% 
+                                                   c("21G (Lambda)") ~ "Lambda",
+                                                 clade_membership %in% 
+                                                   c("21H (Mu)") ~ "Mu",
+                                                 clade_membership %in% 
+                                                   c("21K (Omicron)", "21L (Omicron)", "21M (Omicron)", "22C (Omicron)") ~ "Omicron"))
+
+table(df2$clade_membership, df2$variant, useNA = "always") # These all have a general variant name now. 
+
+```
+
+NORMALIZE FREQ BY COUNTRY
+```{r}
+df3 <- df2 %>% group_by(country, week, variant) %>% summarize(freq = sum(frequency))
+df4 <- df3 %>% group_by(country, week) %>% 
+  dplyr::mutate(nor = (freq/sum(freq))) %>%
+  dplyr::filter(country %in% c("Kenya", "Uganda", "Spain", "Hong Kong", "Italy",
+                               "South Africa", "USA", "Sweden", "Turkey", "China", "United Kingdom", "Chile", "Canada", 
+                                "Mexico", "Colombia", "USA", "India", "Africa", "Kenya")) # List does not include DRC or Burkina Faso b/c opensource data is not available.  thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
+
+```
+
+
+<!-- ```{r} -->
+<!-- # this is global data - it matches the nextstrain viz.  -->
+<!-- clade.freq.week <- opensource.df2 %>% group_by(week, clade_membership) %>% summarize(freq = sum(frequency)) -->
+<!-- opensource.df3 <- left_join(clade.freq.week, pivot_df, by="week") -->
+<!-- ``` -->
+
+
+
+
+```{r}
+df5 <- left_join(df4, pivot_df, by="week")
+
+df6 <- df5 %>% dplyr::mutate(date_ym = format(date, format= "%y-%m"))
+df7 <- df6 %>% group_by(country, date_ym) %>% dplyr::mutate(max_date = max(date))
+df8 <- df7 %>% dplyr::filter(date == max_date)
+```
+
+<!-- Joining on the study cases data -->
+<!-- ```{r} -->
+<!-- cases2 <- cases %>% dplyr::select(Events, country=Country, year, month, pandemic_month) %>%  -->
+<!--   dplyr::mutate(date_ym = paste0(as.character(year-2000), "-", sprintf("%02d", month))) -->
+
+<!-- variants_cases <- left_join(df8, cases2, by=c("country", "date_ym")) -->
+<!-- ``` -->
+
+Joining the case-comparison dates:
+```{r}
+study_cases$date <- mdy(study_cases$date)
+cases <- study_cases %>% dplyr::mutate(date_ym = format(date,format="%y-%m"))
+class(study_cases$date)
+
+variants_cases <- left_join(df8, cases, by=c("country", "date_ym"))
+```
+
+Creates the older map: 
+```{r}
+fill_colors <- factor(1,2)
+palette1 <- c("#999999", "000000")
+variants_cases %>% ggplot() +
+  geom_bar(stat="identity",
+           mapping = aes(x = date_ym, fill = variant, y=nor)) +
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "gray70", "Beta" = "darkseagreen1",
+                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
+                               "Iota" = "cyan3", "Lambda" = "lightsteelblue1", "Mu" = "peachpuff1", "Omicron" = "plum2",
+                               "Theta" = "tomato", "present" = rgb(0,0,0, alpha=0.5), "absent" = rgb(0,0,0,alpha = 0))) + 
+  theme_light() + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
+        axis.text.y = element_text(size = 6)) + 
+  geom_rect(mapping=aes(xmin=pandemic_month-0.5,
+                        xmax=pandemic_month+0.5,
+                        ymin=0.48,
+                        ymax=0.52,
+                        fill = ifelse(Events>0, "present", "absent"))) +
+  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
+   
+ggsave(filename = 'data_out/covid_variant_country_20220524.pdf', width = 6, height = 25, units = "in")
+  
+```
+
+New map with overlayed CC study dates and RFA study dates: 
+```{r}
+
+studies_df <- cases %>% dplyr::filter(Events>=1) %>% 
+  group_by(country, City, study_type) %>%
+  summarize(min_month = min(pandemic_month),
+            max_month = max(pandemic_month)) %>%
+  group_by(country) %>%
+  mutate(country_study_number = 1:n(),
+         country_total_studies = n())
+# see https://stackoverflow.com/questions/36893957/dplyr-generate-row-number-row-position-in-group-by
+
+gap_betw_studies <- 0.15
+
+ggplot() +
+  geom_bar(data = df8, stat="identity",
+           mapping = aes(x = date_ym, fill = variant, y=nor)) +
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
+                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
+                               "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
+                               "Theta" = "tomato")) + 
+  theme_light() + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
+        axis.text.y = element_text(size = 6)) + 
+  xlab("Year-Month") + 
+  ylab("Relative Frequency") +
+  geom_rect(data = studies_df,
+            mapping=aes(xmin=min_month-0.5,
+                        xmax=max_month+0.5,
+                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) - 0.005,
+                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.005)) +
+  geom_text(data = studies_df,
+            mapping=aes(x = 0.5*(min_month + max_month),
+                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
+                        label = ifelse(is.na(City),
+                                       study_type,
+                                       paste(City, study_type))),
+            size = 1.5) +
+  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
+
+ggsave(filename = 'data_out/covid_variant_country_20220525.pdf', width = 6, height = 30, units = "in")
+```
+
+
+
