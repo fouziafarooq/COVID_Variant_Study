@@ -47,10 +47,12 @@ compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
-country_id <- read.csv('data/country_id_ipd.csv') # FF created this file
+# country_id <- read.csv('data/country_id_ipd.csv') # FF created this file. This is the original file where I have study_site 38 as WHO Pakistan also. 
+country_id <- read.csv('data/country_id_ipd_2.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
 # country_id_agd <- read.csv('data/country_id_agd.csv')
-sort(colnames(compiled_ipd_data_new))
 check.df <- compiled_ipd_data_new %>% select(gest_age_pcr, gestage_covid_month1)
+temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==11)
+temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==21) %>% dplyr::select(date_onset_or_test, covid_sympdate, covid_pos)
 ```
 
 ```{r}
@@ -128,10 +130,14 @@ NORMALIZE FREQ BY COUNTRY
 df3 <- df2 %>% group_by(country, week, variant) %>% summarize(freq = sum(frequency))
 df4 <- df3 %>% group_by(country, week) %>% 
   dplyr::mutate(nor = (freq/sum(freq))) %>%
-  dplyr::filter(country %in% c("Kenya", "Uganda", "Spain", "Hong Kong", "Italy",
-                               "South Africa", "USA", "Sweden", "Turkey", "China", "United Kingdom", 
-                               "Chile", "Canada","Mexico", "Colombia", "USA", "India", "Africa", 
-                               "Kenya", "Pakistan", "Bangladesh")) # List does not include DRC or Burkina Faso b/c opensource data is not available thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
+  dplyr::filter(country %in% c("Kenya",  "Spain", "Hong Kong", "Italy",
+                               "South Africa", "USA",  "China","Chile", "Mexico", "Colombia", 
+                               "USA", "India", "Kenya", "Pakistan")) # List does not include DRC or Burkina Faso b/c opensource data is not available thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
+
+# Other countries: "Sweden","Canada","Uganda", United Kingdom, "Africa", "Turkey" 
+###########################################################################
+###***KEEP IN MIND: TURKEY DOESN'T HAVE COVID TEST OR SYMPTOM DATES***####
+###*###########################################################################
 
 ```
 
@@ -166,7 +172,7 @@ NOTE: The reason some of the RFA studies show up on covid_variant_country_202207
 *File with IPD_vars.xlsx saved in folder on the computer*
 ```{r}
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
-df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>% 
+df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:38)) %>% # Removed #14 (Africa for now 20220919)
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city, country, site_name, mat_age, date_onset_or_test, covid_sympdate, covid_pos,
                 edd_date, fetuses, parity, gravidity, weight_pre, # maternal outcomes: 
@@ -179,7 +185,6 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:21,2201,2202,23:38)) %>%
                 verylowbirthweight1, sab_site1, tab_site1, preterm1, verypreterm1, neonatal_death1, earlyneo_death1, 
                 perinatal_death281, perinatal_deathsite1, nicu1, sga1, extremesga1) 
 
-sort(colnames(df9))
 # use date_onset_or_test --> If tested for covid, it is date of first positive test. 
 
 ### Maternal outcomes: 
@@ -272,6 +277,7 @@ df10.6 <- df10.5 %>% dplyr::select(-date_ym)
 study_cases_2 <- df10.6
 # df10.7 <- rbind(study_cases_2, df10.6)
 df10.8 <- df10.6 %>% arrange(country, study_type, date)
+temp.df <- df10.3 %>% dplyr::filter(country=="Turkey")
 ```
 
 New map with overlayed CC study dates and RFA study dates: 06/27/2022 - latest
@@ -288,7 +294,8 @@ studies_df <- df10.8 %>% dplyr::filter(Events>=1) %>%
 
 gap_betw_studies <- 0.15
 
-
+temp.df <- df8 %>% dplyr::filter(country=="Turkey")
+temp.df <- df10.6 %>% dplyr::filter(country=="Turkey")
 ggplot() +
   geom_bar(data = df8, stat="identity",
            mapping = aes(x = date_ym, fill = variant, y=nor)) +
@@ -316,9 +323,11 @@ ggplot() +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
-ggsave(filename = 'data_out/covid_variant_country_20220718.pdf', width = 6, height = 30, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
+ggsave(filename = 'data_out/covid_variant_country_20220919.pdf', width = 6, height = 30, units = "in") #This includes Colombia data (which was excluded b/c i had it spelled ColUmbia before)
+# DON'T NEED TO WRITE THIS OUT EVERYTIME.
 
 # write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
+temp.df <- df8 %>% dplyr::filter(country=="USA")
 ```
 
 
@@ -350,6 +359,7 @@ df8_wide <- df8.1 %>%
 Merge the frequency dataset (wide) on our study dataset (IPD dataset)
 ```{r}
 df11 <- left_join(df10, df8_wide, by=c('country', 'date_ym'))
+temp.df <- df11 %>% dplyr::filter(country=="USA")
 ```
 
 First pivot longer. (have a single column for the outcomes)
@@ -367,6 +377,7 @@ df12 <- df11 %>% pivot_longer(cols = c(matdeath,covid_hosp1, ICUadmit1, covid_ic
 # There are lots of "88" in the outcomes --> converting to NA
 df12 <- df12 %>% mutate(events = if_else(events==88, as.numeric(NA), events))
 df13 <- df12 %>% dplyr::filter(!is.na(events))
+temp.df <- df13 %>% dplyr::filter(site_id==17)
 ```
 
 Groupby and summarize
@@ -375,7 +386,7 @@ df14 <- df13 %>% group_by(site_name, country, dominant_variant, outcome) %>%
   summarize(events = sum(events, na.rm = FALSE),
             tot_n = n(),
             incidence = events/tot_n)
-
+temp.df <- df14 %>% dplyr::filter(country=="USA")
 #write.xlsx(as.data.frame(df14), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_country", row.names = FALSE)
 
 df14.1 <- df13 %>% group_by(dominant_variant, outcome) %>%
@@ -398,7 +409,7 @@ df14 %>%
            position="dodge") + 
   scale_x_discrete(limits = c("no_strain", 'mixed', "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
   xlab("Dominant Strain")
-
+temp.df <- df14 %>% dplyr::filter(country=="Turkey")
 df14.1 %>% 
   filter(dominant_variant!="Beta") %>% 
   ggplot() +
@@ -414,6 +425,7 @@ df14.outcomes.wide <- df14 %>%
   # dplyr::filter(!is.na(dominant_variant)) %>%
   pivot_wider(names_from = c(outcome), values_from = c(events, tot_n, incidence))
 # write.csv(df14.outcomes.wide, file='data_out/VariantStudy_incidence_20220720.csv', na = "",row.names=FALSE)
+temp.df <- df14 %>% dplyr::filter(country=="USA")
 ```
 
 
@@ -440,6 +452,7 @@ Functions for continuity correction and calc logRR and SEs.
     d <- neg2+useadj*adj
     return(sqrt((1/a)+(1/c)-(1/(a+b))-(1/(c+d))))
   }
+
 ```
 
 Setting up for metagen - for loop:
