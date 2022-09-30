@@ -1,0 +1,65 @@
+---
+title: "Data extraction for Variant Study -  COVIPreg"
+author: "Fouzia Farooq"
+date: "06/29/2022"
+output: pdf_document
+---
+
+
+```{r, include=FALSE}
+library(dplyr)
+library(tidyr)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(readxl)
+library(xlsx)
+library(patchwork)
+library(haven)
+library(meta)
+library(tibble)
+library(superheat)
+library(stringr)
+```
+
+READ IN THE DATA FILE:
+```{r}
+# Read in your specific file with your spevific path to the file here:
+df <- read_dta('data/Compiled_IPD_Data_220217.dta') 
+sort(colnames(df))
+```
+
+SUBSET DATASET:
+```{r}
+
+df <- df %>% dplyr::mutate(date_ym = format(date_onset_or_test, format= "%y-%m"))
+
+df2 <- df %>% dplyr::select(date_ym, ICUadmit1, critcare1, ventilation1, pneumonia1, prdeath1,
+                            place_abrupt1,preterm_labor1,preterm_labor1,haemorrhage1,embolicdz1,preeclampsia1,
+                            eclampsia1,pre_or_eclampsia1,hpd_any1,hpd_postcovid1,c_section1,c_intrap1,stillbirth_281,
+                            perinatal_death281,earlyneo_death1,neonatal_death1,nicu1,verylowbirthweight1,
+                            lowbirthweight1,extremesga1,sga1,verypreterm1,preterm1,
+                            # denominators:
+                            denom_allpreg, denom_endpreg, denom_endpreg37, denom_totalbirth28wk,denom_livebirth,
+                            denom_livebirth34, denom_livebirth37,
+                            # missing data on these variables:
+                            ICUadmitm, critcarem, ventilationm, pneumoniam, prdeathm,place_abruptm,preterm_laborm,
+                            preterm_laborm,haemorrhagem,embolicdzm,preeclampsiam,eclampsiam,pre_or_eclampsiam,
+                            hpd_anym,hpd_postcovidm,c_sectionm,c_intrapm,stillbirth_28m,perinatal_death28m,
+                            earlyneo_deathm,neonatal_deathm,nicum,verylowbirthweightm,lowbirthweightm,
+                            extremesgam,sgam,verypretermm,pretermm)
+
+# need to find preterm_labor with restricted denominator with erin. 
+```
+
+PIVOT OUTCOMES
+```{r}
+df2_long <- df2 %>% pivot_longer(cols =ICUadmit1:pretermm , names_to="outcome", values_to="outcome_count")
+```
+
+AGGREGATE DATA:
+```{r}
+df3 <- df2_long %>% group_by(date_ym, outcome) %>% summarize(total_n = sum(outcome_count))
+```
+
