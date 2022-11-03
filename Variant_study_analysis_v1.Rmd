@@ -361,7 +361,6 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:38)) %>% #
 
 Summary for Table 1:
 ```{r}
-sort(colnames(df10))
 mat_age_df <- df10 %>% group_by(city, country) %>%
   summarize(mean_age  = mean(mat_age), 
             sd_age = sd(mat_age),
@@ -450,7 +449,7 @@ ADD IN -01 TO THE DATE.
 ```{r}
 sf_df <- sf_df %>% dplyr::filter(!is.na(date_ym))
 sf_df <- sf_df %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
-
+sf_df <- sf_df %>% mutate(site_name = country)
 sf_fig_df <- sf_df %>% group_by(country, date) %>% 
   summarize(Events = sum(events1))
 sf_fig_df <- sf_fig_df %>% mutate(site_name = country,
@@ -459,7 +458,7 @@ sf_fig_df <- sf_fig_df %>% mutate(site_name = country,
 sf_fig_df <- sf_fig_df %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
 ```
 
-MERGE THE TWO DATASETS HERE: 
+MERGE THE TWO DATASETS HERE for line on Nextstrain variant figure:
 ```{r}
 df10.8_sf_df <- rbind(df10.8, sf_fig_df)
 ```
@@ -500,14 +499,15 @@ ggplot() +
   geom_text(data = studies_df,
             mapping=aes(x = 0.5*(min_month + max_month),
                         y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
-                        label = ifelse(is.na(site_name),
-                                       study_type,
-                                       paste(site_name, study_type))),
+                        label = site_name),
+                     #   label = ifelse(is.na(site_name),
+                      #                 study_type,
+                       #                paste(site_name, study_type))),
             size = 1.5) +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
-ggsave(filename = 'data_out/covid_variant_country_20221012.pdf', width = 6, height = 20, units = "in") #This includes Colombia data (which was excluded b/c i had it spelled ColUmbia before)
+ggsave(filename = 'plots/variants_nextstrain/covid_variant_country_20221101.pdf', width = 6, height = 20, units = "in") #This includes Colombia data (which was excluded b/c i had it spelled ColUmbia before)
 # DON'T NEED TO WRITE THIS OUT EVERYTIME.
 
 # write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
@@ -523,7 +523,7 @@ df8.1 <- df8 %>% group_by(country, date_ym) %>%
   mutate(dominant_variant = if_else(first(freq)==0,
                                     "no_strain", 
                                     # first(variant))) %>% 
-                                      ifelse(!is.na(first(nor)) & first(nor)>=0.70, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
+                                      ifelse(!is.na(first(nor)) & first(nor)>=0.50, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
                                            first(variant), 
                                            "mixed"))) %>% 
   mutate(dominant_variant_v1 = if_else(first(freq)==0,
@@ -593,11 +593,12 @@ df11m <- df11 %>% pivot_longer(cols=c(prdeath1, prdeath0, prdeathm,
 
 ```
 
-
+***#TODO: Issue is here.  There is no eventsm.  I need to create Total in the IPD data here.***
 Groupby and summarize with events and missing variables
 ```{r}
+
 # This group_by() has date_ym in it. 
-df11m.1 <- df11m %>% group_by(site_name, country, dominant_variant, outcome, date_ym) %>%
+df11m.1 <- df11m %>% group_by(site_name, country, dominant_variant, dominant_variant_v1, outcome, date_ym) %>%
   summarize(events = sum(events, na.rm = FALSE))
            # tot_n = n(),
             #incidence = events/tot_n)
@@ -613,50 +614,45 @@ Pivot wider:
 ```{r}
 df11m.2_wide <- df11m.2 %>% pivot_wider(names_from = outcome_mod, names_prefix = "events", values_from = events)
 
+df11m.2_wide<- df11m.2_wide %>% mutate(Total = events0 + events1+ eventsm) # %>%
+  # dplyr::select(-events0)
+
 # Add in a total column first:
-df11m.3_wide <- df11m.2_wide %>% mutate(Total = sum(events0, events1)) %>%
-  dplyr::select(-events0)
+
 ```
 
 ***ADD IN SWISS/FRANCE DATA HERE***
 ```{r}
-sf_df4 <- left_join(sf_df3, df8_wide, by=c('country', 'date_ym', 'dominant_variant'))
+sf_df4 <- left_join(sf_df, df8_wide, by=c('country', 'date_ym'))
 
-sf_df5 <- sf_df4 %>% dplyr::select(site_name, outcome, country, date_ym, dominant_variant, Events, Missing, Total)
-temp.df <- compiled_ipd_data %>% dplyr::select( preterm_labor0, preterm_labor1, preterm_laborm,denom_endpreg, site_id)
+sf_df5 <- sf_df4 %>% dplyr::select(site_name,  country, outcome, date_ym, dominant_variant, dominant_variant_v1, events1, eventsm, Total)
 ```
 
+Mutate - remove the 0,1,m first and put that in a new column for Aggregated data (swiss, france)
+```{r}
+sf_df5.1 <- sf_df5 %>% mutate(outcome_mod = str_sub(outcome, -1), # from the first position all to way to second from the end.
+                              outcome = str_sub(outcome, 1,-2)) # the last char.   
+```
 
 ```{r}
-sf_df3.1 <- sf_df3 %>% rename(events1 = Events, eventsm = Missing)
-merged_df <- rbind(df11m.3_wide, sf_df3.1)
+# sf_df3.1 <- sf_df3 %>% rename(events1 = Events, eventsm = Missing)
+merged_df <- rbind(df11m.2_wide, sf_df5.1)
 ```
 
 
 ```{r}
 #write.xlsx(as.data.frame(df14), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_country", row.names = FALSE)
 
-df14 <- df13 %>% group_by(site_name, country, dominant_variant, outcome) %>%
-  summarize(events = sum(events, na.rm = FALSE),
-            tot_n = n(),
-            incidence = events/tot_n)
-temp.df <- df14 %>% dplyr::filter(country=="USA")
-
-# df14.1 <- df13 %>% group_by(dominant_variant, outcome) %>%
-#   summarize(events = sum(events, na.rm = FALSE),
-#             tot_n = n(),
-#             incidence = events/tot_n)
+merged_df2 <- merged_df %>% mutate(incidence = events1/Total)
 
 #write.xlsx(as.data.frame(df14.1), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_outcome", row.names = FALSE, append=TRUE)
 ```
 
 
-
-
 ```{r}
 # This is more useful
 
-df15 %>% 
+merged_df2 %>% 
   filter(dominant_variant!="Beta") %>% # beta numbers are very low. 
   ggplot() +
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
@@ -664,7 +660,7 @@ df15 %>%
            position="dodge") + 
   scale_x_discrete(limits = c("no_strain", 'mixed', "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
   xlab("Dominant Strain")
-temp.df <- df14 %>% dplyr::filter(country=="Turkey")
+
 
 # df14.1 %>% 
 #   filter(dominant_variant!="Beta") %>% 
@@ -675,15 +671,9 @@ temp.df <- df14 %>% dplyr::filter(country=="Turkey")
 #   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-```{r, include=FALSE}
-# Generates the wide format table with incidences of each outcome in each strain for each study site. 
-df14.outcomes.wide <- df15 %>% 
-  # dplyr::filter(!is.na(dominant_variant)) %>%
-  pivot_wider(names_from = c(outcome), values_from = c(events, tot_n, incidence))
-# write.csv(df14.outcomes.wide, file='data_out/VariantStudy_incidence_20220720.csv', na = "",row.names=FALSE)
-temp.df <- df15 %>% dplyr::filter(country=="USA")
-```
 
+*#TODO make sure the above chunks are correct before proceeding.*
+*#TODO Remove outcomes that are missing more than 25% in total in each country* No need to do this by variant.
 
 Functions for continuity correction and calc logRR and SEs. 
 ```{r}
@@ -713,7 +703,7 @@ Functions for continuity correction and calc logRR and SEs.
 
 Setting up for metagen - for loop:
 ```{r, include=FALSE}
-df14.negpos.outcome <- df15 %>% mutate(neg = tot_n - events)
+df14.negpos.outcome <- merged_df2 %>% mutate(neg = Total - events1)
 strain_vec <- unique(df14.negpos.outcome$dominant_variant) # creates a vector of all different strain names.
 strain_vec <- strain_vec[!is.na(strain_vec)] # removes NAs
 strain_vec <- strain_vec[strain_vec!="no_strain"]
@@ -728,7 +718,7 @@ for (ref.strain in strain_vec) {
       dplyr::filter(dominant_variant %in% c(ref.strain, test.strain)) %>%
       group_by(site_name, dominant_variant, outcome) %>%
       #  dplyr::filter(outcome %in% c("matdeath", "preterm_labor")) %>% 
-      summarise(pos = sum(events), 
+      summarise(pos = sum(events1), 
                 neg = sum(neg)) %>%
       mutate(dominant_variant = if_else(dominant_variant==ref.strain,
                                         "reference",
@@ -798,7 +788,7 @@ metagen_fun <- function(refstr, teststr) {
   
   print(heatmap_data_df2)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20221005_domvar_mixed_>=60/VariantStudy_MetaForestPlot_ref_", refstr, "_test_", teststr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/20221103_domvar_mixed/VariantStudy_MetaForestPlot_ref_", refstr, "_test_", teststr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
          leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
