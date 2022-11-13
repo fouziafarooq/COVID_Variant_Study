@@ -50,6 +50,7 @@ pivots <- read.csv('data/Nextstrain_opensource_pivotdates_oct2022.csv', header =
 ################
 compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
 compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
+# compiled_ipd_20221109 <- read_dta('Compiled_IPD_Data_221109.dta') #MOST UPDATED FILE.  REOMOVE _old and _new.  This has comprehensive data now. 
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
@@ -593,7 +594,6 @@ df11m <- df11 %>% pivot_longer(cols=c(prdeath1, prdeath0, prdeathm,
 
 ```
 
-***#TODO: Issue is here.  There is no eventsm.  I need to create Total in the IPD data here.***
 Groupby and summarize with events and missing variables
 ```{r}
 
@@ -648,11 +648,22 @@ merged_df2 <- merged_df %>% mutate(incidence = events1/Total)
 #write.xlsx(as.data.frame(df14.1), file='data_out/variants_ipd_results_20220706.xlsx', sheetName="dominant_strain_outcome", row.names = FALSE, append=TRUE)
 ```
 
+REMOVING OUTCOME IF MISSING >25% FOR EACH COUNTRY.
+```{r}
+missing_threshold <- 0.25
+
+merged_df3 <- merged_df2 %>% group_by(country, outcome) %>% 
+  mutate(outcome_missing = sum(eventsm),
+            outcome_total = sum(Total),
+            pct_missing = outcome_missing/outcome_total) %>%
+  select(-outcome_missing, -outcome_total) %>% 
+  filter(pct_missing < missing_threshold)
+```
 
 ```{r}
 # This is more useful
 
-merged_df2 %>% 
+merged_df3 %>% 
   filter(dominant_variant!="Beta") %>% # beta numbers are very low. 
   ggplot() +
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
@@ -671,9 +682,6 @@ merged_df2 %>%
 #   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-
-*#TODO make sure the above chunks are correct before proceeding.*
-*#TODO Remove outcomes that are missing more than 25% in total in each country* No need to do this by variant.
 
 Functions for continuity correction and calc logRR and SEs. 
 ```{r}
@@ -703,7 +711,7 @@ Functions for continuity correction and calc logRR and SEs.
 
 Setting up for metagen - for loop:
 ```{r, include=FALSE}
-df14.negpos.outcome <- merged_df2 %>% mutate(neg = Total - events1)
+df14.negpos.outcome <- merged_df3 %>% mutate(neg = Total - events1)
 strain_vec <- unique(df14.negpos.outcome$dominant_variant) # creates a vector of all different strain names.
 strain_vec <- strain_vec[!is.na(strain_vec)] # removes NAs
 strain_vec <- strain_vec[strain_vec!="no_strain"]
@@ -788,7 +796,7 @@ metagen_fun <- function(refstr, teststr) {
   
   print(heatmap_data_df2)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20221103_domvar_mixed/VariantStudy_MetaForestPlot_ref_", refstr, "_test_", teststr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/20221109_domvar_mixed_50/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
          leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
@@ -831,20 +839,43 @@ heatmap_data_df2 <- heatmap_data_df2 %>% dplyr::filter(!n_study==0)
 # heatmap_df3 <- heatmap_data_df2 %>% dplyr::select(-RR, -LCI, -UCI, -n_study)
 ```
 
+***Creating a new big table that has outcome col, ref strain col and test strain going across with pooled estimates.***
+THIS WRANGLING IS INSANELY CLEVER!!!!
+```{r}
+
+est_table_df <- heatmap_data_df %>%
+  mutate(RR_CI_lab = if_else(is.na(RR),
+                             "n=0",
+                             if_else(n_study==1,
+                                     "n=1",
+                                     paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study)))) %>% 
+  dplyr::select(-RR, -LCI, -UCI, -n_study) %>%
+  pivot_wider(names_from = Strain, values_from = RR_CI_lab, names_prefix = "Strain_") %>% 
+  pivot_longer(cols = starts_with("Strain_"), names_to = "Strain", values_to = "RR_CI_lab") %>%
+  mutate(Strain = str_replace(Strain, "Strain_", "")) %>% 
+  mutate(RR_CI_lab = if_else(Strain==Ref_Strain,
+                             "Reference",
+                             if_else(is.na(RR_CI_lab),
+                                     "n=0",
+                                     RR_CI_lab))) %>%
+  pivot_wider(names_from = Strain, values_from = RR_CI_lab) %>%
+ arrange(Outcome)
+write.csv(est_table_df, 'data_out/variant_study_pooled_table.csv', row.names = FALSE)
+```
+
 Heatmap that loops through each dataset. 
 ```{r}
 # We want to loop through each reference strain (rs)
 #TODO
 # NOTE: NA label here is total of NAs --> NEED TO REMOVE
-outcome_vec <- c("matdeath","covid_hosp1", "ICUadmit1", "covid_icu", "critcare1", "ventilation1", "pneumonia1",
-                "rdeath1", "place_abrupt1", "preterm1", "preterm_labor", "haemorrhage1", "embolicdz1",
-                "preeclampsia1", "eclampsia1", "pre_or_eclampsia1", "hpd_any1", "hpd_postcovid1", "c_section1",
-                "c_intrap1","mat_composite_outcome",
+outcome_vec <- c("matdeath","covid_hosp", "ICUadmit", "covid_icu", "critcare", "ventilation", "pneumonia",
+                "rdeath", "place_abrupt", "preterm", "preterm_labor", "haemorrhage", "embolicdz",
+                "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
+                "c_intrap","mat_composite_outcome",
                 # fetal outcomes: 
-                "stillbirth_site1", "stillbirth_281", "sab_site1", "tab_site1", "neonatal_death1", "earlyneo_death1", 
-                "perinatal_death281", "perinatal_deathsite1", "nicu1","lowbirthweight1", "verylowbirthweight1",
-                 "verypreterm1",   "sga1", "extremesga1", 
-                "fetal_composite_outcome")
+                "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death", 
+                "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
+                 "verypreterm",   "sga", "extremesga", "fetal_composite_outcome")
 
 
 for (rs in levels(factor(heatmap_data_df2$Ref_Strain))) {
@@ -852,14 +883,13 @@ for (rs in levels(factor(heatmap_data_df2$Ref_Strain))) {
 
   # Conditional Formatting:
   heatmap_data <- heatmap_data %>% 
-    mutate(RR_sig = case_when((RR>1 & LCI>1 & UCI>1) ~ "RR>1, CI-sig",
-                              (RR<1 & LCI <1 & UCI<1) ~ "RR<1, CI-sig",
-                              ((RR>1|RR==1) & (LCI<1 | UCI<1)) ~ "RR>1, CI-notsig",
-                              ((RR<1|RR==1) & (LCI<1 | UCI<1)) ~ "RR<1, CI-notsig"))
+    mutate(RR_sig = case_when((RR>1.05 & LCI>1 & UCI>1) ~ "RR>1.05, CI-sig",
+                              (RR<0.95 & LCI <1 & UCI<1) ~ "RR<0.95, CI-sig",
+                              TRUE~ "NS"))
   
   heatmap_data$RR_sig <- factor(heatmap_data$RR_sig, 
-                                 levels=c("RR>1, CI-sig", "RR<1, CI-sig", 
-                                          "RR>1, CI-notsig", "RR<1, CI-notsig"),
+                                 levels=c("RR>1.05, CI-sig", "RR<0.95, CI-sig", 
+                                          "NS"),
                                 ordered = TRUE)
   
 heatmap_data$Outcome <- factor(heatmap_data$Outcome, 
@@ -871,10 +901,9 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
   levels(heatmap_data$RR_sig)
   
   
-  colScale <- c("RR>1, CI-sig" = "orangered", 
-                "RR<1, CI-sig" = "dodgerblue", 
-                "RR>1, CI-notsig"= "thistle2", 
-                "RR<1, CI-notsig" = "lightcyan") 
+  colScale <- c("RR>1.05, CI-sig" = "orangered", 
+                "RR<0.95, CI-sig" = "dodgerblue", 
+                "NS" = "gray") 
   
   # THIS PIECE DOES NOT REMOVE N=1 STUDIES
  #  hmap <- heatmap_data %>% drop_na(Outcome) %>% # Removes NA estimates
@@ -898,14 +927,14 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
     drop_na(Outcome) %>% # Removes NA estimates
     ggplot() +
     aes(x = Strain, y=Outcome, fill=RR_sig) +
-    geom_tile()+
+    geom_tile(color="white", alpha=0.8)+
     scale_fill_manual(values = colScale) +
-    geom_text(aes(label=RR_CI_lab), size=2) + 
+   # geom_text(aes(label=RR_CI_lab), size=2) + 
     guides(fill=guide_legend((title = "RR & 95%CI")))+
     labs(title=paste0("Reference strain: ",rs)) + 
     theme(plot.title = element_text(hjust = 0.5))
  
- ggsave(paste0('plots/heatmap/dom_strain>=50/variant_study_heatmap_',
+ ggsave(paste0('plots/heatmap/20221113/dom_strain_50/variant_study_heatmap_',
                format(Sys.time(), "%Y-%m-%d_%H-%M"),
                "_refstrain", 
                rs,
@@ -999,7 +1028,7 @@ heatmap_long3 %>% ggplot() +
   geom_text(aes(label=RR_CI_lab), size=2) + 
   guides(fill=guide_legend((title = "RR & 95%CI")))
 
-ggsave(filename = 'data_out/covid_variant_country_heatmpa_20220919.pdf', width = 10, height = 6, units = "in")
+ggsave(filename = 'data_out/covid_variant_country_heatmap_20220919.pdf', width = 10, height = 6, units = "in")
 ```
 
 ########################################################
