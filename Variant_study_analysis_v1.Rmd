@@ -519,12 +519,13 @@ temp.df <- df8 %>% dplyr::filter(country=="USA")
 Making frequency dataset wider and then we will join it onto compiled_ipd data
 ```{r}
 
+dom_threshold <- 0.50
 df8.1 <- df8 %>% group_by(country, date_ym) %>%
   arrange(desc(freq)) %>% # we first ordered the frequency and the highest is on top. 
   mutate(dominant_variant = if_else(first(freq)==0,
                                     "no_strain", 
                                     # first(variant))) %>% 
-                                      ifelse(!is.na(first(nor)) & first(nor)>=0.50, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
+                                      ifelse(!is.na(first(nor)) & first(nor)>=dom_threshold, # This is the other way of defining the dominant variant-- when it's greater than 60% then call it the dominant variant, otherwise call the set mixed. 
                                            first(variant), 
                                            "mixed"))) %>% 
   mutate(dominant_variant_v1 = if_else(first(freq)==0,
@@ -687,23 +688,23 @@ Functions for continuity correction and calc logRR and SEs.
 ```{r}
   ### used this link to calc: https://www.medcalc.org/manual/relative-risk-odds-ratio.php
   ### function for calculating RR (not logRR)
-  rr_ff <- function(pos1, pos2, neg1, neg2, adj=0.5){
-    useadj <- pos1==0 | neg1==0 | pos2==0 | neg2==0
+  rr_ff <- function(pos_test, pos_ref, neg_test, neg_ref, adj=0.5){
+    useadj <- pos_test==0 | neg_test==0 | pos_ref==0 | neg_ref==0
     
-    a <- pos1+useadj*adj
-    b <- neg1+useadj*adj
-    c <- pos2+useadj*adj
-    d <- neg2+useadj*adj
+    a <- pos_test+useadj*adj
+    b <- neg_test+useadj*adj
+    c <- pos_ref+useadj*adj
+    d <- neg_ref+useadj*adj
     return((a/(a+b))/((c/(c+d))))
   }
   
   ### this calculates SE for logRR not just RR - so this is logSE
-  se_logrr_ff <- function(pos1, pos2, neg1, neg2, adj=0.5){
-    useadj <- pos1==0 | neg1==0 | pos2==0 | neg2==0
-    a <- pos1+useadj*adj
-    b <- neg1+useadj*adj
-    c <- pos2+useadj*adj
-    d <- neg2+useadj*adj
+  se_logrr_ff <- function(pos_test, pos_ref, neg_test, neg_ref, adj=0.5){
+    useadj <- pos_test==0 | neg_test==0 | pos_ref==0 | neg_ref==0
+    a <- pos_test+useadj*adj
+    b <- neg_test+useadj*adj
+    c <- pos_ref+useadj*adj
+    d <- neg_ref+useadj*adj
     return(sqrt((1/a)+(1/c)-(1/(a+b))-(1/(c+d))))
   }
 
@@ -733,13 +734,13 @@ for (ref.strain in strain_vec) {
                                         "test")) %>%
       pivot_wider(names_from = dominant_variant, values_from = c("pos", "neg")) %>%
       drop_na() %>% # drops countries that don't have one or the other dominant strain.
-      mutate(ref.strain=ref.strain, test.strain=test.strain) %>%
+     mutate(ref.strain=ref.strain, test.strain=test.strain) %>%
       mutate(logRR = if_else(pos_reference==0 & pos_test==0,
                              as.numeric(NA),
-                             log(rr_ff(pos_reference, pos_test, neg_reference, neg_test))),
+                             log(rr_ff(pos_ref=pos_reference, pos_test=pos_test, neg_ref=neg_reference, neg_test=neg_test))),
              logSE = if_else(pos_reference==0 & pos_test==0,
                              as.numeric(NA),
-                             se_logrr_ff(pos_reference, pos_test, neg_reference, neg_test)))
+                             se_logrr_ff(pos_ref=pos_reference, pos_test=pos_test, neg_ref=neg_reference, neg_test=neg_test)))
     
     df14.alpha <- rbind(df14.alpha, df14.alpha.rows)
     
@@ -796,7 +797,10 @@ metagen_fun <- function(refstr, teststr) {
   
   print(heatmap_data_df2)
   #generate forest plot:HERE
-  pdf(file=paste0("plots/20221109_domvar_mixed_50/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  day_string <- format(Sys.time(), "%Y%m%d")
+  dir_folder_name <- paste0(day_string,"_domvar_mixed_",as.character(dom_threshold*100))
+  dir.create(paste0("plots/",dir_folder_name))
+  pdf(file=paste0("plots/",dir_folder_name,"/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
          leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
@@ -814,7 +818,6 @@ metagen_fun <- function(refstr, teststr) {
   dev.off()
   return(heatmap_data_df2)
 }
-
 ```
 
 ```{r, include=FALSE}
@@ -842,13 +845,12 @@ heatmap_data_df2 <- heatmap_data_df2 %>% dplyr::filter(!n_study==0)
 ***Creating a new big table that has outcome col, ref strain col and test strain going across with pooled estimates.***
 THIS WRANGLING IS INSANELY CLEVER!!!!
 ```{r}
-
 est_table_df <- heatmap_data_df %>%
   mutate(RR_CI_lab = if_else(is.na(RR),
-                             "n=0",
-                             if_else(n_study==1,
-                                     "n=1",
-                                     paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study)))) %>% 
+                             ("n=0"),
+                            # if_else(n_study==1,
+                             #        "n=1",
+                                     paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))) %>% 
   dplyr::select(-RR, -LCI, -UCI, -n_study) %>%
   pivot_wider(names_from = Strain, values_from = RR_CI_lab, names_prefix = "Strain_") %>% 
   pivot_longer(cols = starts_with("Strain_"), names_to = "Strain", values_to = "RR_CI_lab") %>%
