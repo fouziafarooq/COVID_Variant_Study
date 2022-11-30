@@ -48,18 +48,19 @@ pivots <- read.csv('data/Nextstrain_opensource_pivotdates_oct2022.csv', header =
 ################
 # Study files # 
 ################
-compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
-compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
-# compiled_ipd_20221109 <- read_dta('Compiled_IPD_Data_221109.dta') #MOST UPDATED FILE.  REOMOVE _old and _new.  This has comprehensive data now. 
+# compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
+# compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
+compiled_ipd_20221109 <- read_dta('data/Compiled_IPD_Data_221109.dta') #MOST UPDATED FILE.  REOMOVE _old and _new.  This has comprehensive data now. 
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
 # country_id <- read.csv('data/country_id_ipd.csv') # FF created this file. This is the original file where I have study_site 38 as WHO Pakistan also. 
 country_id <- read.csv('data/country_id_ipd_2.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
 # country_id_agd <- read.csv('data/country_id_agd.csv')
-check.df <- compiled_ipd_data_new %>% select(gest_age_pcr, gestage_covid_month1)
-temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==11)
-temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==21) %>% dplyr::select(date_onset_or_test, covid_sympdate, covid_pos)
+
+#check.df <- compiled_ipd_data_new %>% select(gest_age_pcr, gestage_covid_month1)
+#temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==11)
+# temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==21) %>% dplyr::select(date_onset_or_test, covid_sympdate, covid_pos)
 
 # New data from COVIPreg - Sites include Switzerland and France (From Favre Guillaume)
 swiss_sheets_vec <- excel_sheets('data/TABLE_outcomes_switzerland.xlsx') # creates a vector.
@@ -111,20 +112,22 @@ Creating maternal and fetal composite outcomes to aggregated swiss/french data:
 ```
 
 ```{r}
-table(compiled_ipd_data_old$site_id)
+table(compiled_ipd_20221109$site_id)
 ```
 
+*NOTE: This code is taken out mostly b/c the new most updated ipd file (20221109) has all the sites so no need to join old and new compiled files. 
 ```{r, include=FALSE}
-site_id_new <- compiled_ipd_data_new$site_id
-compiled_ipd_data_old_2 <- compiled_ipd_data_old %>% dplyr::filter(!(site_id %in% site_id_new))
-table(compiled_ipd_data_old_2$site_id)
-class(compiled_ipd_data_new$neo_death_date3)
-compiled_ipd_data_old_2$neo_death_date3 <- as.numeric(compiled_ipd_data_old_2$neo_death_date3)
-compiled_ipd_data_old_2$neo_death_cause_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause_77)
-compiled_ipd_data_old_2$neo_death_cause2_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause2_77)
-compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
-table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
-compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
+site_id_new <- compiled_ipd_20221109$site_id
+# compiled_ipd_data_old_2 <- compiled_ipd_data_old %>% dplyr::filter(!(site_id %in% site_id_new))
+# table(compiled_ipd_data_old_2$site_id)
+# class(compiled_ipd_data_new$neo_death_date3)
+# compiled_ipd_data_old_2$neo_death_date3 <- as.numeric(compiled_ipd_data_old_2$neo_death_date3)
+# compiled_ipd_data_old_2$neo_death_cause_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause_77)
+# compiled_ipd_data_old_2$neo_death_cause2_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause2_77)
+# compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
+# table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
+# compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
+compiled_ipd_data <- compiled_ipd_20221109
 
 ```
 
@@ -183,6 +186,7 @@ df2 <- df  %>% dplyr::mutate(variant = case_when(clade_membership %in%
 
 NORMALIZE FREQ BY COUNTRY
 ```{r}
+### NOTE: Removing Chile, China, Colombia, South Africa, India on 20221116
 df3 <- df2 %>% group_by(country, week, variant) %>% summarize(freq = sum(frequency))
 df4 <- df3 %>% group_by(country, week) %>% 
   dplyr::mutate(nor = (freq/sum(freq))) %>%
@@ -199,7 +203,6 @@ df4 <- df3 %>% group_by(country, week) %>%
 
 
 ```{r}
-#TODO 
 # This is where we are filtering the data by max date of the month? 
 df5 <- left_join(df4, pivot_df, by="week")
 
@@ -416,10 +419,10 @@ df10.1 <- df10 %>% filter(!is.na(date_onset_or_test))
 
 ```{r}
 ## CREATEING A NEW FILE SO I CAN OVERLAY ON GRAPHS AGAIN TO SEE  IF WE HAVE  MORE THAN 1 VRIANT DATA WITH THIS UPDATED FILE FROM ERIN OR NOT.
-check.df <- compiled_ipd_data_old %>% dplyr::select(site_id)
+# check.df <- compiled_ipd_data_old %>% dplyr::select(site_id)
 min(df10.1$date_onset_or_test, na.rm=TRUE)
 df10.2 <- df10.1 %>% dplyr::select(site_id, city, country, site_name, date_onset_or_test, date_ym) 
-check.df <- compiled_ipd_data_old %>% dplyr::filter(site_id=="1")
+# check.df <- compiled_ipd_data_old %>% dplyr::filter(site_id=="1")
 df10.2 <- df10.2 %>% dplyr::mutate(date_onset_or_test = format(date_onset_or_test,format="%m-%d-%y"))
 df10.3 <- df10.2 %>% group_by(country) %>% arrange(country, date_ym)
 df10.4 <- df10.3 %>% group_by(country, site_name, date_ym) %>% tally()
@@ -508,7 +511,8 @@ ggplot() +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
-ggsave(filename = 'plots/variants_nextstrain/covid_variant_country_20221101.pdf', width = 6, height = 20, units = "in") #This includes Colombia data (which was excluded b/c i had it spelled ColUmbia before)
+today_date <- format(Sys.time(), "%Y%m%d")
+ggsave(filename = paste0('plots/variants_nextstrain/covid_variant_country_',today_date, '.pdf'), width = 6, height = 20, units = "in") #This includes Colombia data (which was excluded b/c i had it spelled ColUmbia before)
 # DON'T NEED TO WRITE THIS OUT EVERYTIME.
 
 # write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
@@ -518,7 +522,9 @@ temp.df <- df8 %>% dplyr::filter(country=="USA")
 
 Making frequency dataset wider and then we will join it onto compiled_ipd data
 ```{r}
-
+##########################
+### THRESHOLD SETTING ###
+#########################
 dom_threshold <- 0.50
 df8.1 <- df8 %>% group_by(country, date_ym) %>%
   arrange(desc(freq)) %>% # we first ordered the frequency and the highest is on top. 
@@ -842,15 +848,15 @@ heatmap_data_df2 <- heatmap_data_df2 %>% dplyr::filter(!n_study==0)
 # heatmap_df3 <- heatmap_data_df2 %>% dplyr::select(-RR, -LCI, -UCI, -n_study)
 ```
 
+
+
 ***Creating a new big table that has outcome col, ref strain col and test strain going across with pooled estimates.***
 THIS WRANGLING IS INSANELY CLEVER!!!!
 ```{r}
 est_table_df <- heatmap_data_df %>%
   mutate(RR_CI_lab = if_else(is.na(RR),
-                             ("n=0"),
-                            # if_else(n_study==1,
-                             #        "n=1",
-                                     paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))) %>% 
+                             "n=0",
+                             paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))) %>% 
   dplyr::select(-RR, -LCI, -UCI, -n_study) %>%
   pivot_wider(names_from = Strain, values_from = RR_CI_lab, names_prefix = "Strain_") %>% 
   pivot_longer(cols = starts_with("Strain_"), names_to = "Strain", values_to = "RR_CI_lab") %>%
@@ -860,9 +866,40 @@ est_table_df <- heatmap_data_df %>%
                              if_else(is.na(RR_CI_lab),
                                      "n=0",
                                      RR_CI_lab))) %>%
-  pivot_wider(names_from = Strain, values_from = RR_CI_lab) %>%
- arrange(Outcome)
-write.csv(est_table_df, 'data_out/variant_study_pooled_table.csv', row.names = FALSE)
+  pivot_wider(names_from = Strain, values_from = RR_CI_lab) # %>%
+ # arrange(Outcome)
+table(est_table_df$Outcome)
+est_table_df2 <- est_table_df %>%
+  mutate(Ref_Strain = factor(Ref_Strain, 
+                         levels = c("Pre_alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "mixed"),
+                         labels = c("Pre-alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "Mixed"))) %>%
+  
+  mutate(Outcome = factor(Outcome, 
+                          levels = c("covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia","matdeath",
+                "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
+                "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
+                "c_intrap","mat_composite_outcome",
+                # fetal outcomes:
+                "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death",
+                "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
+                 "verypreterm", "verypreterm2",  "preterm", "preterm2", "sga", "extremesga", "fetal_composite_outcome"), 
+
+           labels = c("Hospitalization", "ICU admission", "Critical care", "Ventilation", "Pneumonia",  "Maternal death",
+                      "Preganncy-related death", "Placental abruption", "Preterm labor", "Haemorrhage", "Embolic disease",
+                      "Preeclampsia", "Eclampsia", "Preeclampsia or eclampsia" , "Any HDP ",
+                      "HDP during or after COVID-19", "C-section", "Intrapartum C-section", "Maternal composite outcome",
+                # fetal outcomes:
+                "Stillbirth site", "Stillbrith", "SAB site", "Tab site",
+                "Neonatal death", "Early neonatal death", "Perinatal death", "Perinatal death site",
+                "NICU admission", "LBW", "vLBW", "vPTB", "vPTB2", "PTB", "PTB2", "SGA", "eSGA", "Fetal composite outcome"))) %>%
+
+  arrange(Outcome, Ref_Strain) %>%
+  select(Outcome, `Reference Strain` = Ref_Strain, `Pre-alpha` = Pre_alpha, Alpha, Beta, Delta, Epsilon, Eta, Omicron, Mixed = mixed)
+
+day_string <- format(Sys.time(), "%Y%m%d")
+write.csv(est_table_df2, paste0("data_out/",day_string,"_Variant_study_pooled_table.csv"), row.names = FALSE)
+    
+# write.csv(est_table_df, 'data_out/20221129_variant_study_pooled_table.csv', row.names = FALSE)
 ```
 
 Heatmap that loops through each dataset. 
@@ -870,8 +907,8 @@ Heatmap that loops through each dataset.
 # We want to loop through each reference strain (rs)
 #TODO
 # NOTE: NA label here is total of NAs --> NEED TO REMOVE
-outcome_vec <- c("matdeath","covid_hosp", "ICUadmit", "covid_icu", "critcare", "ventilation", "pneumonia",
-                "rdeath", "place_abrupt", "preterm", "preterm_labor", "haemorrhage", "embolicdz",
+outcome_vec <- c("matdeath","covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia",
+                "prdeath", "place_abrupt", "preterm", "preterm_labor", "haemorrhage", "embolicdz",
                 "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
                 "c_intrap","mat_composite_outcome",
                 # fetal outcomes: 
@@ -925,7 +962,30 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
  #               "_n_study>=1.pdf"),
  #        hmap, width = 10, height = 6, units = "in")
  
- hmap <- heatmap_data %>% dplyr::filter(n_study>1) %>%
+  heatmap_data2 <- heatmap_data %>%
+  mutate(Strain = factor(Strain, 
+                         levels = c("Pre_alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "mixed"),
+                         labels = c("Pre-alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "Mixed"))) %>%
+    mutate(Outcome = factor(Outcome,
+           levels = c("covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia","matdeath",
+                "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
+                "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
+                "c_intrap","mat_composite_outcome",
+                # fetal outcomes: 
+                "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death", 
+                "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
+                 "verypreterm",  "preterm", "sga", "extremesga", "fetal_composite_outcome"),
+           
+           labels = c("Hospitalization", "ICU admission", "Critical care", "Ventilation", "Pneumonia",  "Maternal death",
+                      "Preganncy-related death", "Placental abruption", "Preterm labor", "Haemorrhage", "Embolic disease", 
+                      "Preeclampsia", "Eclampsia", "Preeclampsia or eclampsia" , "Any HDP ", 
+                      "HDP during or after COVID-19", "C-section", "Intrapartum C-section", "Maternal composite outcome",
+                # fetal outcomes: 
+                "Stillbirth site", "Stillbrith", "SAB site", "Tab site",
+                "Neonatal death", "Early neonatal death", "Perinatal death", "Perinatal death site",
+                "NICU admission", "LBW", "vLBW", "vPTB", "PTB", "SGA", "eSGA", "Fetal composite outcome")))
+  
+ hmap <- heatmap_data2 %>% dplyr::filter(n_study>1) %>%
     drop_na(Outcome) %>% # Removes NA estimates
     ggplot() +
     aes(x = Strain, y=Outcome, fill=RR_sig) +
@@ -936,11 +996,12 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
     labs(title=paste0("Reference strain: ",rs)) + 
     theme(plot.title = element_text(hjust = 0.5))
  
- ggsave(paste0('plots/heatmap/20221113/dom_strain_50/variant_study_heatmap_',
-               format(Sys.time(), "%Y-%m-%d_%H-%M"),
-               "_refstrain", 
-               rs,
-               "_n_study>1.pdf"),
+ day_string <- format(Sys.time(), "%Y%m%d")
+ 
+ dir_folder_name <- paste0(day_string,"_dom_strain_",as.character(dom_threshold*100))
+  dir.create(paste0("plots/heatmap/",dir_folder_name))
+  
+ ggsave(paste0("plots/heatmap/", dir_folder_name, "/variant_study_heatmap_refstrain_", rs, "_n_study>1.pdf"),
         hmap, width = 10, height = 6, units = "in")
 }
 
