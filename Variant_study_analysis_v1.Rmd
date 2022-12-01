@@ -50,7 +50,8 @@ pivots <- read.csv('data/Nextstrain_opensource_pivotdates_oct2022.csv', header =
 ################
 # compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
 # compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
-compiled_ipd_20221109 <- read_dta('data/Compiled_IPD_Data_221109.dta') #MOST UPDATED FILE.  REOMOVE _old and _new.  This has comprehensive data now. 
+# compiled_ipd_20221109 <- read_dta('data/Compiled_IPD_Data_221109.dta') # REOMOVE _old and _new.  This has comprehensive data now. 
+compiled_ipd_20221130 <- read_dta('data/Compiled_IPD_Data_221130.dta') #Most updated.  This has Brazil (REBRACO data) and I need to remove AMHANII Pakistan for now. 
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
@@ -102,22 +103,22 @@ swiss_france_df <- swiss_france_df %>%
 
 Add 2 empty rows in the country_id df to add site num for France and Switzerland
 ```{r}
-country_id <- country_id %>% rbind(c(16, "", "Switzerland", "Switzerland"))
-country_id <- country_id %>% rbind(c(16, "", "France", "France"))
+country_id <- country_id %>% rbind(c(16, "", "Switzerland", "Switzerland_COVIPREG", "Favre, Panchaud, 2022"))
+country_id <- country_id %>% rbind(c(16, "", "France", "France_COVIPREG", "Favre, Panchaud, 2022"))
 ```
 
-Creating maternal and fetal composite outcomes to aggregated swiss/french data:
+REMOVING AMHANII PAKISTAN FROM THE DATA:
 ```{r}
-
+compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=38)
 ```
 
 ```{r}
-table(compiled_ipd_20221109$site_id)
+table(compiled_ipd_20221130$site_id)
 ```
 
 *NOTE: This code is taken out mostly b/c the new most updated ipd file (20221109) has all the sites so no need to join old and new compiled files. 
 ```{r, include=FALSE}
-site_id_new <- compiled_ipd_20221109$site_id
+site_id_new <- compiled_ipd_20221130$site_id
 # compiled_ipd_data_old_2 <- compiled_ipd_data_old %>% dplyr::filter(!(site_id %in% site_id_new))
 # table(compiled_ipd_data_old_2$site_id)
 # class(compiled_ipd_data_new$neo_death_date3)
@@ -127,7 +128,7 @@ site_id_new <- compiled_ipd_20221109$site_id
 # compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
 # table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
 # compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
-compiled_ipd_data <- compiled_ipd_20221109
+compiled_ipd_data <- compiled_ipd_20221130
 
 ```
 
@@ -190,9 +191,8 @@ NORMALIZE FREQ BY COUNTRY
 df3 <- df2 %>% group_by(country, week, variant) %>% summarize(freq = sum(frequency))
 df4 <- df3 %>% group_by(country, week) %>% 
   dplyr::mutate(nor = (freq/sum(freq))) %>%
-  dplyr::filter(country %in% c("Kenya",  "Spain", "Hong Kong", "Italy",
-                               "South Africa", "USA",  "China","Chile", "Mexico", "Colombia", 
-                               "USA", "India", "Kenya", "Pakistan", "Switzerland", "France")) # List does not include DRC or Burkina Faso b/c opensource data is not available thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
+  dplyr::filter(country %in% c("Kenya", "Spain", "Hong Kong", "Italy",
+                                "USA", "Mexico", "Switzerland", "France", "Brazil")) # List does not include DRC or Burkina Faso b/c opensource data is not available thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
 
 # Other countries: "Sweden","Canada","Uganda", United Kingdom, "Africa", "Turkey" 
 ###########################################################################
@@ -234,7 +234,7 @@ country_id$site_id <- as.numeric(country_id$site_id)
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
 df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:38)) %>% # Removed #14 (Africa for now 20220919)
   # Added 20, 24, 34, 37 and updated 5,17,10,19
-  dplyr::select(site_id, city, country, site_name, person_id, twin, triplet, twin2, tripletnum, 
+  dplyr::select(site_id, city, country, site_name, author_year, person_id, twin, triplet, twin2, tripletnum, 
                 mat_age, matage_cat, matage19, matage2024,matage2529,matage3034, 
                 matage3539, matage40, matagem, matage1519, matage4045,matage35_older,
                 gestage_covid_tri1, gestage_covid_tri2, gestage_covid_tri3, gestage_covid_postp, gestage_covid_trim,
@@ -383,6 +383,10 @@ mat_age_df <- df10 %>% group_by(city, country) %>%
 
 Creating maternal and fetal composite outcomes:
 ```{r}
+# NOTE: THIS COMPOSITE OUTCOME CAN'T BE DONE ON AGGREGATE DATA (SWISS FRANCE) B/C EXAMPLE: ICU ADMISSION EVENTS =3, CRITICAL CARE EVENTS = 3, WE DON'T KNOW IF THOSE TWO OUTCOMES HAPPENED TO THE SAME 3 WOMEN OR 6 DIFFERENT WOMEN. 
+
+# WILL MAKE A NOTE NEXT TO THESE VARIABLES STATING IT DOENS'T INCLUDE SWISS/FRANCE.
+
 # NOTE: I had these vars in maternal_composite_outcome as well before: 
 # covid_hosp1==1 | ICUadmit1==1 | covid_icu==1 | critcare1==1| ventilation1==1 | pneumonia1==1 | prdeath1==1 | 
 
@@ -404,15 +408,13 @@ df10 <- df10 %>%
 table(df10$fetal_composite_outcome)
 ```
 
+
 Date format:
 ```{r}
 df10 <- df10 %>% dplyr::mutate(date_ym = format(date_onset_or_test,format="%y-%m"))
 unique(df10$country)
 unique(compiled_ipd_data$site_id)
 unique(df10$site_name)
-
-temp.df <- df10 %>% dplyr::select(country, site_name, date_onset_or_test) %>%
-  filter(country==c("USA", "Kenya"))
 
 df10.1 <- df10 %>% filter(!is.na(date_onset_or_test))
 ```
@@ -421,12 +423,12 @@ df10.1 <- df10 %>% filter(!is.na(date_onset_or_test))
 ## CREATEING A NEW FILE SO I CAN OVERLAY ON GRAPHS AGAIN TO SEE  IF WE HAVE  MORE THAN 1 VRIANT DATA WITH THIS UPDATED FILE FROM ERIN OR NOT.
 # check.df <- compiled_ipd_data_old %>% dplyr::select(site_id)
 min(df10.1$date_onset_or_test, na.rm=TRUE)
-df10.2 <- df10.1 %>% dplyr::select(site_id, city, country, site_name, date_onset_or_test, date_ym) 
+df10.2 <- df10.1 %>% dplyr::select(site_id, city, country, site_name, author_year, date_onset_or_test, date_ym) 
 # check.df <- compiled_ipd_data_old %>% dplyr::filter(site_id=="1")
 df10.2 <- df10.2 %>% dplyr::mutate(date_onset_or_test = format(date_onset_or_test,format="%m-%d-%y"))
 df10.3 <- df10.2 %>% group_by(country) %>% arrange(country, date_ym)
-df10.4 <- df10.3 %>% group_by(country, site_name, date_ym) %>% tally()
-df10.4 <- df10.4 %>% rename(Events='n', site_name = "site_name") %>% mutate(study_type = "RFA",
+df10.4 <- df10.3 %>% group_by(country, author_year, date_ym) %>% tally()
+df10.4 <- df10.4 %>% rename(Events='n') %>% mutate(study_type = "RFA",
                                                    study_type_full = "Risk Factor Analysis")
 df10.4 <- df10.4 %>% dplyr::filter(!is.na(date_ym))
 df10.4 <- df10.4 %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
@@ -440,7 +442,6 @@ df10.6 <- df10.5 %>% dplyr::select(-date_ym)
 study_cases_2 <- df10.6
 # df10.7 <- rbind(study_cases_2, df10.6)
 df10.8 <- df10.6 %>% arrange(country, study_type, date)
-temp.df <- df10.3 %>% dplyr::filter(country=="Turkey")
 ```
 
 ***TRYING TO ADD IN SWISS/FRANCE DATA HERE***
@@ -453,10 +454,10 @@ ADD IN -01 TO THE DATE.
 ```{r}
 sf_df <- sf_df %>% dplyr::filter(!is.na(date_ym))
 sf_df <- sf_df %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
-sf_df <- sf_df %>% mutate(site_name = country)
+# sf_df <- sf_df %>% mutate(site_name = country)
 sf_fig_df <- sf_df %>% group_by(country, date) %>% 
   summarize(Events = sum(events1))
-sf_fig_df <- sf_fig_df %>% mutate(site_name = country,
+sf_fig_df <- sf_fig_df %>% mutate(author_year = "Favre, Panchaud, 2022",
                                   study_type = "RFA",
                                   study_type_full = "Risk Factor Analysis")
 sf_fig_df <- sf_fig_df %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
@@ -467,11 +468,10 @@ MERGE THE TWO DATASETS HERE for line on Nextstrain variant figure:
 df10.8_sf_df <- rbind(df10.8, sf_fig_df)
 ```
 
-New map with overlayed CC study dates and RFA study dates: 06/27/2022 - latest
+New map with overlaid CC study dates and RFA study dates: 06/27/2022 - latest
 ```{r}
-
 studies_df <- df10.8_sf_df %>% dplyr::filter(Events>=1) %>% 
-  group_by(country, site_name, study_type) %>%
+  group_by(country, author_year, study_type) %>%
   summarize(min_month = min(pandemic_month),
             max_month = max(pandemic_month)) %>%
   group_by(country) %>%
@@ -503,11 +503,11 @@ ggplot() +
   geom_text(data = studies_df,
             mapping=aes(x = 0.5*(min_month + max_month),
                         y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
-                        label = site_name),
+                        label = author_year),
                      #   label = ifelse(is.na(site_name),
                       #                 study_type,
                        #                paste(site_name, study_type))),
-            size = 1.5) +
+            size = 2) +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
@@ -632,7 +632,7 @@ df11m.2_wide<- df11m.2_wide %>% mutate(Total = events0 + events1+ eventsm) # %>%
 ```{r}
 sf_df4 <- left_join(sf_df, df8_wide, by=c('country', 'date_ym'))
 
-sf_df5 <- sf_df4 %>% dplyr::select(site_name,  country, outcome, date_ym, dominant_variant, dominant_variant_v1, events1, eventsm, Total)
+sf_df5 <- sf_df4 %>% dplyr::select(country, outcome, date_ym, dominant_variant, dominant_variant_v1, events1, eventsm, Total)
 ```
 
 Mutate - remove the 0,1,m first and put that in a new column for Aggregated data (swiss, france)
@@ -666,6 +666,8 @@ merged_df3 <- merged_df2 %>% group_by(country, outcome) %>%
   select(-outcome_missing, -outcome_total) %>% 
   filter(pct_missing < missing_threshold)
 ```
+
+
 
 ```{r}
 # This is more useful
@@ -879,19 +881,23 @@ est_table_df2 <- est_table_df %>%
                 "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
                 "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
                 "c_intrap","mat_composite_outcome",
-                # fetal outcomes:
-                "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death",
-                "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
-                 "verypreterm", "verypreterm2",  "preterm", "preterm2", "sga", "extremesga", "fetal_composite_outcome"), 
+                # fetal & neonatal morbidity & mortality outcomes:
+                "stillbirth_site", "stillbirth_28", "perinatal_death28", "perinatal_deathsite",
+                "earlyneo_death",  "neonatal_death","nicu",
+                # Adverse Birth outcomes
+                "verylowbirthweight", "lowbirthweight", "extremesga", "sga", "verypreterm", "verypreterm2","preterm", "preterm2",
+                "sab_site", "tab_site","fetal_composite_outcome"), 
 
            labels = c("Hospitalization", "ICU admission", "Critical care", "Ventilation", "Pneumonia",  "Maternal death",
                       "Preganncy-related death", "Placental abruption", "Preterm labor", "Haemorrhage", "Embolic disease",
                       "Preeclampsia", "Eclampsia", "Preeclampsia or eclampsia" , "Any HDP ",
                       "HDP during or after COVID-19", "C-section", "Intrapartum C-section", "Maternal composite outcome",
-                # fetal outcomes:
-                "Stillbirth site", "Stillbrith", "SAB site", "Tab site",
-                "Neonatal death", "Early neonatal death", "Perinatal death", "Perinatal death site",
-                "NICU admission", "LBW", "vLBW", "vPTB", "vPTB2", "PTB", "PTB2", "SGA", "eSGA", "Fetal composite outcome"))) %>%
+               # fetal & neonatal morbidity & mortality outcomes:
+                "Stillbirth site", "Stillbirth","Perinatal death", "Perinatal death site", 
+               "Early neonatal death","Neonatal death", "NICU admission", 
+               # Adverse Birth Outcomes
+               "vLBW", "LBW", "eSGA","SGA", "vPTB", "vPTB - COVID onset <34w", "PTB", "PTB -COVID onset <37w",   
+               "SAB site", "Tab site","Fetal composite outcome"))) %>%
 
   arrange(Outcome, Ref_Strain) %>%
   select(Outcome, `Reference Strain` = Ref_Strain, `Pre-alpha` = Pre_alpha, Alpha, Beta, Delta, Epsilon, Eta, Omicron, Mixed = mixed)
@@ -908,13 +914,13 @@ Heatmap that loops through each dataset.
 #TODO
 # NOTE: NA label here is total of NAs --> NEED TO REMOVE
 outcome_vec <- c("matdeath","covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia",
-                "prdeath", "place_abrupt", "preterm", "preterm_labor", "haemorrhage", "embolicdz",
+                "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
                 "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
                 "c_intrap","mat_composite_outcome",
                 # fetal outcomes: 
                 "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death", 
                 "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
-                 "verypreterm",   "sga", "extremesga", "fetal_composite_outcome")
+                 "verypreterm", "verypreterm2", "preterm", "preterm2", "sga", "extremesga", "fetal_composite_outcome")
 
 
 for (rs in levels(factor(heatmap_data_df2$Ref_Strain))) {
@@ -971,21 +977,25 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
                 "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
                 "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
                 "c_intrap","mat_composite_outcome",
-                # fetal outcomes: 
-                "stillbirth_site", "stillbirth_28", "sab_site", "tab_site", "neonatal_death", "earlyneo_death", 
-                "perinatal_death28", "perinatal_deathsite", "nicu","lowbirthweight", "verylowbirthweight",
-                 "verypreterm",  "preterm", "sga", "extremesga", "fetal_composite_outcome"),
-           
+                # fetal & neonatal morbidity & mortality outcomes:
+                "stillbirth_site", "stillbirth_28", "perinatal_death28", "perinatal_deathsite",
+                "earlyneo_death",  "neonatal_death","nicu",
+                # Adverse Birth outcomes
+                "verylowbirthweight", "lowbirthweight", "extremesga", "sga", "verypreterm", "verypreterm2","preterm", "preterm2",
+                "sab_site", "tab_site","fetal_composite_outcome"), 
+
            labels = c("Hospitalization", "ICU admission", "Critical care", "Ventilation", "Pneumonia",  "Maternal death",
-                      "Preganncy-related death", "Placental abruption", "Preterm labor", "Haemorrhage", "Embolic disease", 
-                      "Preeclampsia", "Eclampsia", "Preeclampsia or eclampsia" , "Any HDP ", 
+                      "Preganncy-related death", "Placental abruption", "Preterm labor", "Haemorrhage", "Embolic disease",
+                      "Preeclampsia", "Eclampsia", "Preeclampsia or eclampsia" , "Any HDP ",
                       "HDP during or after COVID-19", "C-section", "Intrapartum C-section", "Maternal composite outcome",
-                # fetal outcomes: 
-                "Stillbirth site", "Stillbrith", "SAB site", "Tab site",
-                "Neonatal death", "Early neonatal death", "Perinatal death", "Perinatal death site",
-                "NICU admission", "LBW", "vLBW", "vPTB", "PTB", "SGA", "eSGA", "Fetal composite outcome")))
+               # fetal & neonatal morbidity & mortality outcomes:
+                "Stillbirth site", "Stillbrith","Perinatal death", "Perinatal death site", 
+               "Early neonatal death","Neonatal death", "NICU admission", 
+               # Adverse Birth Outcomes
+               "vLBW", "LBW", "eSGA","SGA", "vPTB", "vPTB - COVID onset <34w", "PTB", "PTB -COVID onset <37w",   
+               "SAB site", "Tab site","Fetal composite outcome")))
   
- hmap <- heatmap_data2 %>% dplyr::filter(n_study>1) %>%
+ hmap <- heatmap_data2 %>% dplyr::filter(n_study>=1) %>%
     drop_na(Outcome) %>% # Removes NA estimates
     ggplot() +
     aes(x = Strain, y=Outcome, fill=RR_sig) +
