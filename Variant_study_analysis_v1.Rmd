@@ -22,6 +22,7 @@ library(tibble)
 library(superheat)
 library(stringr)
 library(RColorBrewer)
+library(patchwork)
 #library(reshape)
 # library(metafor)
 # library(esc)
@@ -64,23 +65,24 @@ country_id <- read.csv('data/country_id_ipd_2.csv') # FF created this file. THIS
 # temp.df <- compiled_ipd_data_old %>% dplyr::filter(site_id==21) %>% dplyr::select(date_onset_or_test, covid_sympdate, covid_pos)
 
 # New data from COVIPreg - Sites include Switzerland and France (From Favre Guillaume)
-swiss_sheets_vec <- excel_sheets('data/TABLE_outcomes_switzerland.xlsx') # creates a vector.
+# Newesst data with mistakes fixed sent 12/08/2022
+swiss_sheets_vec <- excel_sheets('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_switzerland.xlsx') # creates a vector.
 swiss_df <- data.frame(month_year = {}, Events={},	Missing={},	Total={})
 for (sheet in swiss_sheets_vec) {
-  sheet_df <- read_excel('data/TABLE_outcomes_switzerland.xlsx', 
+  sheet_df <- read_excel('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_switzerland.xlsx', 
                          sheet=sheet, 
                          skip=2, 
                          col_names=c("month_year", "Events", "Missing", "Total"))
-  sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("switzerland - ", "", sheet),
+  sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("swiss - ", "", sheet),
                                          country="Switzerland")
   swiss_df <- rbind(swiss_df, sheet_df)
 }
 
 # France
-france_sheets_vec <- excel_sheets('data/TABLE_outcomes_france.xlsx') # creates a vector.
+france_sheets_vec <- excel_sheets('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_france.xlsx') # creates a vector.
 france_df <- data.frame(month_year = {}, Events={},	Missing={},	Total={})
 for (sheet in france_sheets_vec) {
-  sheet_df <- read_excel('data/TABLE_outcomes_france.xlsx', 
+  sheet_df <- read_excel('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_france.xlsx', 
                          sheet=sheet, 
                          skip=2, 
                          col_names=c("month_year", "Events", "Missing", "Total"))
@@ -140,8 +142,10 @@ compiled_ipd_data <- compiled_ipd_20221130
 Drop twin and triplet rows that are 2nd/3rd.  Keep the woman though
 ```{r}
 table(compiled_ipd_data$twin2, useNA = "always")
-compiled_ipd_data <- compiled_ipd_data %>% dplyr::filter(twin2!=1 | tripletnum==0) # currently there are no triplets but there are some twins. 
+compiled_ipd_data <- compiled_ipd_data %>% dplyr::filter(twin2!=1) %>% dplyr::filter(tripletnum==0) # currently there are no triplets but there are some twins. 
+table(compiled_ipd_data$twin2, useNA = "always")
 table(compiled_ipd_data$tripletnum, useNA = "always")
+check_df <- compiled_ipd_data %>% select(twin2, site_id, mat_age)
 ```
 
 ```{r}
@@ -370,12 +374,18 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:35,37)) %>
 # extremesga1 = Extreme sga events (<3rd percentile)
 ```
 
+```{r}
+df10 <- df10 %>% mutate(preterm21 = if_else((preterm1==1 & denom_livebirth37==1), 1, 0),
+                          verypreterm21 = if_else((verypreterm1==1 & denom_livebirth34==1), 1, 0),
+                          preterm_labor21 = if_else((preterm_labor1==1 & denom_endpreg37==1), 1,0))
+```
+
 ***Summary for Table 1:***
 ```{r}
 mat_age_df <- df10 %>% group_by(city, country) %>%
-  summarize(mean_age  = mean(mat_age), 
-            sd_age = sd(mat_age),
-            bmi_mean = mean(bmi_pre),
+  summarize(mean_age  = mean(mat_age, na.rm = TRUE), 
+            sd_age = sd(mat_age, na.rm = TRUE),
+            bmi_mean = mean(bmi_pre, na.rm = TRUE),
             bmi_under = sum(bmi_prepreg_under),
             bmi_normal = sum(bmi_prepreg_normal),
             bmi_over = sum(bmi_prepreg_over),
@@ -392,6 +402,9 @@ mat_age_df <- df10 %>% group_by(city, country) %>%
             icu_admit = round(sum(ICUadmit1)/tot_preg*100, 0),
             twins = sum(twin2),
             triplets = sum(tripletnum))
+
+sort(colnames(df10))
+check_df <- mat_age_df %>% dplyr::select(country, icu_admit)
 ```
 
 Creating maternal and fetal composite outcomes:
@@ -404,21 +417,37 @@ Creating maternal and fetal composite outcomes:
 # covid_hosp1==1 | ICUadmit1==1 | covid_icu==1 | critcare1==1| ventilation1==1 | pneumonia1==1 | prdeath1==1 | 
 
 df10 <- df10 %>% 
-  dplyr::mutate(mat_composite_outcome = if_else((place_abrupt1==1 |
-                                          preterm_labor1==1 | haemorrhage1==1 | embolicdz1==1 | 
-                                          preeclampsia1==1 | eclampsia1==1 | pre_or_eclampsia1==1 | 
-                                          hpd_any1==1 | hpd_postcovid1==1 | c_section1==1 | c_intrap1==1), 1, 0))
+  dplyr::mutate(mat_composite_outcome1 = if_else((place_abrupt1==1 |
+                                                   preterm_labor1==1 | 
+                                                   haemorrhage1==1 | 
+                                                   embolicdz1==1 | 
+                                                   preeclampsia1==1 | eclampsia1==1 | pre_or_eclampsia1==1 |
+                                                   hpd_any1==1 | 
+                                                   c_section1==1 | 
+                                                   c_intrap1==1), 1, 0), 
+                mat_composite_outcome0 = 1-mat_composite_outcome1, 
+                mat_composite_outcomem = 0) 
+# took out:  hpd_postcovid1==1
 
-
+table(df10$mat_composite_outcome1, useNA = "always")
+table(df10$mat_composite_outcome0, useNA = "always")
+table(df10$mat_composite_outcomem, useNA = "always")
 str(df10$covid_hosp1)
 df10 <- df10 %>% 
-  dplyr::mutate(fetal_composite_outcome = if_else((stillbirth_site1==1 | stillbirth_281==1 | lowbirthweight1==1 |
-                                                   verylowbirthweight1==1 |sab_site1==1 | tab_site1==1 | preterm1==1 |
-                                                   verypreterm1==1 | neonatal_death1==1 |earlyneo_death1==1  | 
-                                                   perinatal_death281==1 | perinatal_deathsite1==1 | nicu1==1 | 
-                                                   sga1==1 | extremesga1==1), 1, 0))
+  dplyr::mutate(fetal_composite_outcome1 = if_else((stillbirth_281==1 | 
+                                                     neonatal_death1==1 | earlyneo_death1==1 | 
+                                                     perinatal_death281==1 | 
+                                                     nicu1==1 |
+                                                     lowbirthweight1==1 | verylowbirthweight1==1 | 
+                                                     preterm1==1 |
+                                                     verypreterm1==1 | 
+                                                     sga1==1 | extremesga1==1), 1, 0), 
+                fetal_composite_outcome0 = 1-fetal_composite_outcome1, 
+                fetal_composite_outcomem = 0)
 
-table(df10$fetal_composite_outcome)
+table(df10$fetal_composite_outcome1, useNA = "always")
+table(df10$fetal_composite_outcome0, useNA = "always")
+table(df10$fetal_composite_outcomem, useNA = "always")
 ```
 
 
@@ -538,8 +567,8 @@ ggsave(filename = paste0('plots/variants_nextstrain/covid_variant_country_',toda
 # write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
 temp.df <- df8 %>% dplyr::filter(country=="USA")
 ```
-
-
+*NOTE: for the next block: Take out Beta and Epsilon for threhold ≥70%*
+***THRESHOLD SETTING***
 Making frequency dataset wider and then we will join it onto compiled_ipd data
 ```{r}
 ##########################
@@ -577,7 +606,6 @@ temp.df <- df11 %>% dplyr::filter(country=="USA")
 
 Pivot longer from df11 so I have missing data also. 
 ```{r}
-sort(colnames(df11))
 df11m <- df11 %>% pivot_longer(cols=c(prdeath1, prdeath0, prdeathm,
                 covid_hosp1, covid_hosp0, covid_hospm,
                 ICUadmit1, ICUadmit0, ICUadmitm,
@@ -587,7 +615,7 @@ df11m <- df11 %>% pivot_longer(cols=c(prdeath1, prdeath0, prdeathm,
                
                  prdeath1, prdeath0, prdeathm, 
                 place_abrupt1, place_abrupt0,place_abruptm, 
-                preterm_labor1, preterm_labor0, preterm_laborm,
+                preterm_labor1, preterm_labor0, preterm_laborm, preterm_labor21,
                 haemorrhage1, haemorrhage0, haemorrhagem, 
                 embolicdz1, embolicdz0, embolicdzm,
                 preeclampsia1, preeclampsia0, preeclampsiam, 
@@ -611,10 +639,12 @@ df11m <- df11 %>% pivot_longer(cols=c(prdeath1, prdeath0, prdeathm,
                 verylowbirthweight1, verylowbirthweight0, verylowbirthweightm,
                #  sab_site1, sab_site0, sab_sitem,
               #   tab_site1, tab_site0, tab_sitem,
-                preterm1, preterm0, pretermm,
-                verypreterm1, verypreterm0, verypretermm,
+                preterm1, preterm0, pretermm, preterm21,
+                verypreterm1, verypreterm0, verypretermm, verypreterm21, 
                 neonatal_death1, neonatal_death0, neonatal_deathm,
-                earlyneo_death1, earlyneo_death0, earlyneo_deathm),
+                earlyneo_death1, earlyneo_death0, earlyneo_deathm,
+              mat_composite_outcome1, mat_composite_outcome0, mat_composite_outcomem,
+              fetal_composite_outcome1, fetal_composite_outcome0, fetal_composite_outcomem),
                 
                 # denominators:
                 #denom_allpreg,denom_endpreg,denom_endpreg37,denom_totalbirth28wk,
@@ -686,9 +716,7 @@ merged_df3 <- merged_df2 %>% group_by(country, outcome) %>%
   filter(pct_missing < missing_threshold)
 ```
 
-
-
-```{r}
+```{r, include=FALSE}
 # This is more useful
 
 merged_df3 %>% 
@@ -864,12 +892,9 @@ Setting up a big table for heatmap
 ```{r}
 heatmap_data_df2 <- heatmap_data_df %>% 
   mutate(RR_CI_lab = paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))
-
-# heatmap_data_df2 <- heatmap_data_df2 %>% dplyr::filter(!n_study==0)
-# heatmap_df3 <- heatmap_data_df2 %>% dplyr::select(-RR, -LCI, -UCI, -n_study)
 ```
 
-
+*NOTE: for the next block: Take out Beta and Epsilon for threhold ≥70%*
 
 ***Creating a new big table that has outcome col, ref strain col and test strain going across with pooled estimates.***
 THIS WRANGLING IS INSANELY CLEVER!!!!
@@ -894,8 +919,8 @@ est_table_df <- heatmap_data_df %>%
 #############################################################################################
 est_table_df2 <- est_table_df %>%
   mutate(Ref_Strain = factor(Ref_Strain, 
-                             levels = c("Pre_alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "mixed"),
-                             labels = c("Pre-alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "Mixed"))) %>%
+                             levels = c("Pre_alpha", "Alpha", "Beta","Delta", "Epsilon", "Eta", "Omicron", "mixed"),
+                             labels = c("Pre-alpha", "Alpha", "Beta","Delta", "Epsilon", "Eta", "Omicron", "Mixed"))) %>%
   mutate(Outcome = recode_factor(Outcome, 
                                  # Adverse Birth outcomes
                                  "verylowbirthweight" = "vLBW", 
@@ -903,9 +928,9 @@ est_table_df2 <- est_table_df %>%
                                  "extremesga" = "eSGA", 
                                  "sga" = "SGA",
                                  "verypreterm" = "vPTB", 
-                                 "verypreterm2" = "vPTB - COVID onset <34w",
+                                 "verypreterm2" = "vPTB (COVID-19 onset <34w)",
                                  "preterm" = "PTB",
-                                 "preterm2" = "PTB - COVID onset <37w",
+                                 "preterm2" = "PTB (COVID-19 onset <37w)",
                                  "fetal_composite_outcome" = "Fetal composite outcome",
                                  # fetal & neonatal morbidity & mortality outcomes:
                                  "stillbirth_28" = "Stillbrith", 
@@ -917,6 +942,7 @@ est_table_df2 <- est_table_df %>%
                                  "prdeath" = "Pregnancy-related death", 
                                  "place_abrupt" = "Placental abruption", 
                                  "preterm_labor" = "Preterm labor", 
+                                 "preterm_labor2" = "Preterm labor (COVID-19 onset <37w)",
                                  "haemorrhage" = "Heamorrhage", 
                                  "embolicdz" = "Embolic disease",
                                  "preeclampsia" = "Preeclampsia", 
@@ -933,23 +959,28 @@ est_table_df2 <- est_table_df %>%
                                  "critcare" = "Critical care",
                                  "ventilation" = "Ventilation",
                                  "pneumonia" = "Pneumonia")) %>%
-  
+ 
+
+###############!!!!!!!!!!!!!!!!!!!!!!!!!#####################
+# Take out Beta & Epsilon for threhold ≥70%
+###############!!!!!!!!!!!!!!!!!!!!!!!!!#####################
   arrange(Outcome, Ref_Strain) %>%
   select(Outcome, `Reference Strain` = Ref_Strain, `Pre-alpha` = Pre_alpha, Alpha, Beta, Delta, Epsilon, Eta, Omicron, Mixed = mixed)
+# Keep Beta & Epsilon for 50% and 60% prevalence. 
+
 
 day_string <- format(Sys.time(), "%Y%m%d")
-write.csv(est_table_df2, paste0("data_out/",day_string,"_Variant_study_pooled_table.csv"), row.names = FALSE)
+dir_folder_name <- paste0(day_string,"_dom_strain_",as.character(dom_threshold*100))
+dir.create(paste0("data_out/pooled_tables/",dir_folder_name))
 
-# write.csv(est_table_df, 'data_out/20221129_variant_study_pooled_table.csv', row.names = FALSE)
+write.csv(est_table_df2, paste0("data_out/pooled_tables/",dir_folder_name,"/Variant_study_pooled_table_", day_string, "_dom_strain_", as.character(dom_threshold*100), ".csv"), row.names = FALSE)
 ```
 
 Heatmap that loops through each dataset. 
 ```{r}
 # We want to loop through each reference strain (rs)
-#TODO
-# NOTE: NA label here is total of NAs --> NEED TO REMOVE
 outcome_vec <- c("covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia",
-                "prdeath", "place_abrupt", "preterm_labor", "haemorrhage", "embolicdz",
+                "prdeath", "place_abrupt", "preterm_labor", "preterm_labor2", "haemorrhage", "embolicdz",
                 "preeclampsia", "eclampsia", "pre_or_eclampsia", "hpd_any", "hpd_postcovid", "c_section",
                 "c_intrap","mat_composite_outcome",
                 # fetal outcomes: 
@@ -959,6 +990,7 @@ outcome_vec <- c("covid_hosp", "ICUadmit", "critcare", "ventilation", "pneumonia
 
 #  "matdeath","stillbirth_site", "sab_site", "tab_site",, "perinatal_deathsite"
 
+plot_list <- list()
 for (rs in levels(factor(heatmap_data_df2$Ref_Strain))) {
   heatmap_data <- heatmap_data_df2 %>% dplyr::filter(Ref_Strain==rs)
 
@@ -986,23 +1018,6 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
                 "RR<0.95, CI-sig" = "dodgerblue", 
                 "NS" = "gray") 
   
-  # THIS PIECE DOES NOT REMOVE N=1 STUDIES
- #  hmap <- heatmap_data %>% drop_na(Outcome) %>% # Removes NA estimates
- #    ggplot() +
- #    aes(x = Strain, y=Outcome, fill=RR_sig) +
- #    geom_tile()+
- #    scale_fill_manual(values = colScale) +
- #    geom_text(aes(label=RR_CI_lab), size=2) + 
- #    guides(fill=guide_legend((title = "RR & 95%CI")))+
- #    labs(title=paste0("Reference strain: ",rs)) + 
- #    theme(plot.title = element_text(hjust = 0.5))
- # 
- # ggsave(paste0('plots/heatmap/n>=1/variant_study_heatmap_',
- #               format(Sys.time(), "%Y-%m-%d_%H-%M"),
- #               "_refstrain", 
- #               rs,
- #               "_n_study>=1.pdf"),
- #        hmap, width = 10, height = 6, units = "in")
  
   heatmap_data2 <- heatmap_data %>%
   mutate(Strain = factor(Strain, 
@@ -1015,9 +1030,9 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
                                  "extremesga" = "eSGA", 
                                  "sga" = "SGA",
                                  "verypreterm" = "vPTB", 
-                                 "verypreterm2" = "vPTB - COVID onset <34w",
+                                 "verypreterm2" = "vPTB (COVID-19 onset <34w)",
                                  "preterm" = "PTB",
-                                 "preterm2" = "PTB - COVID onset <37w",
+                                 "preterm2" = "PTB (COVID-19 onset <37w)",
                                  "fetal_composite_outcome" = "Fetal composite outcome",
                                  # fetal & neonatal morbidity & mortality outcomes:
                                  "stillbirth_28" = "Stillbrith", 
@@ -1029,6 +1044,7 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
                                  "prdeath" = "Pregnancy-related death", 
                                  "place_abrupt" = "Placental abruption", 
                                  "preterm_labor" = "Preterm labor", 
+                                 "preterm_labor2" = "Preterm labor (COVID-19 onset <37w)",
                                  "haemorrhage" = "Heamorrhage", 
                                  "embolicdz" = "Embolic disease",
                                  "preeclampsia" = "Preeclampsia", 
@@ -1060,7 +1076,11 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
     theme(plot.title = element_text(hjust = 0.5)) +
     xlim(levels(heatmap_data2$Strain)) + # xlim levels of heatmap_df2$Strain retains all strains. 
     ylim(levels(heatmap_data2$Outcome)) + 
-    theme(panel.grid.major.x = element_blank())
+    theme(panel.grid.major.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank())
+          #legend.position="none")
+     
  
  day_string <- format(Sys.time(), "%Y%m%d")
  
@@ -1069,8 +1089,12 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
   
  ggsave(paste0("plots/heatmap/", dir_folder_name, "/variant_study_heatmap_refstrain_", rs, "_n_study>1.pdf"),
         hmap, width = 8, height = 6, units = "in")
+ 
+ variant_plot <- hmap + theme(legend.position="none")
+ plot_list <- append(plot_list, list(variant_plot))
 }
-
+hmap_layout <- plot_layout(ncol = 2)
+plot_list[[1]] + hmap_layout
 ```
 
 ##############
@@ -1159,96 +1183,3 @@ heatmap_long3 %>% ggplot() +
 
 ggsave(filename = 'data_out/covid_variant_country_heatmap_20220919.pdf', width = 10, height = 6, units = "in")
 ```
-
-########################################################
-# DON'T NEED THIS BELOW CODE FOR NOW WITH THE IPD DATA # 
-########################################################
-USING *AGGREGATE* DATA: older file. 
-```{r}
-agd_df <- agd_long %>% dplyr::filter(grepl("calmonth", Strata)) # pulls out the rows that start with "calmonth" in the strata col. 
-agd_df <- agd_df %>% separate(Strata, c("calmonth", "calmonth_date"), "_")
-agd_df <- agd_df %>% mutate(date_ym = as.Date(paste0(substring(calmonth_date, 1,4), "-", substring(calmonth_date, 5), "-01"),
-                                              format="%Y-%m-%d")) # substring pulls out the first 4 characters of the string first. 
-agd_df <- agd_df %>% mutate(date_ym = format(date_ym, format = "%y-%m"))
-
-agd_df <- rename(agd_df, site_id = "Site")
-```
-
-Merge the frequency dataset (wide) on our study dataset (Aggregate dataset)
-```{r}
-# country_id_agd <- agd_df %>% dplyr::select(site_id, Site_name) %>% distinct()
-# write.csv(country_id_agd, 'data/country_id_agd.csv', row.names = FALSE) # I wrote this out and will update, so don't need this code.
-
-agd_df2 <- left_join(agd_df, country_id_agd, by="site_id")
-agd_df2 <- agd_df2 %>% dplyr::select(-Site_name.y)
-
-agd_df3 <- left_join(agd_df2, df8_wide, by=c('country', 'date_ym'))
-```
-
-Summarize data
-```{r}
-#  "Events" column is actually the outcome and the "Total" is the denominator for that Strata
-# So for example, if the Outcome is "Preterm Birth" and the Strata is "20203", then "Events" is the number of preterm births among livebirths with COVID-19 onset in March 2020, and "Total" is the total number of livebirths with COVID-19 onset in March 2020
-
-#TODO calmonth_date has "m" that needs to be deleted - these are missing. We don't know what calmonth the outcome happened. 
-table(agd_df3$Outcome)
-
-agd_df3.1 <- agd_df3 %>% dplyr::filter(country==c("USA", "Canada", "Mexico", "Spain", "Hong Kong", "Italy", "Kenya"))
-agd_df3.1 <- agd_df3.1 %>% dplyr::mutate(variant_mod = if_else(dominant_variant=="Pre_alpha", "Pre_alpha", "other_variant")) 
-agd_df3.1$variant_mod <- factor(agd_df3.1$variant_mod, levels=c("other_variant", "Pre_alpha")) # factorized this variable
-levels(agd_df3.1$variant_mod)
-
-# wide dataset
-agd_wide3.1 <- agd_df3.1 %>% pivot_wider(names_from = Outcome, values_from = Events)
-
-agd_results <- agd_df3.1 %>% group_by(country, dominant_variant, Outcome) %>% summarize(count_condition=sum(Events),
-                                                                       tot_n = sum(Total),
-                                                                       incidence = count_condition/tot_n) %>% 
-  ungroup()
-# write.xlsx(as.data.frame(agd_results), file='data_out/variants_agd_results_20220610.xlsx', sheetName="dominant_strain", row.names = FALSE)
-
-agd_results2 <- agd_df3.1 %>% group_by(country, variant_mod, Outcome) %>% summarize(count_condition=sum(Events),
-                                                                       tot_n = sum(Total),
-                                                                       incidence = count_condition/tot_n) 
-# write.xlsx(as.data.frame(agd_results2), file='data_out/variants_agd_results_20220610.xlsx', sheetName="prealpha_vs.other", append=TRUE, row.names = FALSE)
-
-```
-
-```{r}
-p1 <- agd_wide3.1 %>% 
-  ggplot() +
-  geom_histogram(aes(x=ICUadmit1/Total, fill=dominant_variant)) 
-
-p2 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=prdeath1/Total, fill=dominant_variant)) # maternal death
-
-p3 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=haemorrhage1/Total, fill=dominant_variant))
-
-p4 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=extremesga1/Total, fill=dominant_variant))
-
-p5 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=preterm1/Total, fill=dominant_variant))
-
-p6 <- agd_wide3.2 %>% 
-  ggplot() +
-  geom_histogram(aes(x=c_intrap1/Total, fill=dominant_variant))
-
-p1/p2/p3/p4/p5/p6
-
-
-ggsave('data_out/variant_rates_20220610.pdf', plot=last_plot(), height = 13, width=4)
-```
-
-For modeling, using wide aggregated dataset. 
-```{r}
-summary(mod1 <- glm(preterm1 ~ variant_mod + country, family = "poisson", data=agd_wide3.2))
-
-```
-
-
