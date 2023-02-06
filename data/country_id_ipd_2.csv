@@ -1,0 +1,42 @@
+site_id,city,country,site_name,author_year
+1,,United Kingdom,UK,"Knight, 2021"
+2,,China,China,"Yang, Juan, 2020"
+3,,Chile,Chile,"Carrillo, 2021"
+4,,Canada,Canada,
+5,Madrid,Spain,"Madrid, Spain","Gil, Fernandez Buhigas, 2021"
+6,,Mali,Mali ,
+7,,Uganda,"PREPARE, Uganda",
+8,,USA,"PRIORITY, USA",
+9,,Australia,"CHOPAN, Australia",
+10,,Mexico,Mexico,"Martinez-Portilla, 2021"
+11,,Colombia,Colombia,
+12,Washington State,USA,"Washington State COLLABORATIVE, USA",
+13,,India,India,
+14,,Africa,Africa,
+15,,Kenya,Kenya,"Akelo, Tippett Barr, 2021"
+16,,multi-country,COVIPREG,
+17,Puerto Rico,USA,Puerto Rico,"Bracero, Valencia, Delgado-Lopez, 2021"
+18,,United Kingdom,PANCOVID - UK_international,
+19,Rome,Italy,"Rome, Italy","Bevilacqua, Laurita Longo, 2020"
+20,,Hong Kong,Hong Kong,"Poon, 2021"
+21,,Turkey,Turkey,"Kalafat, 2020"
+23,,Spain,Spanish Obstetrics Emergency Group,
+24,New York,USA,"New York, USA",
+25,New Jersey,USA,"New Jersey, USA",
+26,,Australia,Australia,
+27,Babol,Iran,Babol University of Medical Science,
+28,,South Africa,South Africa,"Nunes, 2021"
+29,Illinois,USA,"Illinois, USA",
+30,Boston,USA,"Boston, USA",
+31,,Sweden,karalinska University Hospital,
+32,D.C.,USA,"GW site (CERNER), USA",
+33,,Chile,"Clinica devela, Chile",
+34,Elmherst,USA,"Elmherst Hospital, NY, USA",
+35,Padua,Italy,"Padua, Italy",
+36,,Brazil,"REBRACO, Brazil","Souza, YEAR"
+37,,Brazil,WHO cohort in Brazil,
+38,,Pakistan,"AMANHI, Pakistan",
+40,,Spain,WHO in spain,
+41,PA,USA,"Saint Luke's University Network, PA, USA",
+2201,Barcelona,Spain,"Barcelona (Cohort I), Spain","Crovetto, 2020, Cohort I"
+2202,Barcelona,Spain,"Barcelona (Cohort II), Spain","Crovetto, 2020, Cohort II"
