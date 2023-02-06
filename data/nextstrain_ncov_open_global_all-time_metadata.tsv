@@ -1,0 +1,610 @@
+strain	date	url	mutational_fitness	epiweek	recency	pango_lineage	country	region	division	emerging_lineage	host	genbank_accession	S1_mutations	clade_membership	current_frequency	author	accession	submitting_lab	originating_lab	logistic_growth
+USA/WA1_vero_stock/2020	1/19/20		-0.06	202004	Older	A	USA	North America	Washington		Homo sapiens	OM301684	1	19B		Fox et al				
+USA/WA-CDC-WA1-F6/2020	1/25/20		-0.06	202004	Older	A	USA	North America	Washington		Homo sapiens	MT020881		19B		Harcourt et al				
+USA/TG701135/2020	3/30/20		-0.08	202014	3-7 days ago	A.1	USA	North America	Arizona		Homo sapiens	ON415527		19B		Bowers et al A				
+USA/CO-QDX-2403/2020	3/16/20		-0.13	202012	Older	A.1	USA	North America	Colorado		Homo sapiens	MW191126		19B		Rosenthal et al A		Quest Diagnostics	Quest Diagnostics	
+USA/NC-CDC-03068181-001/2020	3/6/20		-0.13	202010	Older	A.1	USA	North America	North Carolina		Homo sapiens	MT325591		19B		Li et al B				
+USA/WI-UW-129/2020	4/6/20		-0.04	202015	Older	A.4	USA	North America	Wisconsin		Homo sapiens	MT706257		19B		Moreno et al B		UW-Madison	UWHC	
+USA/NE-CDC-03067304-001/2020	3/5/20		-0.08	202010	Older	B.3	USA	North America	Nebraska		Homo sapiens	MT325592		19A		Li et al C				
+USA/WV-QDX-1284/2020	3/17/20		-0.01	202012	Older	B	USA	North America	West Virginia		Homo sapiens	MW065351		19A		Rosenthal et al B		Quest Diagnostics	Quest Diagnostics	
+GUM/GU-NHG-02/2020	3/24/20		-0.06	202013	Older	B.6	USA	North America	Guam		Homo sapiens	MT459986		19A		Voegtly et al A				
+USA/OR-CDC-03066372-001/2020	3/1/20		-0.1	202010	Older	B	USA	North America	Oregon		Homo sapiens	MT304487		19A		Queen et al A				
+USA/NH-QDX-618/2020	3/18/20		0.02	202012	Older	B.1.1	USA	North America	New Hampshire		Homo sapiens	MW064687	1	20B		Rosenthal et al C		Quest Diagnostics	Quest Diagnostics	
+USA/GA-CDC-03063103-001/2020	2/29/20		0.02	202009	Older	B.1.1.61	USA	North America	Georgia		Homo sapiens	MT276327	1	20B		Tao et al A				
+USA/JEHX/2020	11/4/20		0.03	202045	Older	B.1.1.337	USA	North America	Alabama		Homo sapiens	MW923422	1	20B		Grimwood et al A				
+USA/MD-MDH-0232/2020	9/28/20		0.07	202040	Older	B.1.1.207	USA	North America	Maryland		Homo sapiens	MW157249	3	20B		Keller et al A				
+USA/NC-SLPH-0033/2020	10/5/20		0.02	202041	Older	B.1.1.139	USA	North America	North Carolina		Homo sapiens	MW646425	2	20B		Chase et al A				
+USA/CT-CDC-QDX25704330/2021	6/7/21		0.51	202123	Older	C.37	USA	North America	Connecticut		Homo sapiens	MZ432922	7	21G (Lambda)		Howard et al A		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/MD-CDC-ASC210003728/2021	3/11/21		0.44	202110	Older	B.1.1.7	USA	North America	Maryland		Homo sapiens	MZ256061	7	"20I (Alpha, V1)"		Howard et al B				
+USA/WA-CDC-LC0056226/2021	4/18/21		0.43	202116	Older	B.1.1.7	USA	North America	Washington		Homo sapiens	MZ181679	7	"20I (Alpha, V1)"		Howard et al C				
+USA/RI-CDCBI-CRSP_02755/2021	4/15/21		0.37	202115	Older	B.1.1.7	USA	North America	Rhode Island		Homo sapiens	MZ101474	7	"20I (Alpha, V1)"		Lemieux et al A		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/NJ-CDC-LC0066666/2021	5/21/21		0.37	202120	Older	B.1.1.7	USA	North America	New Jersey		Homo sapiens	MZ371918	6	"20I (Alpha, V1)"		Howard et al D				
+USA/MI-CDC-QDX24633083/2021	5/4/21		0.44	202118	Older	B.1.1.7	USA	North America	Michigan		Homo sapiens	MZ288560	6	"20I (Alpha, V1)"		Howard et al E				
+USA/FL-CDC-QDX23892633/2021	4/13/21		0.4	202115	Older	B.1.1.7	USA	North America	Florida		Homo sapiens	MZ073809	6	"20I (Alpha, V1)"		Howard et al F				
+USA/FL-BPHL-1295/2021	1/29/21		0.41	202104	Older	B.1.1.7	USA	North America	Florida		Homo sapiens	MW735549	6	"20I (Alpha, V1)"		Schmedes et al A		FLDOH	Florida Bureau of Public Health Laboratories	
+USA/IA-CDC-STM-000023171/2021	2/24/21		0.41	202108	Older	B.1.1.7	USA	North America	Iowa		Homo sapiens	MW808212	6	"20I (Alpha, V1)"		Cook et al A				
+USA/NYI-NA-21-184/2021	5/8/21		0.41	202118	Older	B.1.1.7	USA	North America	New York		Homo sapiens	MZ448832	6	"20I (Alpha, V1)"		Mitchell et al A				
+USA/UT-UPHL-210812656259/2021	3/10/21		0.41	202110	Older	B.1.1.7	USA	North America	Utah		Homo sapiens	MZ842932	6	"20I (Alpha, V1)"		Linares et al		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/NC-CDC-STM-000069573/2021	5/5/21		0.35	202118	Older	B.1.1.7	USA	North America	North Carolina		Homo sapiens	MZ290584	7	"20I (Alpha, V1)"		Howard et al G				
+USA/LA-CDC-STM-000033024/2021	3/9/21		0.41	202110	Older	B.1.1.7	USA	North America	Louisiana		Homo sapiens	MW964057	6	"20I (Alpha, V1)"		Howard et al H				
+USA/FL-CDC-STM-000704227/2021	6/19/21		0.41	202124	Older	B.1.1.7	USA	North America	Florida		Homo sapiens	OL522376	6	"20I (Alpha, V1)"		Howard et al I		CDC-OAMD	'Helix'	
+USA/TX-CDC-QDX23916720/2021	4/14/21		0.41	202115	Older	B.1.1.7	USA	North America	Texas		Homo sapiens	MZ090230	6	"20I (Alpha, V1)"		Howard et al J				
+USA/WA-CDC-UW21052413641/2021	5/24/21		0.45	202121	Older	Q.3	USA	North America	Washington		Homo sapiens	MZ385942	7	"20I (Alpha, V1)"		Howard et al K		CDC-OAMD	UW Virology Lab	
+USA/MI-MDHHS-SC23430/2021	2/9/21		0.38	202106	Older	B.1.1.7	USA	North America	Michigan		Homo sapiens	OL849136	6	"20I (Alpha, V1)"		Blankenship et al A				
+USA/SD-SDPHL-0380/2021	5/13/21		0.4	202119	Older	B.1.1.7	USA	North America	South Dakota		Homo sapiens	MZ444206	7	"20I (Alpha, V1)"		Carlson et al A		South Dakota Department of Health	South Dakota Public Health Laboratory	
+USA/1715882/2021	6/1/21		0.43	202122	Older	B.1.1.7	USA	North America	Iowa		Homo sapiens	ON186475	7	"20I (Alpha, V1)"		Reeb et al A		State Hygienic Laboratory at the University of Iowa	Test Iowa	
+USA/MN-CDC-ASC210053811/2021	4/8/21		0.41	202114	Older	B.1.1.7	USA	North America	Minnesota		Homo sapiens	MZ084940	7	"20I (Alpha, V1)"		Howard et al L				
+USA/HI-CDC-LC0073774/2021	6/13/21		0.48	202124	Older	B.1.1.7	USA	North America	Hawaii		Homo sapiens	OK231825	6	"20I (Alpha, V1)"		Howard et al M				
+USA/NJ-CDC-ASC210108476/2021	6/9/21		0.46	202123	Older	B.1.1.7	USA	North America	New Jersey		Homo sapiens	OK291715	6	"20I (Alpha, V1)"		Howard et al N				
+USA/NJ-CDC-LC0066286/2021	5/26/21		0.42	202121	Older	B.1.1.7	USA	North America	New Jersey		Homo sapiens	MZ371780	6	"20I (Alpha, V1)"		Howard et al O				
+USA/LA-CDC-2-4651561/2021	7/13/21		0.47	202128	Older	B.1.1.7	USA	North America	Louisiana		Homo sapiens	MZ709055	7	"20I (Alpha, V1)"		Sheth et al A				
+USA/WI-CDC-FG-024742/2021	4/7/21		0.46	202114	Older	B.1.1.7	USA	North America	Wisconsin		Homo sapiens	MZ182640	8	"20I (Alpha, V1)"		Howard et al P				
+USA/KS-CDC-ASC210031318/2021	4/23/21		0.46	202116	Older	B.1.1.7	USA	North America	Kansas		Homo sapiens	MZ283973	8	"20I (Alpha, V1)"		Howard et al Q				
+USA/MP-CDC-2-4392999/2021	4/29/21		0.43	202117	Older	B.1.1.7	USA	North America	Northern Mariana Islands		Homo sapiens	MZ331023	6	"20I (Alpha, V1)"		Sheth et al B				
+USA/CA-CDC-FG-020173/2021	4/7/21		0.48	202114	Older	B.1.1.7	USA	North America	California		Homo sapiens	MW992510	6	"20I (Alpha, V1)"		Howard et al R				
+USA/CO-CDC-MMB09379877/2021	7/14/21		0.44	202128	Older	B.1.1.7	USA	North America	Colorado		Homo sapiens	MZ809650	6	"20I (Alpha, V1)"		Howard et al S		CDC-OAMD	Mako Medical	
+USA/PA-CDC-STM-000058865/2021	4/16/21		0.44	202115	Older	B.1.1.7	USA	North America	Pennsylvania		Homo sapiens	MZ132307	6	"20I (Alpha, V1)"		Howard et al T				
+USA/PA-CDC-LC0066727/2021	5/24/21		0.44	202121	Older	B.1.1.7	USA	North America	Pennsylvania		Homo sapiens	MZ372012	6	"20I (Alpha, V1)"		Howard et al U				
+USA/AR-CDC-QDX26400584/2021	6/29/21		0.41	202126	Older	B.1.1.7	USA	North America	Arkansas		Homo sapiens	MZ590861	6	"20I (Alpha, V1)"		Howard et al V		CDC-OAMD	Quest Diagnostics Incorporated	
+PRI/PR-UPRRP-2460/2021	4/5/21		0.42	202114	Older	B.1.1.7	USA	North America	Puerto Rico		Homo sapiens	OK203756	7	"20I (Alpha, V1)"		Van Belleghem et al A				
+USA/VA-CDC-LC0058220/2021	5/6/21		0.45	202118	Older	B.1.1.7	USA	North America	Virginia		Homo sapiens	MZ253581	6	"20I (Alpha, V1)"		Howard et al W				
+USA/MD-CDC-ASC210108280/2021	6/8/21		0.42	202123	Older	B.1.1.7	USA	North America	Maryland		Homo sapiens	MZ450329	6	"20I (Alpha, V1)"		Howard et al X				
+USA/NYI-1343-21-1/2021	3/24/21		0.43	202112	Older	B.1.1.7	USA	North America	New York		Homo sapiens	MZ451581	6	"20I (Alpha, V1)"		Mitchell et al B				
+USA/WA-CDC-LC0034717/2021	3/22/21		0.44	202112	Older	B.1.1.7	USA	North America	Washington		Homo sapiens	MW914346	6	"20I (Alpha, V1)"		Howard et al Y				
+USA/OK-CDC-ASC210031563/2021	4/23/21		0.42	202116	Older	B.1.1.7	USA	North America	Oklahoma		Homo sapiens	MZ284510	6	"20I (Alpha, V1)"		Howard et al Z				
+USA/NE-CDC-ASC210064873/2021	5/15/21		0.43	202119	Older	B.1.1.7	USA	North America	Nebraska		Homo sapiens	OK292905	6	"20I (Alpha, V1)"		Howard et al AA				
+USA/NV-CDC-LC0043879/2021	4/9/21		0.44	202114	Older	B.1.1.7	USA	North America	Nevada		Homo sapiens	MZ039471	6	"20I (Alpha, V1)"		Howard et al AB				
+USA/HI-CDC-LC0045000/2021	4/16/21		0.43	202115	Older	B.1.1.7	USA	North America	Hawaii		Homo sapiens	MZ069738	6	"20I (Alpha, V1)"		Howard et al AC				
+USA/ME-CDC-QDX26032805/2021	6/15/21		0.44	202124	Older	B.1.1.7	USA	North America	Maine		Homo sapiens	OK252863	7	"20I (Alpha, V1)"		Howard et al AD				
+USA/MI-CDC-ASC210064755/2021	5/18/21		0.51	202120	Older	B.1.1.7	USA	North America	Michigan		Homo sapiens	MZ294784	6	"20I (Alpha, V1)"		Howard et al AE				
+USA/RI-CDC-2-4331764/2021	4/24/21		0.43	202116	Older	B.1.1.7	USA	North America	Rhode Island		Homo sapiens	MZ206201	6	"20I (Alpha, V1)"		Sheth et al C				
+USA/MA-CDCBI-CRSP_4D7WUXO5MAAEGIQU/2021	5/25/21		0.43	202121	Older	B.1.1.7	USA	North America	Massachusetts		Homo sapiens	MZ472148	6	"20I (Alpha, V1)"		Lemieux et al B		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/ME-CDC-4056514-001/2021	3/16/21		0.46	202111	Older	B.1.1.7	USA	North America	Maine		Homo sapiens	MW945262	7	"20I (Alpha, V1)"		Li et al R				
+USA/VA-CDC-LC0022891/2021	2/28/21		0.45	202109	Older	B.1.1.7	USA	North America	Virginia		Homo sapiens	MW844769	6	"20I (Alpha, V1)"		Cook et al B				
+USA/AR-UNM-2110200000377/2021	4/12/21		0.46	202115	Older	B.1.1.7	USA	North America	Arkansas		Homo sapiens	OM461724	7	"20I (Alpha, V1)"		Domman et al A		University of New Mexico Health Sciences	Arkansas Department of Health	
+USA/WA-CDC-UW21062222950/2021	6/22/21		0.54	202125	Older	B.1.1.7	USA	North America	Washington		Homo sapiens	MZ532411	8	"20I (Alpha, V1)"		Howard et al AF		CDC-OAMD	UW Virology Lab	
+USA/GA-CDC-STM-000068405/2021	5/1/21		0.45	202117	Older	B.1.1.7	USA	North America	Georgia		Homo sapiens	MZ279060	6	"20I (Alpha, V1)"		Howard et al AG				
+USA/MP-CDC-2-4122711/2021	3/22/21		0.45	202112	Older	B.1.1.7	USA	North America	Northern Mariana Islands		Homo sapiens	MZ780117	6	"20I (Alpha, V1)"		Sheth et al D				
+USA/AR-UNM-ADH2112700000032/2021	5/7/21		0.51	202118	Older	P.1	USA	North America	Arkansas		Homo sapiens	OM461976	10	"20J (Gamma, V3)"		Domman et al B		University of New Mexico Health Sciences	Arkansas Department of Health	
+USA/PA-CDC-ASC210059352/2021	5/5/21		0.49	202118	Older	P.1.13	USA	North America	Pennsylvania		Homo sapiens	MZ281316	10	"20J (Gamma, V3)"		Howard et al AH				
+USA/MD-MDH-2535/2021	5/18/21		0.45	202120	Older	P.1	USA	North America	Maryland		Homo sapiens	MZ393520	10	"20J (Gamma, V3)"		Keller et al B				
+USA/IL-CDC-QDX26076102/2021	6/17/21		0.48	202124	Older	P.1	USA	North America	Illinois		Homo sapiens	MZ536442	11	"20J (Gamma, V3)"		Howard et al AI		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/AR-UAMS002/2020	4/1/20		0.02	202014	Older	B.1.1	USA	North America	Arkansas		Homo sapiens	MT766908	1	20B		Jenjaroenpun et al A				
+USA/WA-S1955/2020	6/2/20		0.02	202023	Older	B.1.1.291	USA	North America	Washington		Homo sapiens	MT831434	1	20B		Nickerson et al A		Seattle Flu Study submission group	Washington State Department of Health	
+USA/WA-S2926/2020	8/25/20		0.02	202035	Older	B.1.1.291	USA	North America	Washington		Homo sapiens	MW474107	1	20B		Nickerson et al B		Seattle Flu Study submission group	Washington State Department of Health	
+USA/JW0326/2021	2/22/21		0.05	202108	Older	B.1.1.222	USA	North America	North Carolina		Homo sapiens	MZ619428	2	20B		Wang et al A				
+USA/MD-CDC-LC0020407/2021	2/23/21		0.24	202108	Older	R.1	USA	North America	Maryland		Homo sapiens	MW985707	3	20B		Howard et al AJ				
+USA/CUIMC-NP-3381/2020	11/9/20		-0.02	202046	Older	B.1.1.461	USA	North America	New York		Homo sapiens	MZ680800	2	20B		Annavajhala et al A				
+USA/AK-PHL473/2020	6/11/20		0.03	202024	Older	B.1.1	USA	North America	Alaska		Homo sapiens	MW079834	1	20B		DeRonde et al A				
+USA/VT-CDC-2-4044718/2020	11/29/20		0.04	202049	Older	B.1.1.159	USA	North America	Vermont		Homo sapiens	MW550589	1	20B		Queen et al B				
+USA/IL-UW-857/2020	7/8/20		0.02	202028	Older	B.1.1.464	USA	North America	Illinois		Homo sapiens	MT846547	1	20B		Moreno et al C				
+USA/CO-QDX-3407/2020	10/30/20		0.07	202044	Older	B.1.1.222	USA	North America	Colorado		Homo sapiens	MW522384	1	20B		Rosenthal et al D				
+USA/NE-CDC-LC0004304/2021	1/4/21		0.11	202101	Older	B.1.1.222	USA	North America	Nebraska		Homo sapiens	MW638586	1	20B		Cook et al C				
+USA/PR-CDC-LC0006445/2021	1/18/21		0.04	202103	Older	B.1.1.434	USA	North America	Puerto Rico		Homo sapiens	MW636593	1	20B		Cook et al D				
+USA/SD-UW-859/2020	7/9/20		0.02	202028	Older	B.1.1.228	USA	North America	South Dakota		Homo sapiens	MT846549	1	20B		Moreno et al D				
+USA/WA-S2744/2020	7/17/20		0.02	202029	Older	B.1.1.228	USA	North America	Washington		Homo sapiens	MT947560	1	20B		Nickerson et al C		Seattle Flu Study submission group	Seattle Flu Study	
+USA/TX-QDX-3503/2020	9/13/20		0.01	202038	Older	B.1.1	USA	North America	Texas		Homo sapiens	MW521803	1	20B		Rosenthal et al E				
+USA/MD-MDH-2677/2021	1/5/21		0.1	202101	Older	B.1.1.25	USA	North America	Maryland		Homo sapiens	MZ438622	2	20B		Keller et al C				
+USA/OR-CDC-LC0091072/2021	6/14/21		0.45	202124	Older	B.1.1.318	USA	North America	Oregon		Homo sapiens	OK231923	5	20B		Howard et al AK				
+USA/LA-BIE-LSUH000773/2020	8/23/20		0.02	202035	Older	B.1.1.268	USA	North America	Louisiana		Homo sapiens	MZ457477	1	20B		Crabtree et al				
+USA/OH-CDC-2-3693592/2020	10/30/20		0.08	202044	Older	B.1.1.265	USA	North America	Ohio		Homo sapiens	MW406579	2	20B		Queen et al C				
+USA/WV120496/2021	3/12/21		0.16	202110	Older	B.1.1.420	USA	North America	West Virginia		Homo sapiens	MZ499926	3	20B		Denvir et al A				
+USA/NC-QDX-4454/2020	8/19/20		-0.01	202034	Older	B.1.1.135	USA	North America	North Carolina		Homo sapiens	MW566533	2	20B		Rosenthal et al F				
+USA/MT-BHDH-5296/2020	8/4/20		0.02	202032	Older	B.1.1	USA	North America	Montana		Homo sapiens	MW861384	1	20B		Nemudryi et al				
+USA/SD-CDC-IBX299544129180/2021	3/16/21		0.28	202111	Older	B.1.1.519	USA	North America	South Dakota		Homo sapiens	MZ010077	3	20B		Howard et al AL				
+USA/WV-CDC-LC0034933/2021	3/17/21		0.27	202111	Older	B.1.1.519	USA	North America	West Virginia		Homo sapiens	MW903701	3	20B		Howard et al AM				
+USA/KY-CDC-ASC210012858/2021	3/20/21		0.31	202111	Older	B.1.1.519	USA	North America	Kentucky		Homo sapiens	MW891942	4	20B		Howard et al AN				
+USA/NV-CDC-LC0039198/2021	3/29/21		0.26	202113	Older	B.1.1.519	USA	North America	Nevada		Homo sapiens	MZ003167	3	20B		Howard et al AO				
+USA/FL-CDC-STM-000024551/2021	2/24/21		0.26	202108	Older	B.1.1.519	USA	North America	Florida		Homo sapiens	MW758574	4	20B		Cook et al E				
+USA/1626106/2021	3/15/21		0.25	202111	Older	B.1.1.519	USA	North America	Iowa		Homo sapiens	ON062734	4	20B		Reeb et al B		State Hygienic Laboratory at the University of Iowa	State Hygienic Laboratory at the University of Iowa	
+USA/OH-CDC-LC0009275/2021	1/23/21		0.24	202103	Older	B.1.1.519	USA	North America	Ohio		Homo sapiens	MW640387	4	20B		Cook et al F				
+USA/AK-PHL7861/2021	4/1/21		0.31	202113	Older	B.1.1.519	USA	North America	Alaska		Homo sapiens	MZ202141	4	20B		DeRonde et al B				
+USA/AK-PHL7816/2021	3/31/21		0.27	202113	Older	B.1.1.519	USA	North America	Alaska		Homo sapiens	MZ199182	4	20B		DeRonde et al C				
+USA/AK-PHL7744/2021	3/25/21		0.27	202112	Older	B.1.1.519	USA	North America	Alaska		Homo sapiens	MZ246401	3	20B		DeRonde et al D				
+USA/AK-CDC-2-4504158/2021	5/16/21		0.26	202120	Older	B.1.1.519	USA	North America	Alaska		Homo sapiens	MZ451698	4	20B		Sheth et al E				
+USA/OK-CDC-QDX35823847/2022	4/11/22		1.35	202215	One month ago	BA.2	USA	North America	Oklahoma		Homo sapiens	ON336988	25	21L (Omicron)	0.02	Howard et al AP		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/AK-CDC-LC0582158/2022	4/12/22		1.33	202215	One week ago	BA.2.3	USA	North America	Alaska	BA.2.3	Homo sapiens	ON372707	25	21L (Omicron)	0.03	Howard et al AQ		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/WA-CDC-LC0537615/2022	2/10/22		1.34	202206	Older	BA.2.3	USA	North America	Washington	BA.2.3	Homo sapiens	OM789632	25	21L (Omicron)		Howard et al AR		CDC-OAMD	Laboratory Corporation of America	
+USA/GU-CDC-2-5776857/2022	2/14/22		1.37	202207	One month ago	BA.2.3	USA	North America	Guam	BA.2.3	Homo sapiens	ON333339	25	21L (Omicron)		Sheth et al F		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	
+USA/GU-CDC-2-5877388/2022	3/7/22		1.38	202210	One week ago	BA.2.3	USA	North America	Guam	BA.2.3	Homo sapiens	ON384081	25	21L (Omicron)	0	Sheth et al G		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	6.36
+USA/MP-CDC-2-5807126/2022	1/27/22		1.31	202204	One month ago	BA.2.3	USA	North America	Northern Mariana Islands	BA.2.3	Homo sapiens	ON260232	25	21L (Omicron)		Sheth et al H		CDC DVD Genomics and DIscovery Team	Commonwealth Healthcare Center	
+USA/MP-CDC-2-5903680/2022	3/11/22		1.31	202210	One week ago	BA.2.3	USA	North America	Northern Mariana Islands	BA.2.3	Homo sapiens	ON402580	25	21L (Omicron)	0	Sheth et al I		CDC DVD Genomics and DIscovery Team	Commonwealth Healthcare Center	6.36
+USA/2086735/2022	4/21/22		1.37	202216	One week ago	BA.2.3	USA	North America	Iowa	BA.2.3	Homo sapiens	ON398904	25	21L (Omicron)	0.07	Reeb et al C		State Hygienic Laboratory at the University of Iowa	State Hygienic Laboratory at the University of Iowa	6.36
+USA/WA-CDC-ASC210823217/2022	2/21/22		1.35	202208	Older	BA.2.3	USA	North America	Washington	BA.2.3	Homo sapiens	OM911119	24	21L (Omicron)		Howard et al AS		CDC-OAMD	Aegis Sciences Corporation	
+USA/OR-CDC-LC0582062/2022	4/15/22		1.37	202215	One week ago	BA.2.3	USA	North America	Oregon	BA.2.3	Homo sapiens	ON373271	25	21L (Omicron)	0.04	Howard et al AT		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/MP-CDC-2-5903899/2022	4/4/22		1.37	202214	One week ago	BA.2.3	USA	North America	Northern Mariana Islands	BA.2.3	Homo sapiens	ON402697	25	21L (Omicron)	0.01	Sheth et al J		CDC DVD Genomics and DIscovery Team	Commonwealth Healthcare Center	6.36
+USA/DC-CDC-STM-298H995QE/2022	4/9/22		1.35	202214	One month ago	BA.2	USA	North America	Washington DC		Homo sapiens	ON345577	25	21L (Omicron)	0.02	Howard et al AU		CDC-OAMD	'Helix'	6.36
+USA/WA-CDC-UW22040314148/2022	4/3/22		1.35	202214	One month ago	BA.2	USA	North America	Washington		Homo sapiens	ON305124	25	21L (Omicron)	0.01	Howard et al AV		CDC-OAMD	UW Virology Lab	6.36
+USA/OH-CDC-ASC210738945/2022	3/27/22		1.38	202213	One month ago	BA.2	USA	North America	Ohio		Homo sapiens	ON235121	26	21L (Omicron)	0	Howard et al AW		CDC-OAMD	Aegis Sciences Corporation	6.36
+USA/CO-CDC-MMB14933855/2022	4/5/22		1.36	202214	One month ago	BA.2	USA	North America	Colorado		Homo sapiens	ON346215	26	21L (Omicron)	0.01	Howard et al AX		CDC-OAMD	Mako Medical	6.36
+USA/OH-CDC-QDX34993022/2022	3/13/22		1.35	202211	Older	BA.2.9	USA	North America	Ohio		Homo sapiens	ON117903	25	21L (Omicron)	0	Howard et al AY		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/TN-CDC-QDX35775977/2022	4/6/22		1.35	202214	One month ago	BA.2.9	USA	North America	Tennessee		Homo sapiens	ON334951	25	21L (Omicron)	0.01	Howard et al AZ		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/HI-CDC-QDX35868921/2022	4/9/22		1.39	202214	One month ago	BA.2	USA	North America	Hawaii		Homo sapiens	ON335989	25	21L (Omicron)	0.02	Howard et al BA		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/VI-CDC-2-5903795/2022	4/12/22		1.35	202215	One week ago	BA.2	USA	North America	Virgin Islands		Homo sapiens	ON402750	25	21L (Omicron)	0.03	Sheth et al K		CDC DVD Genomics and DIscovery Team	VI-US Virgin Islands Department of Health	6.36
+USA/VA-CDC-QDX36261382/2022	4/23/22		1.37	202216	1-2 days ago	BA.2.12	USA	North America	Virginia		Homo sapiens	ON453016	26	21L (Omicron)	0.08	Howard et al BB				6.36
+USA/DC-CDC-LC0571453/2022	3/30/22		1.37	202213	One month ago	BA.2.12.1	USA	North America	Washington DC	BA.2.12.1	Homo sapiens	ON247871	26	22C (Omicron)	0	Howard et al BC		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/WV-CDC-LC0590815/2022	4/22/22		1.37	202216	3-7 days ago	BA.2.12.1	USA	North America	West Virginia	BA.2.12.1	Homo sapiens	ON414847	26	22C (Omicron)	0.07	Howard et al BD		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/MD-CDC-LC0571523/2022	3/30/22		1.35	202213	One month ago	BA.2.12	USA	North America	Maryland		Homo sapiens	ON247888	25	21L (Omicron)	0	Howard et al BE		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/CO-CDC-MMB15028256/2022	4/17/22		1.35	202216	One week ago	BA.2	USA	North America	Colorado		Homo sapiens	ON389603	25	21L (Omicron)	0.05	Howard et al BF		CDC-OAMD	Mako Medical	6.36
+USA/FL-CDC-LC0571083/2022	3/24/22		1.35	202212	One month ago	BA.2	USA	North America	Florida		Homo sapiens	ON247454	25	21L (Omicron)	0	Howard et al BG		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/SD-CDC-ASC210723535/2022	4/5/22		1.34	202214	One month ago	BA.2	USA	North America	South Dakota		Homo sapiens	ON252974	25	21L (Omicron)	0.01	Howard et al BH		CDC-OAMD	Aegis Sciences Corporation	6.36
+USA/MS-MSPHL-0770/2022	3/29/22		1.35	202213	Older	BA.2	USA	North America	Mississippi		Homo sapiens	ON117782	25	21L (Omicron)	0	Karolewicz et al A		Mississippi Public Health Lab	MS PHL	6.36
+USA/MN-MDH-23535/2022	4/1/22		1.35	202213	One month ago	BA.2	USA	North America	Minnesota		Homo sapiens	ON254387	25	21L (Omicron)	0.01	Garfin et al				6.36
+USA/OSPHL05447/2022	4/4/22		1.35	202214	One month ago	BA.2	USA	North America	Oregon		Homo sapiens	ON256200	25	21L (Omicron)	0.01	Razzaque et al A				6.36
+USA/VT-Broad-CRSP_QNVU6RCWCKAGNRYT/2022	4/14/22		1.34	202215	3-7 days ago	BA.2	USA	North America	Vermont		Homo sapiens	ON403236	25	21L (Omicron)	0.04	Lemieux et al C		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	6.36
+USA/ND-CDC-MMB14595620/2022	3/1/22		1.39	202209	Older	BA.2.10	USA	North America	North Dakota		Homo sapiens	ON032103	25	21L (Omicron)	0	Howard et al BI		CDC-OAMD	Mako Medical	6.36
+USA/OK-CDC-QDX35823842/2022	4/10/22		1.34	202215	One month ago	BA.2.10	USA	North America	Oklahoma		Homo sapiens	ON336146	25	21L (Omicron)	0.02	Howard et al BJ		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/WI-CDC-QDX34496898/2022	3/2/22		1.34	202209	Older	BA.2.10	USA	North America	Wisconsin		Homo sapiens	ON034258	25	21L (Omicron)	0	Howard et al BK		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/WI-CDC-ASC210845892/2022	3/19/22		1.34	202211	Older	BA.2.10	USA	North America	Wisconsin		Homo sapiens	ON144848	25	21L (Omicron)	0	Howard et al BL		CDC-OAMD	Aegis Sciences Corporation	6.36
+USA/PA-CDC-QDX35281550/2022	3/27/22		1.38	202213	One month ago	BA.2	USA	North America	Pennsylvania		Homo sapiens	ON203765	25	21L (Omicron)	0	Howard et al BM		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/NV-CDC-LC0591789/2022	4/18/22		1.36	202216	3-7 days ago	BA.2	USA	North America	Nevada		Homo sapiens	ON414069	25	21L (Omicron)	0.05	Howard et al BN		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/NJ-CDC-LC0570957/2022	3/28/22		1.35	202213	One month ago	BA.2	USA	North America	New Jersey		Homo sapiens	ON247550	25	21L (Omicron)	0	Howard et al BO		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/NM-CDC-LC0589066/2022	4/10/22		1.35	202215	One week ago	BA.2	USA	North America	New Mexico		Homo sapiens	ON394912	25	21L (Omicron)	0.02	Howard et al BP		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/SC-CDC-QDX34836314/2022	3/14/22		1.35	202211	Older	BA.2	USA	North America	South Carolina		Homo sapiens	ON084696	25	21L (Omicron)	0	Howard et al BQ		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/RI-CDC-LC0575162/2022	3/21/22		1.35	202212	One month ago	BA.2	USA	North America	Rhode Island		Homo sapiens	ON294485	25	21L (Omicron)	0	Howard et al BR		CDC-OAMD	Laboratory Corporation of America	6.36
+USA/TN-CDC-ASC210849919/2022	4/1/22		1.35	202213	One month ago	BA.2	USA	North America	Tennessee		Homo sapiens	ON236480	25	21L (Omicron)	0.01	Howard et al BS		CDC-OAMD	Aegis Sciences Corporation	6.36
+USA/OK-CDC-QDX36018362/2022	4/15/22		1.35	202215	One week ago	BA.2	USA	North America	Oklahoma		Homo sapiens	ON393481	25	21L (Omicron)	0.04	Howard et al BT		CDC-OAMD	Quest Diagnostics Incorporated	6.36
+USA/MN-CDC-IBX622352676438/2021	12/29/21		1.25	202152	Older	BA.1.20	USA	North America	Minnesota		Homo sapiens	OM289367	27	21K (Omicron)		Howard et al BU		CDC-OAMD	Infinity Biologix	
+USA/MD-CDC-ASC210699759/2022	2/11/22		1.26	202206	Older	BA.1.20	USA	North America	Maryland		Homo sapiens	OM834279	27	21K (Omicron)		Howard et al BV		CDC-OAMD	Aegis Sciences Corporation	
+USA/FL-CDC-STM-9A8FNW5QX/2022	1/26/22		1.27	202204	Older	BA.1.20	USA	North America	Florida		Homo sapiens	OM686556	27	21K (Omicron)		Howard et al BW		CDC-OAMD	'Helix'	
+USA/WI-CDC-FG-244231/2022	1/9/22		1.27	202202	Older	BA.1.20	USA	North America	Wisconsin		Homo sapiens	OM445983	27	21K (Omicron)		Howard et al BX		CDC-OAMD	Fulgent Genetics	
+USA/MI-CDC-ASC210593536/2022	1/16/22		1.28	202203	Older	BA.1.20	USA	North America	Michigan		Homo sapiens	OM518185	27	21K (Omicron)		Howard et al BY		CDC-OAMD	Aegis Sciences Corporation	
+USA/TX-CDC-ASC210693258/2022	2/4/22		1.27	202205	Older	BA.1.20	USA	North America	Texas		Homo sapiens	OM767399	27	21K (Omicron)		Howard et al BZ		CDC-OAMD	Aegis Sciences Corporation	
+USA/WI-CDC-LC0468820/2021	12/30/21		1.27	202152	Older	BA.1.20	USA	North America	Wisconsin		Homo sapiens	OM357656	27	21K (Omicron)		Howard et al CA		CDC-OAMD	Laboratory Corporation of America	
+USA/V03446/2022	2/8/22		1.31	202206	Older	BA.1.17.2	USA	North America	Arkansas		Homo sapiens	ON157445	27	21K (Omicron)		Boyanton et al A		University of Arkansas Medical Sciences/Arkansas Children's Hospital	University of Arkansas for Medical Sciences	
+USA/LA-CDC-STM-Q44Z7QWN2/2022	1/5/22		1.28	202201	Older	BA.1.15	USA	North America	Louisiana		Homo sapiens	OM354585	27	21K (Omicron)		Howard et al CB		CDC-OAMD	'Helix'	
+USA/GA-CDC-LC0481285/2022	1/14/22		1.28	202202	Older	BA.1.15	USA	North America	Georgia		Homo sapiens	OM413543	27	21K (Omicron)		Howard et al CC		CDC-OAMD	Laboratory Corporation of America	
+USA/FL-CDC-LC0449236/2021	12/28/21		1.28	202152	Older	BA.1.15	USA	North America	Florida		Homo sapiens	OM226040	27	21K (Omicron)		Howard et al CD				
+USA/CA-CDC-FG-198485/2021	12/16/21		1.28	202150	Older	BA.1.15	USA	North America	California		Homo sapiens	OM013367	27	21K (Omicron)		Howard et al CE		CDC-OAMD	Fulgent Genetics	
+USA/MI-CDC-STM-HAPUT35JK/2022	1/5/22		1.28	202201	Older	BA.1.15	USA	North America	Michigan		Homo sapiens	OM354704	27	21K (Omicron)		Howard et al CF		CDC-OAMD	'Helix'	
+USA/HI-CDC-ASC210652512/2022	2/7/22		1.28	202206	Older	BA.1.15	USA	North America	Hawaii		Homo sapiens	OM727771	27	21K (Omicron)		Howard et al CG		CDC-OAMD	Aegis Sciences Corporation	
+USA/MS-CDC-ASC210730837/2022	3/1/22		1.28	202209	Older	BA.1.15	USA	North America	Mississippi		Homo sapiens	OM969431	27	21K (Omicron)	0	Howard et al CH		CDC-OAMD	Aegis Sciences Corporation	-4.84
+USA/WI-CDC-STM-K8RD3PEXN/2021	12/29/21		1.27	202152	Older	BA.1	USA	North America	Wisconsin		Homo sapiens	OM196132	27	21K (Omicron)		Howard et al CI		CDC-OAMD	'Helix'	
+USA/NY-CDC-FG-194186/2021	12/9/21		1.24	202149	Older	BA.1	USA	North America	New York		Homo sapiens	OL986634	26	21K (Omicron)		Howard et al CJ		CDC-OAMD	Fulgent Genetics	
+USA/KS-CDC-LC0459688/2021	12/23/21		1.27	202151	Older	BA.1	USA	North America	Kansas		Homo sapiens	OM355712	27	21K (Omicron)		Howard et al CK				
+USA/VT-CDC-ASC210598128/2022	1/11/22		1.24	202202	Older	BA.1	USA	North America	Vermont		Homo sapiens	OM398956	26	21K (Omicron)		Howard et al CL				
+USA/CA-CDC-FG-272710/2022	2/10/22		1.26	202206	Older	BA.1	USA	North America	California		Homo sapiens	OM763240	27	21K (Omicron)		Howard et al CM		CDC-OAMD	Fulgent Genetics	
+USA/CA-CDC-STM-8NH7J6JYU/2021	12/21/21		1.27	202151	Older	BA.1	USA	North America	California		Homo sapiens	OM140183	27	21K (Omicron)		Howard et al CN		CDC-OAMD	'Helix'	
+USA/SC-CDC-LC0450394/2021	12/29/21		1.27	202152	Older	BA.1	USA	North America	South Carolina		Homo sapiens	OM226996	27	21K (Omicron)		Howard et al CO		CDC-OAMD	Laboratory Corporation of America	
+USA/NMDOH-2022002914/2022	1/3/22		1.27	202201	Older	BA.1.18	USA	North America	New Mexico		Homo sapiens	OM876812	27	21K (Omicron)		Johnson et al A		New Mexico Department of Health Scientific Laboratory	New Mexico Department of Health Scientific Laboratory	
+USA/NH-CDC-LC0491092/2022	1/9/22		1.34	202202	Older	BA.1.1.10	USA	North America	New Hampshire	BA.1.1	Homo sapiens	OM494570	29	21K (Omicron)		Howard et al CP		CDC-OAMD	Laboratory Corporation of America	
+USA/AL-CDC-ASC210642633/2021	12/23/21		1.3	202151	Older	BA.1.1.18	USA	North America	Alabama	BA.1.1	Homo sapiens	OM198559	28	21K (Omicron)		Howard et al CQ		CDC-OAMD	Aegis Sciences Corporation	
+USA/VA-CDC-ASC210694437/2022	2/7/22		1.3	202206	Older	BA.1.1.18	USA	North America	Virginia	BA.1.1	Homo sapiens	OM727817	28	21K (Omicron)		Howard et al CR		CDC-OAMD	Aegis Sciences Corporation	
+USA/MO-CDC-QDX32456707/2021	12/30/21		1.3	202152	Older	BA.1.1.18	USA	North America	Missouri	BA.1.1	Homo sapiens	OM310397	28	21K (Omicron)		Howard et al CS		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/TG1183480/2022	2/8/22		1.3	202206	3-7 days ago	BA.1.1.18	USA	North America	Arizona	BA.1.1	Homo sapiens	ON425790	28	21K (Omicron)		Bowers et al B				
+USA/MT-CDC-LC0538125/2022	2/13/22		1.3	202207	Older	BA.1.1	USA	North America	Montana	BA.1.1	Homo sapiens	OM790018	28	21K (Omicron)		Howard et al CT		CDC-OAMD	Laboratory Corporation of America	
+USA/NJ-CDC-ASC210570407/2021	12/27/21		1.31	202152	Older	BA.1.1	USA	North America	New Jersey	BA.1.1	Homo sapiens	OM261057	28	21K (Omicron)		Howard et al CU		CDC-OAMD	Aegis Sciences Corporation	
+USA/NJ-CDC-LC0508532/2022	1/26/22		1.31	202204	Older	BA.1.1	USA	North America	New Jersey	BA.1.1	Homo sapiens	OM626920	28	21K (Omicron)		Howard et al CV		CDC-OAMD	Laboratory Corporation of America	
+USA/AZ-CDC-LC0551280/2022	2/14/22		1.3	202207	Older	BA.1.1	USA	North America	Arizona	BA.1.1	Homo sapiens	OM940190	28	21K (Omicron)		Howard et al CW		CDC-OAMD	Laboratory Corporation of America	
+USA/DE-CDC-ASC210733313/2022	3/9/22		1.3	202210	Older	BA.1.1	USA	North America	Delaware	BA.1.1	Homo sapiens	ON046922	28	21K (Omicron)	0	Howard et al CX		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/SC-CDC-ASC210724948/2022	4/8/22		1.29	202214	One month ago	BA.1.1	USA	North America	South Carolina	BA.1.1	Homo sapiens	ON309943	28	21K (Omicron)	0.02	Howard et al CY		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/RI-CDCBI-RIDOH_4NUCB7XXYZTHPV7O/2022	2/9/22		1.3	202206	Older	BA.1.1	USA	North America	Rhode Island	BA.1.1	Homo sapiens	OM916407	28	21K (Omicron)		Lemieux et al D		Broad Institute Genomic Center for Infectious Diseases	Rhode Island Department of Health	
+USA/WA-S17287/2022	1/11/22		1.3	202202	Older	BA.1.1	USA	North America	Washington	BA.1.1	Homo sapiens	OM538507	28	21K (Omicron)		Nickerson et al D		Seattle Flu Study submission group	Seattle Flu Study	
+USA/KY-CDC-LC0543761/2022	2/9/22		1.29	202206	Older	BA.1.1	USA	North America	Kentucky	BA.1.1	Homo sapiens	OM871793	28	21K (Omicron)		Howard et al CZ		CDC-OAMD	Laboratory Corporation of America	
+USA/WV-CDC-LC0530312/2022	1/25/22		1.3	202204	Older	BA.1.1	USA	North America	West Virginia	BA.1.1	Homo sapiens	OM736900	28	21K (Omicron)		Howard et al DA		CDC-OAMD	Laboratory Corporation of America	
+USA/JW5700/2022	4/8/22		1.3	202214	One month ago	BA.1.1	USA	North America	North Carolina	BA.1.1	Homo sapiens	ON323699	28	21K (Omicron)	0.02	Wang et al B				-3.63
+USA/SC-CDC-MMB13660360/2022	1/19/22		1.3	202203	Older	BA.1.1	USA	North America	South Carolina	BA.1.1	Homo sapiens	OM645993	28	21K (Omicron)		Howard et al DB		CDC-OAMD	Mako Medical	
+USA/NM-CDC-LC0589447/2022	4/14/22		1.29	202215	One week ago	BA.1.1	USA	North America	New Mexico	BA.1.1	Homo sapiens	ON395418	28	21K (Omicron)	0.04	Howard et al DC		CDC-OAMD	Laboratory Corporation of America	-3.63
+USA/OH-CDC-FG-237806/2022	1/4/22		1.3	202201	Older	BA.1.1	USA	North America	Ohio	BA.1.1	Homo sapiens	OM306797	28	21K (Omicron)		Howard et al DD		CDC-OAMD	Fulgent Genetics	
+USA/22U036MD00039_2-23-2022/2022	2/5/22		1.3	202205	Older	BA.1.1	USA	North America	Arkansas	BA.1.1	Homo sapiens	OM831500	28	21K (Omicron)		Harley et al		University of Arkansas Medical Sciences/Arkansas Children's Hospital	University of Arkansas for Medical Sciences	
+USA/PR-CDC-FG-215414/2021	12/23/21		1.3	202151	Older	BA.1.1	USA	North America	Puerto Rico	BA.1.1	Homo sapiens	OM118635	28	21K (Omicron)		Howard et al DE		CDC-OAMD	Fulgent Genetics	
+USA/NM-CDC-LC0475988/2022	1/5/22		1.3	202201	Older	BA.1.1	USA	North America	New Mexico	BA.1.1	Homo sapiens	OM344777	29	21K (Omicron)		Howard et al DF		CDC-OAMD	Laboratory Corporation of America	
+USA/SC-CDC-ASC210859685/2022	2/16/22		1.32	202207	Older	BA.1.1	USA	North America	South Carolina	BA.1.1	Homo sapiens	OM862575	29	21K (Omicron)		Howard et al DG		CDC-OAMD	Aegis Sciences Corporation	
+USA/CA-CDC-LC0562276/2022	3/8/22		1.32	202210	Older	BA.1.1	USA	North America	California	BA.1.1	Homo sapiens	ON048564	28	21K (Omicron)	0	Howard et al DH		CDC-OAMD	Laboratory Corporation of America	-3.63
+USA/OH-CDC-MMB12566107/2021	12/29/21		1.3	202152	Older	BA.1.1	USA	North America	Ohio	BA.1.1	Homo sapiens	OM413967	28	21K (Omicron)		Howard et al DI		CDC-OAMD	Mako Medical	
+USA/OH-CDC-LC0525147/2022	1/24/22		1.3	202204	Older	BA.1.1	USA	North America	Ohio	BA.1.1	Homo sapiens	OM692617	28	21K (Omicron)		Howard et al DJ		CDC-OAMD	Laboratory Corporation of America	
+USA/UNKNOWN-UW-22032292700/2022	3/22/22		1.32	202212	One week ago	BA.1.1	USA	North America		BA.1.1	Homo sapiens	ON380905	29	21K (Omicron)	0	Roychoudhury et al H				-3.63
+USA/NC-CDC-MMB14417963/2022	2/17/22		1.3	202207	Older	BA.1.1	USA	North America	North Carolina	BA.1.1	Homo sapiens	OM979730	28	21K (Omicron)		Howard et al DK		CDC-OAMD	Mako Medical	
+USA/OK-CDC-QDX34992926/2022	3/16/22		1.31	202211	Older	BA.1.1	USA	North America	Oklahoma	BA.1.1	Homo sapiens	ON118091	28	21K (Omicron)	0	Howard et al DL		CDC-OAMD	Quest Diagnostics Incorporated	-3.63
+USA/ID-CDC-LC0455242/2021	12/31/21		1.3	202152	Older	BA.1.1	USA	North America	Idaho	BA.1.1	Homo sapiens	OM271768	28	21K (Omicron)		Howard et al DM		CDC-OAMD	Laboratory Corporation of America	
+USA/NV-CDC-QDX33787646/2022	2/12/22		1.31	202206	Older	BA.1.1	USA	North America	Nevada	BA.1.1	Homo sapiens	OM811187	28	21K (Omicron)		Howard et al DN		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/MT-CDC-ASC210547133/2022	1/28/22		1.3	202204	Older	BA.1.1	USA	North America	Montana	BA.1.1	Homo sapiens	OM644103	28	21K (Omicron)		Howard et al DO		CDC-OAMD	Aegis Sciences Corporation	
+USA/CA-CDC-FG-257998/2022	1/29/22		1.29	202204	Older	BA.1.1	USA	North America	California	BA.1.1	Homo sapiens	OM620130	28	21K (Omicron)		Howard et al DP		CDC-OAMD	Fulgent Genetics	
+USA/MT-CDC-ASC210683361/2022	1/24/22		1.29	202204	Older	BA.1.1	USA	North America	Montana	BA.1.1	Homo sapiens	OM561450	28	21K (Omicron)		Howard et al DQ		CDC-OAMD	Aegis Sciences Corporation	
+USA/OK-CDC-ASC210846080/2022	3/18/22		1.29	202211	Older	BA.1.1	USA	North America	Oklahoma	BA.1.1	Homo sapiens	ON143823	28	21K (Omicron)	0	Howard et al DR		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/WV129817/2022	1/24/22		1.3	202204	Older	BA.1.1	USA	North America	West Virginia	BA.1.1	Homo sapiens	ON029894	28	21K (Omicron)		Denvir et al B				
+USA/MN-CDC-IBX543524727008/2022	2/10/22		1.27	202206	Older	BA.1.1	USA	North America	Minnesota	BA.1.1	Homo sapiens	OM781880	28	21K (Omicron)		Howard et al DS		CDC-OAMD	Infinity Biologix	
+USA/ND-CDC-MMB14141948/2022	2/3/22		1.32	202205	Older	BA.1.1	USA	North America	North Dakota	BA.1.1	Homo sapiens	OM769264	28	21K (Omicron)		Howard et al DT		CDC-OAMD	Mako Medical	
+USA/WY-CDC-ASC210734559/2022	3/11/22		1.29	202210	Older	BA.1.1	USA	North America	Wyoming	BA.1.1	Homo sapiens	ON078579	28	21K (Omicron)	0	Howard et al DU		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/MT-CDC-MMB14498379/2022	2/22/22		1.3	202208	Older	BA.1.1	USA	North America	Montana	BA.1.1	Homo sapiens	ON017885	28	21K (Omicron)		Howard et al DV		CDC-OAMD	Mako Medical	
+USA/2072641/2022	3/23/22		1.24	202212	One month ago	BA.1.1	USA	North America	Iowa	BA.1.1	Homo sapiens	ON239659	26	21K (Omicron)	0	Reeb et al D		State Hygienic Laboratory at the University of Iowa	University of Iowa Hospitals and Clinics	-3.63
+USA/CA-CDC-FG-247305/2022	1/23/22		1.3	202204	Older	BA.1.1	USA	North America	California	BA.1.1	Homo sapiens	OM464072	28	21K (Omicron)		Howard et al DW		CDC-OAMD	Fulgent Genetics	
+USA/GA-GPHL-1163/2022	2/4/22		1.3	202205	Older	BA.1.1	USA	North America	Georgia	BA.1.1	Homo sapiens	OM906990	28	21K (Omicron)		Parrott et al A				
+USA/OH-CDC-MMB14804134/2022	3/21/22		1.3	202212	One month ago	BA.1.1	USA	North America	Ohio	BA.1.1	Homo sapiens	ON242552	28	21K (Omicron)	0	Howard et al DX		CDC-OAMD	Mako Medical	-3.63
+USA/VA-CDC-QDX34633775/2022	3/8/22		1.32	202210	Older	BA.1.1	USA	North America	Virginia	BA.1.1	Homo sapiens	ON035459	29	21K (Omicron)	0	Howard et al DY		CDC-OAMD	Quest Diagnostics Incorporated	-3.63
+USA/LA-CDC-QDX36018837/2022	4/16/22		1.32	202215	3-7 days ago	BA.1.1	USA	North America	Louisiana	BA.1.1	Homo sapiens	ON418496	28	21K (Omicron)	0.04	Howard et al DZ		CDC-OAMD	Quest Diagnostics Incorporated	-3.63
+USA/MS-MSPHL-0796/2022	4/7/22		1.26	202214	One month ago	BA.1.1	USA	North America	Mississippi	BA.1.1	Homo sapiens	ON305011	26	21K (Omicron)	0.01	Karolewicz et al B		Mississippi Public Health Lab	MS PHL	-3.63
+USA/CA-CDC-ASC210540111/2022	1/21/22		1.3	202203	Older	BA.1.1	USA	North America	California	BA.1.1	Homo sapiens	OM567018	28	21K (Omicron)		Howard et al EA		CDC-OAMD	Aegis Sciences Corporation	
+USA/FL-CDC-STM-U7UE4EUVS/2022	1/29/22		1.3	202204	Older	BA.1.1	USA	North America	Florida	BA.1.1	Homo sapiens	OM664802	28	21K (Omicron)		Howard et al EB		CDC-OAMD	'Helix'	
+USA/MO-CDC-QDX33832334/2022	2/12/22		1.3	202206	Older	BA.1.1	USA	North America	Missouri	BA.1.1	Homo sapiens	OM831906	28	21K (Omicron)		Howard et al EC		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/MI-CDC-STM-X4GWKFZXR/2022	4/8/22		1.3	202214	One month ago		USA	North America	Michigan	BA.1.1	Homo sapiens	ON347183	28	21K (Omicron)	0.02	Howard et al ED		CDC-OAMD	'Helix'	-3.63
+USA/NV-CDC-FG-261862/2022	1/27/22		1.3	202204	Older	BA.1.1	USA	North America	Nevada	BA.1.1	Homo sapiens	OM650995	28	21K (Omicron)		Howard et al EE		CDC-OAMD	Fulgent Genetics	
+USA/AL-CDC-ASC210754029/2022	2/27/22		1.3	202209	Older	BA.1.1	USA	North America	Alabama	BA.1.1	Homo sapiens	OM948303	28	21K (Omicron)	0	Howard et al EF		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/ME-CDC-ASC210754783/2022	3/1/22		1.3	202209	Older	BA.1.1	USA	North America	Maine	BA.1.1	Homo sapiens	OM969463	28	21K (Omicron)	0	Howard et al EG		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/IN-CDC-ASC210757686/2022	3/8/22		1.3	202210	Older	BA.1.1	USA	North America	Indiana	BA.1.1	Homo sapiens	ON019732	28	21K (Omicron)	0	Howard et al EH		CDC-OAMD	Aegis Sciences Corporation	-3.63
+USA/IN-CDC-LC0128358/2021	7/18/21		0.48	202129	Older	B.1.621	USA	North America	Indiana		Homo sapiens	OK112375	8	20A		Howard et al EI				
+USA/AK-PHL10848/2021	7/26/21		0.56	202130	Older	B.1.621	USA	North America	Alaska		Homo sapiens	MZ813041	8	21H (Mu)		DeRonde et al E				
+USA/CMI-IGM-021/2021	8/13/21		0.58	202132	Older	B.1.621	USA	North America	Ohio		Homo sapiens	OL869035	8	21H (Mu)		Wilson et al				
+USA/TG668374/2020	5/14/20		0	202020	Older	B.1	USA	North America	Arizona		Homo sapiens	MZ906636	1	20A		Bowers et al C		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories	
+USA/IL-UW-987/2020	7/16/20		0.01	202029	Older	B.1.162	USA	North America	Illinois		Homo sapiens	MT846673	1	20A		Moreno et al E				
+USA/CO-UW-739/2020	6/29/20		0	202027	Older	B.1.112	USA	North America	Colorado		Homo sapiens	MT772510	1	20A		Moreno et al F				
+USA/SC_3371_T56/2020	10/25/20		0	202044	Older	B.1.436	USA	North America	South Carolina		Homo sapiens	MW480014	1	20A		Arnold et al M				
+USA/ND-CDC-2-4069014/2020	12/29/20		0.04	202053	Older	B.1.436	USA	North America	North Dakota		Homo sapiens	MW708903	1	20A		Queen et al D				
+USA/DC-DFS-PHL-0078/2020	6/16/20		0.01	202025	Older	B.1.110.3	USA	North America	Washington DC		Homo sapiens	MZ487675	1	20A		Nguyen et al B				
+USA/NC-SLPH-0023/2020	11/24/20		0.03	202048	Older	B.1.110.3	USA	North America	North Carolina		Homo sapiens	MW642255	2	20A		Chase et al B				
+USA/NMDOH-2020189581/2020	7/7/20		0	202028	Older	B.1.366	USA	North America	New Mexico		Homo sapiens	MW070052	2	20C		Johnson et al B		New Mexico Department of Health Scientific Laboratory	New Mexico Department of Health Scientific Laboratory	
+USA/FL-QDX-1707/2020	3/17/20		-0.03	202012	Older	B.1	USA	North America	Florida		Homo sapiens	MW190457	1	20C		Rosenthal et al G		Quest Diagnostics	Quest Diagnostics	
+USA/AR-UAMS001/2020	4/1/20		-0.03	202014	Older	B.1.319	USA	North America	Arkansas		Homo sapiens	MT766907	1	20C		Jenjaroenpun et al B				
+USA/TG969465/2020	8/29/20		-0.04	202035	Older	B.1.369	USA	North America	Arizona		Homo sapiens	OK466179	1	20C		Bowers et al D		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories - Phoenix	
+USA/MN-MDH-1565/2020	8/14/20		-0.03	202033	Older	B.1.369	USA	North America	Minnesota		Homo sapiens	MT958262	1	20C		Plumb et al A				
+USA/NC-SLPH-0043/2020	9/18/20		0	202038	Older	B.1.369	USA	North America	North Carolina		Homo sapiens	MW646600	3	20C		Chase et al C				
+USA/NE-Noblis-S04B03/2020	9/30/20		-0.01	202040	Older	B.1.369	USA	North America	Nebraska		Homo sapiens	MZ267338	1	20C		Brinkac et al A		Noblis		
+USA/WA-S4072/2021	1/18/21		-0.01	202103	Older	B.1.369	USA	North America	Washington		Homo sapiens	MW555947	1	20C		Nickerson et al E		Seattle Flu Study submission group	Altius Institute	
+USA/ND-NDDH-0024/2020	3/27/20		-0.03	202013	Older	B.1	USA	North America	North Dakota		Homo sapiens	MW685449	1	20C		Wingerter et al A				
+USA/FL-BPHL-1504/2020	7/23/20		-0.04	202030	Older	B.1.509	USA	North America	Florida		Homo sapiens	MW056151	1	20C		Schmedes et al B		FLDOH	Florida Bureau of Public Health Laboratories	
+USA/KS-CDC-LC0002426/2021	1/2/21		0.03	202053	Older	B.1.509	USA	North America	Kansas		Homo sapiens	MW635111	2	20C		Cook et al G				
+USA/WV118926/2020	4/10/20		-0.04	202015	Older	B.1	USA	North America	West Virginia		Homo sapiens	MZ498099	1	20C		Denvir et al C				
+USA/CT-Yale-333/2020	5/12/20		-0.04	202020	Older	B.1	USA	North America	Connecticut		Homo sapiens	MT886446	1	20C		Fauver et al		Yale School of Public Health	Yale COVID-19 Biorepository	
+USA/WA-S2863/2020	9/18/20		-0.04	202038	Older	B.1.500	USA	North America	Washington		Homo sapiens	MW173406	1	20C		Nickerson et al F		Seattle Flu Study submission group	Seattle Flu Study	
+USA/MS-BIE-CAT00302/2020	4/8/20		-0.02	202015	Older	B.1	USA	North America	Mississippi		Homo sapiens	OL589102	1	20C		Feehan et al A				
+USA/KS-BIE-CAT00283/2020	4/8/20		-0.02	202015	Older	B.1.450	USA	North America	Kansas		Homo sapiens	OL589091	1	20C		Feehan et al B				
+USA/SC-COVID21-0718/2021	2/27/21		0.03	202108	Older	B.1.336	USA	North America	South Carolina		Homo sapiens	MW768052	1	20C		Flores et al A				
+USA/MS-QDX-3493/2020	9/9/20		-0.02	202037	Older	B.1.265	USA	North America	Mississippi		Homo sapiens	MW521732	1	20C		Rosenthal et al H				
+USA/AR-CDC-2-3693765/2020	10/26/20		-0.02	202044	Older	B.1.265	USA	North America	Arkansas		Homo sapiens	MW406516	1	20C		Queen et al F				
+USA/WV118930/2020	10/14/20		0	202042	Older	B.1.265	USA	North America	West Virginia		Homo sapiens	MZ498101	1	20C		Denvir et al D				
+USA/TN-QDX-246/2020	4/28/20		-0.01	202018	Older	B.1	USA	North America	Tennessee		Homo sapiens	MT806798	1	20C		Rosenthal et al I				
+USA/SD-SDPHL-0361/2020	3/13/20		-0.02	202011	Older	B.1	USA	North America	South Dakota		Homo sapiens	MZ346437	1	20C		Carlson et al B		South Dakota Department of Health	South Dakota Public Health Laboratory	
+USA/ID-UW-6455/2020	4/2/20		-0.02	202014	Older	B.1	USA	North America	Idaho		Homo sapiens	MT461633	2	20C		Roychoudhury et al K				
+USA/GA-EHC-284Z/2020	5/14/20		0.02	202020	Older	B.1	USA	North America	Georgia		Homo sapiens	MZ313059	1	20C		Piantadosi et al A				
+USA/MS-USAFSAM-S025/2020	3/30/20		-0.01	202014	Older	B.1.595	USA	North America	Mississippi		Homo sapiens	MT873891	1	20C		Fries et al A		United States Air Force School of Aerospace Medicine	United States Air Force School of Aerospace Medicine	
+USA/SEARCH-0852-NBG/2020	5/14/20		0	202020	Older	B.1.595	USA	North America	Louisiana		Homo sapiens	MT811755	2	20C		Smither et al		The Scripps Research Institute	UC San Diego Center for Advanced Laboratory Medicine	
+USA/PR-CDC-LC0000631/2020	12/24/20		0.07	202052	Older	B.1.588	USA	North America	Puerto Rico		Homo sapiens	MW634288	2	20C		Cook et al H				
+USA/VI-CDC-2-4122440/2021	2/19/21		0.05	202107	Older	B.1.588	USA	North America	Virgin Islands		Homo sapiens	MZ780075	2	20C		Sheth et al L				
+USA/DC-DFS-PHL-0076/2020	5/16/20		-0.01	202020	Older	B.1.595.1	USA	North America	Washington DC		Homo sapiens	MZ488074	1	20C		Nguyen et al C				
+USA/TG920848/2020	10/30/20		-0.02	202044	Older	B.1.595	USA	North America	Arizona		Homo sapiens	MZ917484	1	20C		Bowers et al E		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories - Phoenix	
+USA/CT-UW-510/2020	6/8/20		0.02	202024	Older	B.1.595	USA	North America	Connecticut		Homo sapiens	MT750092	1	20C		Moreno et al G				
+USA/IL-UW-600/2020	6/25/20		-0.01	202026	Older	B.1.595	USA	North America	Illinois		Homo sapiens	MT750178	1	20C		Moreno et al H				
+USA/IN-CDC-STM-A100376/2021	1/5/21		0.08	202101	Older	B.1.596	USA	North America	Indiana		Homo sapiens	MW523806	3	20G		Cook et al I				
+USA/NV-QDX-3543/2020	10/13/20		0.05	202042	Older	B.1.2	USA	North America	Nevada		Homo sapiens	MW521749	1	20G		Rosenthal et al J				
+ON110373	9/22/20		0.06	202039	Older	B.1.2	USA	North America	Idaho			ON110373	1	20G		Ammons et al				
+USA/40639/2020	7/9/20		0.06	202028	Older	B.1.2	USA	North America	Idaho		Homo sapiens	OM315426	1	20G		Beukelman et al A				
+USA/42563/2020	7/9/20		0.07	202028	Older	B.1.2	USA	North America	Idaho		Homo sapiens	OM316380	1	20G		Beukelman et al B				
+USA/OSPHL01508/2020	8/7/20		0.06	202032	Older	B.1.2	USA	North America	Oregon		Homo sapiens	MZ682263	1	20G		Razzaque et al B				
+USA/WA-S2883/2020	9/28/20		0.06	202040	Older	B.1.2	USA	North America	Washington		Homo sapiens	MW173439	1	20G		Nickerson et al G		Seattle Flu Study submission group	Seattle Flu Study	
+USA/WA-S2961/2020	9/3/20		0.07	202036	Older	B.1.2	USA	North America	Washington		Homo sapiens	MW474137	1	20G		Nickerson et al H		Seattle Flu Study submission group	Washington State Department of Health	
+USA/NV-CDC-2-4058081/2020	12/30/20		0.06	202053	Older	B.1.2	USA	North America	Nevada		Homo sapiens	MW850152	1	20G		Sheth et al M				
+USA/WV064994/2021	1/13/21		0.1	202102	Older	B.1.2	USA	North America	West Virginia		Homo sapiens	MZ498075	1	20G		Denvir et al E				
+USA/ID-UI-IIDS-U0106/2020	9/23/20		0.06	202039	Older	B.1.2	USA	North America	Idaho		Homo sapiens	OM264384	1	20G		Andrews et al		University of Idaho IIDS GBRC	Gritman Medical Center	
+USA/VA-CDC-LC0012659/2021	1/31/21		0.06	202105	Older	B.1.2	USA	North America	Virginia		Homo sapiens	MW643411	1	20G		Cook et al J				
+USA/OR-CDC-2-3693568/2020	11/17/20		0.09	202047	Older	B.1.2	USA	North America	Oregon		Homo sapiens	MW406617	1	20G		Queen et al G				
+USA/ND-CDC-IBX264821207073/2021	3/21/21		0.08	202112	Older	B.1.2	USA	North America	North Dakota		Homo sapiens	MZ718171	1	20G		Howard et al EJ				
+USA/MT-CDC-LC0008896/2021	1/21/21		0.06	202103	Older	B.1.2	USA	North America	Montana		Homo sapiens	MW640188	1	20G		Cook et al K				
+USA/OR-CDC-2-3693481/2020	11/23/20		0.09	202048	Older	B.1.2	USA	North America	Oregon		Homo sapiens	MW406622	1	20G		Queen et al H				
+USA/MT-CDC-LC0021956/2021	2/20/21		0.07	202107	Older	B.1.2	USA	North America	Montana		Homo sapiens	MW779821	1	20G		Cook et al L				
+USA/TN-CDC-2-3877962/2021	1/26/21		0.09	202104	Older	B.1.2	USA	North America	Tennessee		Homo sapiens	MW708743	1	20G		Queen et al I				
+USA/OR-QDX-3377/2020	10/23/20		0.1	202043	Older	B.1.2	USA	North America	Oregon		Homo sapiens	MW522481	2	20G		Rosenthal et al K				
+USA/OK-CDC-2-3829843/2020	12/29/20		0.09	202053	Older	B.1.2	USA	North America	Oklahoma		Homo sapiens	MW708090	2	20G		Queen et al J				
+USA/MS-CDC-2-3714198/2020	11/5/20		0.08	202045	Older	B.1.2	USA	North America	Mississippi		Homo sapiens	MW495951	2	20G		Queen et al K				
+USA/CO-CDC-STM-000009219/2021	2/4/21		0.12	202105	Older	B.1.2	USA	North America	Colorado		Homo sapiens	MW672796	3	20G		Cook et al M				
+USA/SD-SDPHL-0145/2021	2/25/21		0.13	202108	Older	B.1.2	USA	North America	South Dakota		Homo sapiens	MW873941	3	20G		Carlson et al C		South Dakota Department of Health	South Dakota Public Health Laboratory	
+USA/MA-MGH-03730/2020	12/23/20		0.06	202052	Older	B.1.2	USA	North America	Massachusetts		Homo sapiens	MW687448	1	20G		Lemieux et al E		Broad Institute Genomic Center for Infectious Diseases	Massachusetts General Hospital	
+USA/SC-CDC-LC0005944/2021	1/17/21		0.12	202103	Older	B.1.2	USA	North America	South Carolina		Homo sapiens	MW636430	1	20G		Cook et al N				
+USA/DC-DFS-PHL-0264/2021	1/19/21		0.09	202103	Older	B.1.2	USA	North America	Washington DC		Homo sapiens	MZ487711	1	20G		Nguyen et al D				
+USA/TX-DSHS-2058/2020	12/2/20		0.06	202049	Older	B.1.2	USA	North America	Texas		Homo sapiens	MW436738	3	20G		Bonser et al		Texas Department of State Health Services-SARS-CoV-2 submission group	Texas Department of State Health Services	
+USA/AR-QDX-3303/2020	7/23/20		0.07	202030	Older	B.1.2	USA	North America	Arkansas		Homo sapiens	MW522370	1	20G		Rosenthal et al L				
+USA/AK-PHL767/2020	7/2/20		0.07	202027	Older	B.1.2	USA	North America	Alaska		Homo sapiens	MW173168	1	20G		DeRonde et al F				
+USA/MO-QDX-4514/2020	10/9/20		0.1	202041	Older	B.1.2	USA	North America	Missouri		Homo sapiens	MW566528	2	20G		Rosenthal et al M				
+USA/AR-CDC-2-3693771/2020	10/29/20		0.1	202044	Older	B.1.2	USA	North America	Arkansas		Homo sapiens	MW406520	1	20G		Queen et al L				
+USA/IN-CDC-LC0008734/2021	1/21/21		0.09	202103	Older	B.1.2	USA	North America	Indiana		Homo sapiens	MW640097	1	20G		Cook et al O				
+USA/FL-BPHL-1169/2020	8/19/20		0.06	202034	Older	B.1.2	USA	North America	Florida		Homo sapiens	MT956779	1	20G		Schmedes et al C		FLDOH	Florida Bureau of Public Health Laboratories	
+USA/2103300331/2021	3/30/21		0.09	202113	Older	B.1.2	USA	North America	New Hampshire		Homo sapiens	MZ798958	2	20G		Benton et al A				
+USA/KY-CDC-LC0042621/2021	4/5/21		0.07	202114	Older	B.1.2	USA	North America	Kentucky		Homo sapiens	MZ038338	1	20G		Howard et al EK				
+USA/NE-CDC-LC0003660/2021	1/10/21		0.07	202102	Older	B.1.2	USA	North America	Nebraska		Homo sapiens	MW638343	1	20G		Cook et al P				
+USA/IL-CDC-LC0005593/2021	1/15/21		0.08	202102	Older	B.1.2	USA	North America	Illinois		Homo sapiens	MW636310	1	20G		Cook et al Q				
+USA/FL-BPHL-2372/2020	10/16/20		0.07	202042	Older	B.1.2	USA	North America	Florida		Homo sapiens	MW490965	1	20G		Schmedes et al D		FLDOH	Florida Bureau of Public Health Laboratories	
+USA/VA_NIDDL_29800/2020	11/4/20		0.06	202045	Older	B.1.2	USA	North America	Virginia		Homo sapiens	MW974594	1	20G		Voegtly et al M				
+USA/GA-EHC-834D/2020	9/6/20		0.08	202037	Older	B.1.2	USA	North America	Georgia		Homo sapiens	MZ312997	1	20G		Piantadosi et al B				
+USA/KY-QDX-4444/2020	11/12/20		0.06	202046	Older	B.1.2	USA	North America	Kentucky		Homo sapiens	MW566512	1	20G		Rosenthal et al N				
+USA/UND-00036018/2020	12/3/20		0.08	202049	Older	B.1.2	USA	North America	Indiana		Homo sapiens	MZ518358	2	20G		Pfrender et al				
+USA/MI-MDHHS-SC26148/2020	11/13/20		0.05	202046	Older	B.1.2	USA	North America	Michigan		Homo sapiens	OL905914	1	20G		Blankenship et al B				
+USA/MP-CDC-2-3998396/2021	2/20/21		0.07	202107	Older	B.1.2	USA	North America	Northern Mariana Islands		Homo sapiens	MZ779755	1	20G		Sheth et al N				
+USA/MP-CDC-2-3998467/2021	2/20/21		0.07	202107	Older	B.1.2	USA	North America	Northern Mariana Islands		Homo sapiens	MZ779757	1	20G		Sheth et al O				
+USA/1423503/2020	11/12/20		0.08	202046	Older	B.1.2	USA	North America	Iowa		Homo sapiens	ON116197	1	20G		Reeb et al E		State Hygienic Laboratory at the University of Iowa	State Hygienic Laboratory at the University of Iowa	
+USA/WY-CDC-IBX369365469071/2021	4/7/21		0.19	202114	Older	B.1.2	USA	North America	Wyoming		Homo sapiens	OK220752	3	20G		Howard et al EL				
+USA/NE-Noblis-S23B15/2020	10/13/20		0.07	202042	Older	B.1.2	USA	North America	Nebraska		Homo sapiens	MZ267370	1	20G		Brinkac et al B		Noblis		
+USA/WA-S9087/2020	11/23/20		0.06	202048	Older	B.1.2	USA	North America	Washington		Homo sapiens	MZ469179	1	20G		Nickerson et al I		Seattle Flu Study submission group	Seattle Flu Study	
+USA/ME-CDC-2-4195191/2021	1/2/21		0.14	202053	Older	B.1.2	USA	North America	Maine		Homo sapiens	MZ028743	1	20G		Sheth et al P				
+USA/DC-CDC-LC0015061/2021	2/9/21		0.13	202106	Older	B.1.2	USA	North America	Washington DC		Homo sapiens	MW705874	1	20G		Cook et al R				
+USA/KS-CDC-2-4177038/2021	3/23/21		0.07	202112	Older	B.1.2	USA	North America	Kansas		Homo sapiens	MZ780203	1	20G		Sheth et al Q				
+USA/TN-CDC-2-4011863/2021	2/4/21		0.11	202105	Older	B.1.2	USA	North America	Tennessee		Homo sapiens	MW792652	2	20G		Queen et al M				
+USA/KY-CDC-LC0038912/2021	3/30/21		0.13	202113	Older	B.1.2	USA	North America	Kentucky		Homo sapiens	MZ002937	2	20G		Howard et al EM				
+USA/TX-DSHS-2243/2020	12/27/20		-0.05	202053	Older	B.1.2	USA	North America	Texas		Homo sapiens	MW535215	1	20G		Pokharel et al		Texas Department of State Health Services-SARS-CoV-2 submission group	Texas Department of State Health Services	
+USA/JDZC/2020	10/27/20		0.06	202044	Older	B.1.2	USA	North America	Alabama		Homo sapiens	MW923900	1	20G		Grimwood et al B				
+USA/GA-CDC-STM-000016746/2021	2/16/21		0.08	202107	Older	B.1.2	USA	North America	Georgia		Homo sapiens	MW777876	1	20G		Cook et al S				
+USA/MI-MDHHS-SC26100/2020	12/5/20		0.07	202049	Older	B.1.2	USA	North America	Michigan		Homo sapiens	OL905932	1	20G		Blankenship et al C				
+USA/MA-Broad_CRSP-00358/2021	1/8/21		0.06	202101	Older	B.1.2	USA	North America	Massachusetts		Homo sapiens	MW599498	1	20G		Lemieux et al F		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/PA-CDC-2-3693775/2020	11/5/20		0.09	202045	Older	B.1.2	USA	North America	Pennsylvania		Homo sapiens	MW406501	1	20G		Queen et al N				
+USA/NYI-734-20-1/2020	10/23/20		0.09	202043	Older	B.1.2	USA	North America	New York		Homo sapiens	MZ448879	1	20G		Mitchell et al C				
+USA/MN-MDH-3071/2021	2/11/21		0.16	202106	Older	B.1.2	USA	North America	Minnesota		Homo sapiens	MW719480	1	20G		Lorentz et al				
+USA/TN-VUMC-000170/2020	11/25/20		0.07	202048	Older	B.1.2	USA	North America	Tennessee		Homo sapiens	OK372290	1	20G		Vestal et al		Vanderbilt University Medical Center	Vanderbilt University Medical Center - Suman R. Das Lab	
+USA/IN-CDC-LC0009054/2021	1/20/21		0.13	202103	Older	B.1.2	USA	North America	Indiana		Homo sapiens	MW640270	2	20G		Cook et al T				
+USA/IL-BIE-COILL04/2020	11/2/20		0.09	202045	Older	B.1.2	USA	North America	Illinois		Homo sapiens	MZ363716	1	20G		Hagarty et al				
+USA/GU-CDC-2-3906151/2021	1/14/21		0.08	202102	Older	B.1.2	USA	North America	Guam		Homo sapiens	MW766867	1	20G		Queen et al O				
+USA/WI-UW-2523/2020	12/30/20		0.09	202053	Older	B.1.2	USA	North America	Wisconsin		Homo sapiens	MW486321	1	20G		Moreno et al I				
+USA/TN-SPHL-1220/2021	1/21/21		0.13	202103	Older	B.1.2	USA	North America	Tennessee		Homo sapiens	OL964698	1	20G		Selinsky et al A		FDA CVM NARMS - Tennesse DOH	Tennessee Department of Health Laboratory Services	
+USA/NE-CDC-2-3850523/2021	1/25/21		0.09	202104	Older	B.1.2	USA	North America	Nebraska		Homo sapiens	MW708534	1	20G		Queen et al P				
+USA/OK-CDC-LC0035079/2021	3/23/21		0.08	202112	Older	B.1.2	USA	North America	Oklahoma		Homo sapiens	MW903790	1	20G		Howard et al EN				
+USA/ND-CDC-2-4069013/2021	1/2/21		0.1	202053	Older	B.1.2	USA	North America	North Dakota		Homo sapiens	MW708915	1	20G		Queen et al Q				
+USA/COVID20-0076/2020	4/17/20		-0.03	202016	Older	B.1.334	USA	North America	South Carolina		Homo sapiens	MT764180	1	20C		Flores et al B				
+USA/IL-QDX-1103/2020	3/19/20		-0.03	202012	Older	B.1	USA	North America	Illinois		Homo sapiens	MW065143	1	20C		Rosenthal et al O		Quest Diagnostics	Quest Diagnostics	
+USA/IL-UW-553/2020	6/21/20		-0.02	202026	Older	B.1.578	USA	North America	Illinois		Homo sapiens	MT750133	1	20C		Moreno et al J				
+USA/OK-QDX-430/2020	3/19/20		-0.03	202012	Older	B.1	USA	North America	Oklahoma		Homo sapiens	MW064552	1	20C		Rosenthal et al P		Quest Diagnostics	Quest Diagnostics	
+USA/TG569498/2020	7/10/20		-0.03	202028	Older	B.1.516	USA	North America	Arizona		Homo sapiens	MZ906925	1	20C		Bowers et al F		The Translational Genomics Research Institute COVID submission group	ADHS	
+USA/MD-MDH-0056/2020	5/26/20		0.01	202022	Older	B.1.328	USA	North America	Maryland		Homo sapiens	MT827222	1	20C		Keller et al D				
+USA/AK153/2020	4/7/20		-0.03	202015	Older	B.1.38	USA	North America	Alaska		Homo sapiens	MT477857	1	20C		DeRonde et al G				
+USA/CO-QDX-3318/2020	8/5/20		-0.03	202032	Older	B.1.570	USA	North America	Colorado		Homo sapiens	MW522382	2	20C		Rosenthal et al Q				
+USA/CA-CZB-5759/2020	7/17/20		-0.03	202029	Older	B.1.267	USA	North America	California		Homo sapiens	MW483418	1	20C		Bhatt et al		Chan Zuckerberg Biohub	County of San Luis Obispo Public Health Laboratory	
+USA/TG670167/2020	4/30/20		-0.03	202018	Older	B.1	USA	North America	Arizona		Homo sapiens	MZ906361	1	20C		Bowers et al G		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories	
+USA/UT-UPHL-201010360/2020	7/6/20		-0.01	202028	Older	B.1.108	USA	North America	Utah		Homo sapiens	MW181478	1	20C		Young et al A		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/UT-UPHL-201016626/2020	7/6/20		-0.01	202028	Older	B.1.108	USA	North America	Utah		Homo sapiens	MW181502	1	20C		Young et al B		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/KY-CDC-2-3850641/2021	1/25/21		0.23	202104	Older	B.1	USA	North America	Kentucky		Homo sapiens	MZ779400	5	20C		Sheth et al R				
+USA/CT-CDC-QDX22524938/2021	2/27/21		0.23	202108	Older	B.1.623	USA	North America	Connecticut		Homo sapiens	MW975774	4	20C		Howard et al EO				
+USA/OSPHL01470/2020	5/1/20		-0.03	202018	Older	B.1	USA	North America	Oregon		Homo sapiens	MZ682062	1	20C		Razzaque et al C				
+USA/MA-MGH-01121/2020	5/2/20		0.01	202018	Older	B.1	USA	North America	Massachusetts		Homo sapiens	MT873396	1	20C		Lemieux et al G			Massachusetts Department of Public Health	
+USA/SEARCH-1086-SAN/2020	6/23/20		-0.03	202026	Older	B.1	USA	North America	California		Homo sapiens	MT811518	1	20C		SEARCH Alliance et al		The Scripps Research Institute	UC San Diego Center for Advanced Laboratory Medicine	
+USA/VSP0327/2020	8/26/20		-0.01	202035	Older	B.1.340	USA	North America	Pennsylvania		Homo sapiens	OK245582	2	20C		Marques et al				
+USA/MD-NIH-00020/2020	8/17/20		-0.01	202034	Older	B.1.576	USA	North America	Maryland		Homo sapiens	MW681014	1	20C		Roder et al				
+USA/ND-NDDH-0015/2020	5/2/20		-0.03	202018	Older	B.1	USA	North America	North Dakota		Homo sapiens	MW471396	1	20C		Wingerter et al B				
+USA/KS-QDX-3351/2020	9/27/20		-0.03	202040	Older	B.1.612	USA	North America	Kansas		Homo sapiens	MW522413	1	20C		Rosenthal et al R				
+USA/MN-MDH-1975/2020	10/22/20		-0.04	202043	Older	B.1.612	USA	North America	Minnesota		Homo sapiens	MW246618	1	20C		Plumb et al B				
+USA/NH-CDC-2-3714182/2020	11/6/20		0.06	202045	Older	B.1.361	USA	North America	New Hampshire		Homo sapiens	MW495978	1	20C		Queen et al R				
+USA/CUIMC-NP-3005/2020	8/27/20		0.01	202035	Older	B.1	USA	North America	New York		Homo sapiens	MZ681416	2	20C		Annavajhala et al B				
+USA/ME-CDC-QDX24981092/2021	5/11/21		0.38	202119	Older	B.1.526	USA	North America	Maine		Homo sapiens	MZ321322	5	21F (Iota)		Howard et al EP				
+USA/ME-CDC-2-4567196/2021	6/8/21		0.36	202123	Older	B.1.526	USA	North America	Maine		Homo sapiens	MZ511663	4	21F (Iota)		Sheth et al S				
+USA/MA-CDC-ASC210025878/2021	3/29/21		0.31	202113	Older	B.1.526	USA	North America	Massachusetts		Homo sapiens	MZ158828	3	21F (Iota)		Howard et al EQ				
+USA/IN-CDC-LC0042262/2021	4/1/21		0.39	202113	Older	B.1.526	USA	North America	Indiana		Homo sapiens	MZ037657	4	21F (Iota)		Howard et al ER				
+USA/DE-CDC-ASC210003424/2021	3/9/21		0.39	202110	Older	B.1.526	USA	North America	Delaware		Homo sapiens	OK295686	4	21F (Iota)		Howard et al ES				
+USA/NJ-CDC-LC0035971/2021	3/24/21		0.39	202112	Older	B.1.526	USA	North America	New Jersey		Homo sapiens	MZ000472	4	21F (Iota)		Howard et al ET				
+USA/OK-CDC-ASC210005030/2021	3/14/21		0.39	202111	Older	B.1.526	USA	North America	Oklahoma		Homo sapiens	MZ256295	4	21F (Iota)		Howard et al EU				
+USA/NY-CDC-LC0019157/2021	2/15/21		0.39	202107	Older	B.1.526	USA	North America	New York		Homo sapiens	MW985674	4	21F (Iota)		Howard et al EV				
+USA/MN-MDH-1759/2020	4/11/20		-0.03	202015	Older	B.1	USA	North America	Minnesota		Homo sapiens	MW136827	1	20C		Plumb et al C				
+USA/KY-CDC-LC0002174/2020	12/28/20		0.01	202053	Older	B.1	USA	North America	Kentucky		Homo sapiens	MW635021	1	20C		Cook et al U				
+USA/NC-CDC-LC0001424/2020	12/28/20		0.04	202053	Older	B.1.311	USA	North America	North Carolina		Homo sapiens	MW634676	1	20C		Cook et al V				
+USA/MO-QDX-4435/2020	11/14/20		0.03	202046	Older	B.1.311	USA	North America	Missouri		Homo sapiens	MW566518	1	20C		Rosenthal et al S				
+USA/MN-CDC-IBX282814885985/2021	3/25/21		0.06	202112	Older	B.1.311	USA	North America	Minnesota		Homo sapiens	OK220798	2	20C		Howard et al EW				
+USA/COVID20-1139/2020	7/10/20		-0.02	202028	Older	B.1	USA	North America	South Carolina		Homo sapiens	MW067814	1	20C		Flores et al C				
+USA/KY-QDX-3309/2020	7/10/20		-0.03	202028	Older	B.1	USA	North America	Kentucky		Homo sapiens	MW522420	1	20C		Rosenthal et al T				
+USA/CT-CDC-2-4058090/2020	11/30/20		0.07	202049	Older	B.1.517	USA	North America	Connecticut		Homo sapiens	MW850154	2	20C		Sheth et al T				
+USA/ME-CDC-2-3920719/2020	12/26/20		0.06	202052	Older	B.1.517	USA	North America	Maine		Homo sapiens	MW730916	2	20C		Queen et al S				
+USA/FL-BPHL-0101/2020	4/27/20		-0.03	202018	Older	B.1	USA	North America	Florida		Homo sapiens	MT577627	1	20C		Schmedes et al E		FLDOH	Florida Bureau of Public Health Laboratories	
+USA/CA-CZB-14068/2020	6/24/20		-0.03	202026	Older	B.1.453	USA	North America	California		Homo sapiens	MW565582	1	20C		Consortium et al A		CZ Biohub	Alameda County Public Health Lab	
+USA/VA_NIDDL_8353/2020	6/17/20		-0.03	202025	Older	B.1.451	USA	North America	Virginia		Homo sapiens	MW976945	1	20C		Voegtly et al N				
+USA/WV118693/2020	5/4/20		-0.03	202019	Older	B.1	USA	North America	West Virginia		Homo sapiens	MZ497591	1	20C		Denvir et al F				
+USA/OR-QDX-3525/2020	9/15/20		0.03	202038	Older	B.1.453	USA	North America	Oregon		Homo sapiens	MW521777	1	20C		Rosenthal et al U				
+USA/MA-MGH-03386/2020	11/9/20		0.04	202046	Older	B.1.433	USA	North America	Massachusetts		Homo sapiens	MW454697	1	20C		Lemieux et al H		Broad Institute of Harvard and MIT	Massachusetts General Hospital	
+USA/RI-Broad_RIDOH-00004/2020	10/26/20		0.07	202044	Older	B.1.375	USA	North America	Rhode Island		Homo sapiens	MW521591	2	20C		Lemieux et al I		Broad Institute Genomic Center for Infectious Diseases	Rhode Island Department of Health	
+USA/RI-Broad_RIDOH-00045/2020	11/30/20		0.07	202049	Older	B.1.375	USA	North America	Rhode Island		Homo sapiens	MW521618	2	20C		Lemieux et al J		Broad Institute Genomic Center for Infectious Diseases	Rhode Island Department of Health	
+USA/ME-CDC-QDX25249559/2021	5/22/21		0.42	202120	Older	B.1.637	USA	North America	Maine		Homo sapiens	MZ354013	5	20C		Howard et al EX				
+USA/MI-CDC-QDX25848379/2021	6/11/21		0.43	202123	Older	B.1.637	USA	North America	Michigan		Homo sapiens	MZ538419	4	20C		Howard et al EY		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/VA-CDC-QDX23320090/2021	3/25/21		0.42	202112	Older	B.1.637	USA	North America	Virginia		Homo sapiens	MW890590	7	20C		Howard et al EZ				
+USA/DC-CDC-2-4195359/2021	3/21/21		0.41	202112	Older	B.1.637	USA	North America	Washington DC		Homo sapiens	MZ028840	6	20C		Sheth et al U				
+USA/AZ-CDC-STM-000014248/2021	2/12/21		0.16	202106	Older	B.1.427	USA	North America	Arizona		Homo sapiens	MW767280	3	21C (Epsilon)		Cook et al W				
+USA/AR-CDC-FG-011742/2021	3/13/21		0.15	202110	Older	B.1.427	USA	North America	Arkansas		Homo sapiens	MW859813	5	21C (Epsilon)		Howard et al FA				
+USA/UT-CDC-ASC210058726/2021	5/4/21		0.16	202118	Older	B.1.427	USA	North America	Utah		Homo sapiens	MZ238425	3	21C (Epsilon)		Howard et al FB				
+USA/WA-S3736/2020	12/21/20		0.12	202052	Older	B.1.429	USA	North America	Washington		Homo sapiens	MW549247	3	21C (Epsilon)		Nickerson et al J		Seattle Flu Study submission group	Seattle Flu Study	
+USA/NMDOH-2021058545/2021	2/13/21		0.12	202106	Older	B.1.429	USA	North America	New Mexico		Homo sapiens	MW681549	3	21C (Epsilon)		Johnson et al C		New Mexico Department of Health Scientific Laboratory	New Mexico Department of Health Scientific Laboratory	
+USA/TN-CDC-LC0003616/2021	1/11/21		0.15	202102	Older	B.1.429	USA	North America	Tennessee		Homo sapiens	MW638324	4	21C (Epsilon)		Cook et al X				
+USA/NV-CDC-2-4634153/2021	3/5/21		0.17	202109	Older	B.1.429	USA	North America	Nevada		Homo sapiens	MZ666521	3	21C (Epsilon)		Sheth et al V				
+USA/PA-CDC-STM-000023332/2021	2/24/21		0.13	202108	Older	B.1.429	USA	North America	Pennsylvania		Homo sapiens	MW758688	3	21C (Epsilon)		Cook et al Y				
+USA/UT-CDC-LC0033969/2021	3/18/21		0.14	202111	Older	B.1.429	USA	North America	Utah		Homo sapiens	OK232703	3	21C (Epsilon)		Howard et al FC				
+USA/AK-PHL7794/2021	3/29/21		0.14	202113	Older	B.1.429	USA	North America	Alaska		Homo sapiens	MZ246566	3	21C (Epsilon)		DeRonde et al H				
+USA/OR-CDC-ASC210026624/2021	3/29/21		0.14	202113	Older	B.1.429	USA	North America	Oregon		Homo sapiens	MZ024204	3	21C (Epsilon)		Howard et al FD				
+USA/MA-MGH-01195/2020	5/4/20		0.05	202019	Older	B.1.390	USA	North America	Massachusetts		Homo sapiens	MT873307	3	20A		Lemieux et al K			Massachusetts Department of Public Health	
+USA/MI-MDHHS-SC21001/2020	6/11/20		-0.01	202024	Older	B.1	USA	North America	Michigan		Homo sapiens	OL816652	1	20A		Blankenship et al D				
+USA/TN-QDX-2517/2020	3/14/20		0.03	202011	Older	B.1	USA	North America	Tennessee		Homo sapiens	MW191277	1	20A		Rosenthal et al V		Quest Diagnostics	Quest Diagnostics	
+USA/NM-QDX-263/2020	4/30/20		0.04	202018	Older	B.1	USA	North America	New Mexico		Homo sapiens	MT806795	1	20A		Rosenthal et al W				
+USA/CA-CZB-13311/2020	11/2/20		0.08	202045	Older	B.1.399	USA	North America	California		Homo sapiens	MZ842445	2	20A		Consortium et al B		Chan Zuckerberg Biohub	Santa Clara County Public Health Laboratory	
+USA/OK-QDX-750/2020	3/16/20		0.03	202012	Older	B.1	USA	North America	Oklahoma		Homo sapiens	MW064850	1	20A		Rosenthal et al X		Quest Diagnostics	Quest Diagnostics	
+USA/PA-UW-547/2020	6/22/20		0.05	202026	Older	B.1.139	USA	North America	Pennsylvania		Homo sapiens	MT750127	1	20A		Moreno et al K				
+USA/1213603/2020	9/1/20		0.06	202036	Older	B.1.565	USA	North America	Iowa		Homo sapiens	ON184830	1	20A		Reeb et al F		State Hygienic Laboratory at the University of Iowa	State Hygienic Laboratory at the University of Iowa	
+USA/NE-CDC-LC0000092/2020	12/24/20		0.05	202052	Older	B.1.565	USA	North America	Nebraska		Homo sapiens	MW634058	2	20A		Cook et al Z				
+USA/MI-MDHHS-SC21979/2020	8/15/20		0.06	202033	Older	B.1.139	USA	North America	Michigan		Homo sapiens	OL817299	1	20A		Blankenship et al E				
+USA/WI-UW-757/2020	7/4/20		0.06	202027	Older	B.1.139	USA	North America	Wisconsin		Homo sapiens	MT795872	1	20A		Moreno et al L				
+USA/WI-UW-666/2020	6/26/20		0.06	202026	Older	B.1.139	USA	North America	Wisconsin		Homo sapiens	MT772443	1	20A		Moreno et al M				
+USA/NJ-UW-755/2020	7/7/20		0.06	202028	Older	B.1.139	USA	North America	New Jersey		Homo sapiens	MT795870	1	20A		Moreno et al N				
+USA/NY-UW-641/2020	6/28/20		0.06	202027	Older	B.1.139	USA	North America	New York		Homo sapiens	MT772418	1	20A		Moreno et al O				
+USA/UT-UPHL-201025349/2020	6/22/20		0.04	202026	Older	B.1.554	USA	North America	Utah		Homo sapiens	MW181543	1	20A		Young et al C		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/UT-UPHL-201109604/2020	10/12/20		0.06	202042	Older	B.1.400	USA	North America	Utah		Homo sapiens	MW241373	2	20A		Young et al D		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/Oklahoma-ADDL-1/2020	4/10/20		0.04	202015	Older	B.1.243	USA	North America	Oklahoma		Homo sapiens	MT998442	1	20A		Narayanan et al				
+USA/CA-CZB-16055/2020	11/29/20		0.06	202049	Older	B.1.243	USA	North America	California		Homo sapiens	MW653558	1	20A		Consortium et al C		CZ Biohub	Renegade	
+USA/NV-QDX-3361/2020	9/29/20		0.09	202040	Older	B.1.243	USA	North America	Nevada		Homo sapiens	MW522454	1	20A		Rosenthal et al Y				
+USA/GU-CDC-2-3847017/2020	11/27/20		0.06	202048	Older	B.1.243	USA	North America	Guam		Homo sapiens	MW766892	2	20A		Queen et al T				
+USA/MP-CDC-2-3831027/2020	9/1/20		0.06	202036	Older	B.1.243	USA	North America	Northern Mariana Islands		Homo sapiens	MZ779313	2	20A		Sheth et al W				
+USA/PA-M20153468/2020	12/4/20		0.06	202049	Older	B.1.243	USA	North America	Pennsylvania		Homo sapiens	MZ819934	2	20A		Xia et al A		PA Department of Health Bureau of Laboratories Submission Group	Pennsylvania Department of Health Bureau of Laboratories	
+USA/MS-CDC-LC0017360/2021	2/15/21		0.06	202107	Older	B.1.243	USA	North America	Mississippi		Homo sapiens	MW706833	2	20A		Cook et al AA				
+USA/NYI-NA-20-125/2020	8/31/20		0.04	202036	Older	B.1	USA	North America	New York		Homo sapiens	MZ448773	1	20A		Mitchell et al D				
+USA/MN-MDH-1516/2020	7/6/20		0.04	202028	Older	B.1.241	USA	North America	Minnesota		Homo sapiens	MT958213	1	20A		Plumb et al D				
+USA/MN-MDH-1523/2020	7/14/20		0.04	202029	Older	B.1.241	USA	North America	Minnesota		Homo sapiens	MT958220	1	20A		Plumb et al E				
+USA/COVID20-1150/2020	7/10/20		0.13	202028	Older	B.1	USA	North America	South Carolina		Homo sapiens	MW067750	1	20A		Flores et al D				
+USA/MN-CDC-2-3714175/2020	11/13/20		0.04	202046	Older	B.1	USA	North America	Minnesota		Homo sapiens	MW495936	1	20A		Queen et al U				
+USA/NE-CDC-LC0000326/2020	12/26/20		0	202052	Older	B.1	USA	North America	Nebraska		Homo sapiens	MW634160	1	20A		Cook et al AB				
+USA/WA-S3501/2020	12/3/20		0.04	202049	Older	B.1.234	USA	North America	Washington		Homo sapiens	MW548887	1	20A		Nickerson et al K		Seattle Flu Study submission group	Seattle Flu Study	
+USA/MO-CDC-2-3693556/2020	11/2/20		0.05	202045	Older	B.1.234	USA	North America	Missouri		Homo sapiens	MW406593	1	20A		Queen et al V				
+USA/AK-PHL7683/2021	3/17/21		0.05	202111	Older	B.1.234	USA	North America	Alaska		Homo sapiens	MZ246503	1	20A		DeRonde et al I				
+USA/KY-CDC-2-3714568/2020	12/2/20		0.03	202049	Older	B.1.234	USA	North America	Kentucky		Homo sapiens	MW496107	1	20A		Queen et al W				
+USA/MA-CDC-4014019-001/2020	12/2/20		0.04	202049	Older	B.1.234	USA	North America	Massachusetts		Homo sapiens	MW863690	2	20A		Tao et al B				
+USA/TN-CDC-LC0020179/2021	2/21/21		0.04	202108	Older	B.1.234	USA	North America	Tennessee		Homo sapiens	MW734544	1	20A		Cook et al AC				
+USA/NM-UNM-TC217282/2020	7/14/20		0.04	202029	Older	B.1	USA	North America	New Mexico		Homo sapiens	OL706963	1	20A		Domman et al C		The University of New Mexico Health Sciences Center	TriCore Reference Laboratories	
+USA/hCoV_19_USA_ID_IVREF_648369_2020/2020	8/26/20		0.04	202035	Older	B.1	USA	North America	Idaho		Homo sapiens	OL467786	1	20A		Beukelman et al C				
+USA/TG989716/2020	9/3/20		0.05	202036	Older	B.1.240	USA	North America	Arizona		Homo sapiens	OK467157	1	20A		Bowers et al H		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories - Phoenix	
+USA/SD-SDPHL-0400/2020	9/14/20		0.04	202038	Older	B.1.240	USA	North America	South Dakota		Homo sapiens	MZ444225	2	20A		Carlson et al D		South Dakota Department of Health	South Dakota Public Health Laboratory	
+USA/AK-PHL2587/2020	8/1/20		0.04	202031	Older	B.1.240	USA	North America	Alaska		Homo sapiens	MZ246451	1	20A		DeRonde et al J				
+USA/MD-MDH-0394/2020	11/2/20		0.04	202045	Older	B.1.240	USA	North America	Maryland		Homo sapiens	MW292653	1	20A		Keller et al E				
+USA/SC-COV21-0008/2020	12/2/20		0.04	202049	Older	B.1.240	USA	North America	South Carolina		Homo sapiens	MW483840	2	20A		Flores et al E				
+USA/KS-QDX-3372/2020	9/30/20		0.04	202040	Older	B.1.240	USA	North America	Kansas		Homo sapiens	MW522417	1	20A		Rosenthal et al Z				
+USA/TX-DSHS-1009/2020	3/27/20		0.03	202013	Older	B.1	USA	North America	Texas		Homo sapiens	MW269912	1	20A		Pedrueza et al		Texas Department of State Health Services-SARS-CoV-2 submission group	Texas Department of State Health Services	
+USA/ND-NDDH-0016/2020	4/25/20		0.03	202017	Older	B.1.382	USA	North America	North Dakota		Homo sapiens	MW471394	1	20A		Wingerter et al C				
+USA/995886/2020	5/5/20		0.03	202019	Older	B.1	USA	North America	Iowa		Homo sapiens	ON186434	1	20A		Reeb et al G		State Hygienic Laboratory at the University of Iowa	State Hygienic Laboratory at the University of Iowa	
+USA/UT-UPHL-201103306/2020	5/13/20		0.03	202020	Older	B.1	USA	North America	Utah		Homo sapiens	MW241330	1	20A		Young et al E		Utah Public Health Laboratory Infectious Disease submission group	Utah Public Health Laboratory	
+USA/WI-UW-1188/2020	8/6/20		0.03	202032	Older	B.1.1.464	USA	North America	Wisconsin		Homo sapiens	MT981472	1	20A		Moreno et al P				
+USA/ND-CDC-IBX527701244552/2021	8/10/21		0.67	202132	Older	B.1.617.2	USA	North America	North Dakota		Homo sapiens	MZ896333	7	21A (Delta)		Howard et al FE				
+USA/FL-CDC-ASC210344682/2021	10/11/21		0.73	202141	Older	AY.54	USA	North America	Florida		Homo sapiens	OL432778	7	21A (Delta)		Howard et al FF				
+USA/CT-CDC-QDX26177992/2021	6/23/21		0.74	202125	Older	AY.14	USA	North America	Connecticut		Homo sapiens	MZ535106	8	21A (Delta)		Howard et al FG				
+USA/VT-CDCBI-CRSP_X3AOEJMOR5FFQEY2/2021	8/2/21		0.74	202131	Older	AY.14	USA	North America	Vermont		Homo sapiens	MZ753455	8	21A (Delta)		Lemieux et al L		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/HI-CDC-STM-000715426/2021	8/2/21		0.72	202131	Older	AY.13	USA	North America	Hawaii		Homo sapiens	OL523445	8	21A (Delta)		Howard et al FH		CDC-OAMD	'Helix'	
+USA/NM-CDC-LC0268730/2021	8/26/21		0.75	202134	Older	AY.67	USA	North America	New Mexico		Homo sapiens	OK307736	10	21I (Delta)		Howard et al FI				
+USA/MD-CDC-MMB11661202/2021	11/16/21		0.79	202146	Older	AY.26	USA	North America	Maryland		Homo sapiens	OL884983	10	21I (Delta)		Howard et al FJ		CDC-OAMD	Mako Medical	
+USA/CT-CDC-QDX25392420/2021	5/28/21		0.78	202121	Older	AY.26	USA	North America	Connecticut		Homo sapiens	MZ363242	9	21I (Delta)		Howard et al FK				
+USA/VI-CDC-STM-000714738/2021	7/31/21		0.77	202130	Older	AY.26	USA	North America	Virgin Islands		Homo sapiens	OL526071	9	21I (Delta)		Howard et al FL		CDC-OAMD	'Helix'	
+USA/FL-CDC-ASC210283738/2021	9/17/21		0.79	202137	Older	AY.26	USA	North America	Florida		Homo sapiens	OK621173	8	21I (Delta)		Howard et al FM				
+USA/MI-CDC-QDX27432112/2021	8/1/21		0.78	202131	Older	AY.26	USA	North America	Michigan		Homo sapiens	OK056179	10	21I (Delta)		Howard et al FN				
+USA/WI-QDX-26380647/2021	6/30/21		0.76	202126	Older	AY.37	USA	North America	Wisconsin		Homo sapiens	MZ590729	10	21I (Delta)		Howard et al FO		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/OK-CDC-ASC210409909/2021	9/13/21		0.79	202137	Older	AY.47	USA	North America	Oklahoma		Homo sapiens	OK497343	10	21I (Delta)		Howard et al FP				
+USA/NY-CDC-LC0290250/2021	9/19/21		0.78	202138	Older	AY.47	USA	North America	New York		Homo sapiens	OK455415	10	21I (Delta)		Howard et al FQ				
+USA/AZ-CDC-QDX26256099/2021	6/27/21		0.76	202126	Older	AY.75	USA	North America	Arizona		Homo sapiens	MZ535963	9	21I (Delta)		Howard et al FR				
+USA/SC-COVID21-5512/2021	10/5/21		0.86	202140	Older	AY.110	USA	North America	South Carolina		Homo sapiens	OL693811	8	21J (Delta)		Freeman et al				
+USA/VI-CDC-STM-000739061/2021	10/3/21		0.82	202140	Older	AY.20	USA	North America	Virgin Islands		Homo sapiens	OK591916	10	21J (Delta)		Howard et al FS				
+USA/SC-CDC-ASC210472560/2021	10/19/21		0.85	202142	Older	AY.20	USA	North America	South Carolina		Homo sapiens	OL465880	9	21J (Delta)		Howard et al FT				
+USA/NV-CDC-ASC210513124/2021	11/24/21		0.85	202147	Older	AY.46.4	USA	North America	Nevada		Homo sapiens	OL940201	10	21J (Delta)		Howard et al FU		CDC-OAMD	Aegis Sciences Corporation	
+USA/VT-CDCBI-CRSP_FD2ENPXJABDEIJI3/2021	10/6/21		0.82	202140	Older	AY.98.1	USA	North America	Vermont		Homo sapiens	OK537216	9	21J (Delta)		Lemieux et al M		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/IN-CDC-STM-AVWQWU6WJ/2021	11/29/21		0.84	202148	Older	AY.34.1	USA	North America	Indiana		Homo sapiens	OL806185	10	21J (Delta)		Howard et al FV		CDC-OAMD	'Helix'	
+USA/FL-CDC-STM-000705263/2021	6/30/21		0.86	202126	Older	AY.114	USA	North America	Florida		Homo sapiens	OL523073	9	21J (Delta)		Howard et al FW		CDC-OAMD	'Helix'	
+USA/MI-CDC-QDX27249257/2021	7/26/21		0.8	202130	Older	AY.44	USA	North America	Michigan		Homo sapiens	MZ797422	8	21J (Delta)		Howard et al FX		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/AR-CDC-LC0073286/2021	6/6/21		0.8	202123	Older	AY.44	USA	North America	Arkansas		Homo sapiens	OK234581	9	21J (Delta)		Howard et al FY				
+USA/IN-CDC-LC0159441/2021	7/28/21		0.79	202130	Older	AY.44	USA	North America	Indiana		Homo sapiens	MZ887862	8	21J (Delta)		Howard et al FZ				
+USA/PA-M21085894/2021	8/25/21		0.83	202134	Older	AY.44	USA	North America	Pennsylvania		Homo sapiens	OK337406	8	21J (Delta)		Xia et al B		PA Department of Health Bureau of Laboratories Submission Group	Pennsylvania Department of Health Bureau of Laboratories	
+USA/WI-CDC-ASC210472387/2021	10/18/21		0.84	202142	Older	AY.44	USA	North America	Wisconsin		Homo sapiens	OL464943	10	21J (Delta)		Howard et al GA				
+USA/NE-CDC-LC0419894/2021	11/29/21		0.81	202148	Older	AY.44	USA	North America	Nebraska		Homo sapiens	OL990833	8	21J (Delta)		Howard et al GB		CDC-OAMD	Laboratory Corporation of America	
+USA/OSPHL01797/2021	7/28/21		0.85	202130	Older	AY.44	USA	North America	Oregon		Homo sapiens	MZ827611	8	21J (Delta)		Razzaque et al D				
+USA/SD-SDPHL-0363/2021	6/30/21		0.8	202126	Older	AY.44	USA	North America	South Dakota		Homo sapiens	MZ611523	8	21J (Delta)		Carlson et al E		South Dakota Department of Health	South Dakota Public Health Laboratory	
+USA/CA-SEARCH-46576/2021	8/3/21		0.8	202131	Older	AY.44	USA	North America	California		Homo sapiens	OK551093	8	21J (Delta)		Andersen et al K		SEARCH Alliance San Diego	"David Pride, Sharon Reed, Chip Schooley, Angela Scioscia, Natasha Martin Cheryl Anderson, Sawyer Farmer, Abigail Schnapper, Helena Tubb, Tommy Valles with SEARCH Alliance San Diego with the help of EXCITE Lab"	
+USA/AZ-5195/2021	8/30/21		0.85	202135	Older	AY.44	USA	North America	Arizona		Homo sapiens	OK171092	7	21J (Delta)		Hyunh et al				
+USA/UT-CDC-ASC210394879/2021	11/10/21		0.84	202145	Older	AY.44	USA	North America	Utah		Homo sapiens	OL786026	8	21J (Delta)		Howard et al GC		CDC-OAMD	Aegis Sciences Corporation	
+USA/VT-CDCBI-CRSP_TGRDKRP3BEOFV5Y5/2021	7/29/21		0.86	202130	Older	AY.44	USA	North America	Vermont		Homo sapiens	MZ720713	9	21J (Delta)		Lemieux et al N		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/NY-CDCBI-CRSP_SFQRLVLENSPFPYZQ/2021	11/30/21		0.83	202148	Older	AY.44	USA	North America	New York		Homo sapiens	OL822908	8	21J (Delta)		Lemieux et al O		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/ID-CDC-IBX369542694208/2021	8/31/21		0.83	202135	Older	AY.44	USA	North America	Idaho		Homo sapiens	OK398787	7	21J (Delta)		Howard et al GD				
+USA/CT-CDC-LC0362092/2021	10/26/21		0.86	202143	Older	AY.44	USA	North America	Connecticut		Homo sapiens	OL492008	8	21J (Delta)		Howard et al GE		CDC-OAMD	Laboratory Corporation of America	
+USA/OR-CDC-UW21080349881/2021	8/3/21		0.81	202131	Older	AY.44	USA	North America	Oregon		Homo sapiens	MZ952379	7	21J (Delta)		Howard et al GF				
+USA/HI-CDC-QDX30129496/2021	10/13/21		0.79	202141	Older	AY.44	USA	North America	Hawaii		Homo sapiens	OL349836	9	21J (Delta)		Howard et al GG				
+USA/SD-CDC-2-5421732/2021	12/27/21		0.8	202152	Older	AY.44	USA	North America	South Dakota		Homo sapiens	OM461004	8	21J (Delta)		Sheth et al Y		CDC DVD Genomics and DIscovery Team	SD Public Health Laboratory	
+USA/TX-CDC-LC0200265/2021	8/2/21		0.73	202131	Older	AY.3	USA	North America	Texas		Homo sapiens	OK102035	8	21J (Delta)		Howard et al GH				
+USA/OK-CDC-ASC210327803/2021	9/17/21		0.71	202137	Older	AY.3	USA	North America	Oklahoma		Homo sapiens	OK564926	8	21J (Delta)		Howard et al GI				
+USA/DE-CDC-IBX849839111832/2021	9/18/21		0.82	202137	Older	AY.3	USA	North America	Delaware		Homo sapiens	OK361130	7	21J (Delta)		Howard et al GJ				
+USA/OK-CDC-ASC210409505/2021	9/13/21		0.81	202137	Older	AY.3	USA	North America	Oklahoma		Homo sapiens	OK496871	8	21J (Delta)		Howard et al GK				
+USA/GU-CDC-2-5203647/2021	10/12/21		0.85	202141	Older	AY.3	USA	North America	Guam		Homo sapiens	OL743611	9	21J (Delta)		Sheth et al Z		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	
+USA/RI-CDCBI-RIDOH_BVX7VNNCUGL26YOF/2021	7/31/21		0.82	202130	Older	AY.3	USA	North America	Rhode Island		Homo sapiens	MZ776319	8	21J (Delta)		Lemieux et al P		Broad Institute Genomic Center for Infectious Diseases	Rhode Island Department of Health	
+USA/VT-CDCBI-CRSP_5FPDQ3MSFEWTXJUT/2021	9/19/21		0.82	202138	Older	AY.3	USA	North America	Vermont		Homo sapiens	OK337355	8	21J (Delta)		Lemieux et al Q		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/MS-CDC-LC0082459/2021	6/28/21		0.82	202126	Older	AY.3	USA	North America	Mississippi		Homo sapiens	MZ554274	8	21J (Delta)		Howard et al GL		CDC-OAMD	Laboratory Corporation of America	
+USA/OKPHLCOV0008183/2021	8/10/21		0.83	202132	Older	AY.3	USA	North America	Oklahoma		Homo sapiens	OM285278	7	21J (Delta)		Grimaldo et al A				
+USA/PR-CDC-ASC210236117/2021	7/29/21		0.83	202130	Older	AY.3	USA	North America	Puerto Rico		Homo sapiens	OK026485	8	21J (Delta)		Howard et al GM				
+USA/CA-CDC-LC0337618/2021	10/13/21		0.79	202141	Older	AY.3	USA	North America	California		Homo sapiens	OL327508	8	21J (Delta)		Howard et al GN				
+USA/KS-CDC-LC0333441/2021	10/7/21		0.85	202140	Older	AY.3	USA	North America	Kansas		Homo sapiens	OL324874	9	21J (Delta)		Howard et al GO				
+USA/KY-CDC-ASC210557994/2021	12/28/21		0.82	202152	Older	AY.3	USA	North America	Kentucky		Homo sapiens	OM308871	8	21J (Delta)		Howard et al GP		CDC-OAMD	Aegis Sciences Corporation	
+USA/MI-CDC-STM-000724120/2021	8/20/21		0.83	202133	Older	AY.3	USA	North America	Michigan		Homo sapiens	OL529751	8	21J (Delta)		Howard et al GQ				
+USA/WY-CDC-ASC210451896/2021	11/8/21		0.81	202145	Older	AY.3	USA	North America	Wyoming		Homo sapiens	OL652016	9	21J (Delta)		Howard et al GR		CDC-OAMD	Aegis Sciences Corporation	
+USA/MI-MDHHS-SC31810/2021	7/29/21		0.81	202130	Older	AY.3	USA	North America	Michigan		Homo sapiens	OL983310	8	21J (Delta)		Blankenship et al F				
+USA/SRL_329992787/2021	6/30/21		0.81	202126	Older	AY.3.1	USA	North America	Mississippi		Homo sapiens	MZ746684	7	21J (Delta)		Moller et al A				
+USA/MD-CDC-ASC210424101/2021	11/16/21		0.85	202146	Older	AY.4	USA	North America	Maryland		Homo sapiens	OL749193	8	21J (Delta)		Howard et al GS				
+USA/MO-CDC-ASC210490306/2021	10/22/21		0.83	202142	Older	AY.3	USA	North America	Missouri		Homo sapiens	OL479289	8	21J (Delta)		Howard et al GT				
+USA/NC-CDC-LC0403478/2021	11/16/21		0.75	202146	Older	AY.3	USA	North America	North Carolina		Homo sapiens	OL832663	7	21J (Delta)		Howard et al GU				
+USA/KS-CDC-ASC210424932/2021	11/18/21		0.81	202146	Older	AY.3	USA	North America	Kansas		Homo sapiens	OL887634	8	21J (Delta)		Howard et al GV		CDC-OAMD	Aegis Sciences Corporation	
+USA/TN-SPHL-0256/2021	7/21/21		0.82	202129	Older	AY.3	USA	North America	Tennessee		Homo sapiens	OK480615	8	21J (Delta)		Selinsky et al B		FDA CVM NARMS - Tennesse DOH	Tennessee Department of Health Laboratory Services	
+USA/MA-CDC-ASC210399446/2021	11/12/21		0.81	202145	Older	AY.3	USA	North America	Massachusetts		Homo sapiens	OL733599	8	21J (Delta)		Howard et al GW				
+USA/MS-CDC-LC0138164/2021	7/26/21		0.83	202130	Older	AY.3	USA	North America	Mississippi		Homo sapiens	MZ857492	8	21J (Delta)		Howard et al GX				
+USA/TX-CDC-ASC210287325/2021	9/17/21		0.83	202137	Older	AY.25	USA	North America	Texas		Homo sapiens	OK564852	8	21J (Delta)		Howard et al GY				
+USA/CO-CDC-ASC210109984/2021	6/17/21		0.82	202124	Older	AY.25	USA	North America	Colorado		Homo sapiens	MZ565819	8	21J (Delta)		Howard et al GZ				
+USA/OK-CDC-ASC210108565/2021	6/9/21		0.81	202123	Older	AY.25	USA	North America	Oklahoma		Homo sapiens	MZ450629	8	21J (Delta)		Howard et al HA				
+USA/WY-CDC-LC0109185/2021	6/22/21		0.81	202125	Older	AY.25	USA	North America	Wyoming		Homo sapiens	MZ785624	10	21J (Delta)		Howard et al HB		CDC-OAMD	Laboratory Corporation of America	
+USA/ME-CDC-QDX29260395/2021	9/25/21		0.86	202138	Older	AY.25	USA	North America	Maine		Homo sapiens	OK542457	10	21J (Delta)		Howard et al HC				
+USA/WY-CDC-IBX386816537218/2021	7/1/21		0.81	202126	Older	AY.25	USA	North America	Wyoming		Homo sapiens	MZ593862	8	21J (Delta)		Howard et al HD		CDC-OAMD	Infinity Biologix	
+USA/GA-CDC-QDX29079858/2021	9/24/21		0.81	202138	Older	AY.25	USA	North America	Georgia		Homo sapiens	OK447409	9	21J (Delta)		Howard et al HE				
+USA/V02142/2021	11/16/21		0.85	202146	Older	AY.25	USA	North America	Arkansas		Homo sapiens	OM676492	9	21J (Delta)		Kandel et al		University of Arkansas Medical Sciences/Arkansas Children's Hospital	Arkansas Children's Hospital	
+USA/MS-CDC-ASC210161572/2021	7/20/21		0.82	202129	Older	AY.25	USA	North America	Mississippi		Homo sapiens	MZ968105	8	21J (Delta)		Howard et al HF				
+USA/ME-CDC-QDX30567855/2021	10/28/21		0.82	202143	Older	AY.25	USA	North America	Maine		Homo sapiens	OL504097	9	21J (Delta)		Howard et al HG		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/DC-CDC-LC0359679/2021	10/28/21		0.82	202143	Older	AY.25	USA	North America	Washington DC		Homo sapiens	OL488656	8	21J (Delta)		Howard et al HH				
+USA/MA-CDCBI-CRSP_G7GSTCYFEJ7YZ6ST/2021	9/7/21		0.81	202136	Older	AY.25	USA	North America	Massachusetts		Homo sapiens	OK176761	8	21J (Delta)		Lemieux et al R		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/LA-CDC-2-5063496/2021	10/4/21		0.84	202140	Older	AY.25	USA	North America	Louisiana		Homo sapiens	OL607291	8	21J (Delta)		Sheth et al AA		CDC DVD Genomics and DIscovery Team	LA Office of Public Health Laboratories	
+USA/VA-CDC-LC0245687/2021	8/31/21		0.86	202135	Older	AY.25	USA	North America	Virginia		Homo sapiens	OK199634	8	21J (Delta)		Howard et al HI				
+USA/TN-CDC-ASC210493318/2021	10/24/21		0.83	202143	Older	AY.25	USA	North America	Tennessee		Homo sapiens	OL483896	7	21J (Delta)		Howard et al HJ		CDC-OAMD	Aegis Sciences Corporation	
+USA/LA-CDC-2-5064284/2021	10/13/21		0.83	202141	Older	AY.25	USA	North America	Louisiana		Homo sapiens	OL607462	9	21J (Delta)		Sheth et al AB		CDC DVD Genomics and DIscovery Team	LA Office of Public Health Laboratories	
+USA/NE-CDC-LC0223672/2021	8/17/21		0.84	202133	Older	AY.25	USA	North America	Nebraska		Homo sapiens	OK155917	8	21J (Delta)		Howard et al HK				
+USA/V02091/2021	10/31/21		0.84	202144	Older	AY.25	USA	North America	Arkansas		Homo sapiens	OM779945	8	21J (Delta)		Boyanton et al B		University of Arkansas Medical Sciences/Arkansas Children's Hospital	Arkansas Children's Hospital	
+USA/GU-CDC-2-5097549/2021	9/14/21		0.84	202137	Older	AY.25	USA	North America	Guam		Homo sapiens	OL520395	8	21J (Delta)		Sheth et al AC		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	
+USA/GU-CDC-2-5097601/2021	9/6/21		0.86	202136	Older	AY.25	USA	North America	Guam		Homo sapiens	OL520356	8	21J (Delta)		Sheth et al AD		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	
+USA/GU-CDC-STM-000735350/2021	9/22/21		0.84	202138	Older	AY.25	USA	North America	Guam		Homo sapiens	OK529663	8	21J (Delta)		Howard et al HL				
+USA/GU-CDC-2-5203645/2021	10/13/21		0.84	202141	Older	AY.25	USA	North America	Guam		Homo sapiens	OL743625	8	21J (Delta)		Sheth et al AE		CDC DVD Genomics and DIscovery Team	Guam Public Health Laboratory	
+USA/PA-CDC-ASC210633693/2021	12/17/21		0.79	202150	Older	AY.25.1	USA	North America	Pennsylvania		Homo sapiens	OM077339	8	21J (Delta)		Howard et al HM		CDC-OAMD	Aegis Sciences Corporation	
+USA/FL-CDC-ASC210279093/2021	9/15/21		0.82	202137	Older	AY.25.1	USA	North America	Florida		Homo sapiens	OK599410	7	21J (Delta)		Howard et al HN				
+USA/MA-CDCBI-CRSP_LAFBPESKIOW2TNPJ/2021	12/8/21		0.82	202149	Older	AY.25.1	USA	North America	Massachusetts		Homo sapiens	OL910604	8	21J (Delta)		Lemieux et al S		Broad Institute Genomic Center for Infectious Diseases	Broad Institute Clinical Research Sequencing Platform	
+USA/RI-CDC-LC0402830/2021	11/23/21		0.82	202147	Older	AY.25.1	USA	North America	Rhode Island		Homo sapiens	OL836403	8	21J (Delta)		Howard et al HO		CDC-OAMD	Laboratory Corporation of America	
+USA/2107270249/2021	7/27/21		0.82	202130	Older	AY.25.1	USA	North America	New Hampshire		Homo sapiens	MZ801085	8	21J (Delta)		Benton et al B				
+USA/RI-CDC-LC0448312/2021	12/26/21		0.93	202152	Older	AY.25.1	USA	North America	Rhode Island		Homo sapiens	OM224912	8	21J (Delta)		Howard et al HP		CDC-OAMD	Laboratory Corporation of America	
+USA/DE-CDC-LC0388387/2021	11/17/21		0.84	202146	Older	AY.25.1	USA	North America	Delaware		Homo sapiens	OL738058	8	21J (Delta)		Howard et al HQ				
+USA/IN-CDC-STM-6GH53MC22/2021	12/3/21		0.87	202148	Older	AY.113	USA	North America	Indiana		Homo sapiens	OL865005	9	21J (Delta)		Howard et al HR		CDC-OAMD	'Helix'	
+USA/NY-CDC-FG-202823/2021	12/8/21		0.88	202149	Older	AY.113	USA	North America	New York		Homo sapiens	OM057031	9	21J (Delta)		Howard et al HS		CDC-OAMD	Fulgent Genetics	
+USA/KS-CDC-LC0316582/2021	9/24/21		0.85	202138	Older	AY.100	USA	North America	Kansas		Homo sapiens	OK519192	9	21J (Delta)		Howard et al HT				
+USA/MD-CDC-MMB10637618/2021	9/23/21		0.82	202138	Older	AY.100	USA	North America	Maryland		Homo sapiens	OK619165	8	21J (Delta)		Howard et al HU				
+USA/KY-CDC-LC0194115/2021	8/18/21		0.88	202133	Older	AY.100	USA	North America	Kentucky		Homo sapiens	OK097265	9	21J (Delta)		Howard et al HV				
+USA/SRL_330827138/2021	9/13/21		0.87	202137	Older	AY.100	USA	North America	Mississippi		Homo sapiens	OK510425	9	21J (Delta)		Moller et al B				
+USA/CA-CDC-ASC210494759/2021	10/24/21		0.87	202143	Older	AY.100	USA	North America	California		Homo sapiens	OL484182	9	21J (Delta)		Howard et al HW				
+USA/IA-CDC-LC0422425/2021	12/1/21		0.91	202148	Older	AY.100	USA	North America	Iowa		Homo sapiens	OL991178	10	21J (Delta)		Howard et al HX		CDC-OAMD	Laboratory Corporation of America	
+USA/DC-CDC-LC0406299/2021	11/30/21		0.9	202148	Older	AY.4	USA	North America	Washington DC		Homo sapiens	OL917835	10	21J (Delta)		Howard et al HY		CDC-OAMD	Laboratory Corporation of America	
+USA/AS-CDC-2-5343436/2021	11/4/21		0.83	202144	Older	AY.103	USA	North America	American Samoa		Homo sapiens	OM258737	10	21J (Delta)		Sheth et al AF		CDC DVD Genomics and DIscovery Team	Tafuna Health Center	
+USA/ND-CDC-2-4653761/2021	7/13/21		0.84	202128	Older	AY.103	USA	North America	North Dakota		Homo sapiens	MZ727708	8	21J (Delta)		Sheth et al AG				
+USA/AR-UMGC-20059/2021	10/8/21		0.83	202140	Older	AY.103	USA	North America	Arkansas		Homo sapiens	OL515419	8	21J (Delta)		Gohl et al				
+USA/ND-CDC-IBX525502783002/2021	12/5/21		0.82	202149	Older	AY.103	USA	North America	North Dakota		Homo sapiens	OL997749	8	21J (Delta)		Howard et al HZ		CDC-OAMD	Infinity Biologix	
+USA/SC-CDC-QDX25988553/2021	6/18/21		0.85	202124	Older	AY.103	USA	North America	South Carolina		Homo sapiens	OK251439	8	21J (Delta)		Howard et al IA				
+USA/DE-CDC-LC0154331/2021	7/29/21		0.84	202130	Older	AY.103	USA	North America	Delaware		Homo sapiens	MZ864469	8	21J (Delta)		Howard et al IB				
+USA/NC-CDC-LC0297316/2021	9/15/21		0.89	202137	Older	AY.103	USA	North America	North Carolina		Homo sapiens	OK453219	8	21J (Delta)		Howard et al IC				
+USA/AS-CDC-2-5343430/2021	9/16/21		0.83	202137	Older	AY.103	USA	North America	American Samoa		Homo sapiens	OM258734	8	21J (Delta)		Sheth et al AH		CDC DVD Genomics and DIscovery Team	Tafuna Health Center	
+USA/IL-CDC-QDX26826454/2021	7/12/21		0.84	202128	Older	AY.103	USA	North America	Illinois		Homo sapiens	OK110370	8	21J (Delta)		Howard et al ID				
+USA/MO-CDC-MMB09695613/2021	8/11/21		0.83	202132	Older	AY.103	USA	North America	Missouri		Homo sapiens	OK137996	8	21J (Delta)		Howard et al IE				
+USA/SRL_330438938/2021	8/23/21		0.8	202134	Older	AY.103	USA	North America	Mississippi		Homo sapiens	OK082105	9	21J (Delta)		Moller et al C				
+USA/MT-CDC-LC0152783/2021	7/28/21		0.83	202130	Older	AY.103	USA	North America	Montana		Homo sapiens	MZ866471	9	21J (Delta)		Howard et al IF				
+USA/OSPHL02166/2021	8/13/21		0.86	202132	Older	AY.103	USA	North America	Oregon		Homo sapiens	MZ950742	8	21J (Delta)		Razzaque et al E				
+USA/IN-CDC-STM-EKJDUQWYH/2021	11/9/21		0.83	202145	Older	AY.103	USA	North America	Indiana		Homo sapiens	OL597125	8	21J (Delta)		Howard et al IG		CDC-OAMD	'Helix'	
+USA/CA-CDC-FG-151986/2021	10/19/21		0.82	202142	Older	AY.103	USA	North America	California		Homo sapiens	OK628308	8	21J (Delta)		Howard et al IH				
+USA/DE-CDC-ASC210477380/2021	10/21/21		0.83	202142	Older	AY.103	USA	North America	Delaware		Homo sapiens	OL478640	8	21J (Delta)		Howard et al II				
+USA/RI-CDC-2-5070668/2021	10/5/21		0.89	202140	Older	AY.103	USA	North America	Rhode Island		Homo sapiens	OL336723	9	21J (Delta)		Sheth et al AI				
+USA/ID-CDC-LC0332559/2021	10/5/21		0.85	202140	Older	AY.103	USA	North America	Idaho		Homo sapiens	OL324079	8	21J (Delta)		Howard et al IJ				
+USA/WV091578/2021	11/30/21		0.85	202148	Older	AY.103	USA	North America	West Virginia		Homo sapiens	OL913389	8	21J (Delta)		Denvir et al G				
+USA/WI-CDC-ASC210355692/2021	10/8/21		0.85	202140	Older	AY.103	USA	North America	Wisconsin		Homo sapiens	OL430426	7	21J (Delta)		Howard et al IK				
+USA/TX-CDC-ASC210330185/2021	9/20/21		0.79	202138	Older	AY.103	USA	North America	Texas		Homo sapiens	OK566728	5	21J (Delta)		Howard et al IL				
+USA/GA-CDC-ASC210336689/2021	10/6/21		0.93	202140	Older	AY.103	USA	North America	Georgia		Homo sapiens	OL387440	7	21J (Delta)		Howard et al IM				
+USA/DE-CDC-LC0388298/2021	11/17/21		0.85	202146	Older	AY.103	USA	North America	Delaware		Homo sapiens	OL738059	8	21J (Delta)		Howard et al IN				
+USA/CA-CDC-LC0170055/2021	7/23/21		0.83	202129	Older	AY.103	USA	North America	California		Homo sapiens	MZ943217	8	21J (Delta)		Howard et al IO				
+USA/AZ-CDC-STM-000735715/2021	9/24/21		0.83	202138	Older	AY.103	USA	North America	Arizona		Homo sapiens	OK529823	9	21J (Delta)		Howard et al IP				
+USA/NMDOH-2021156944/2021	8/17/21		0.83	202133	Older	AY.103	USA	North America	New Mexico		Homo sapiens	OK178005	9	21J (Delta)		Johnson et al D		New Mexico Department of Health Scientific Laboratory	New Mexico Department of Health Scientific Laboratory	
+USA/CT-CDC-LC0307890/2021	9/27/21		0.8	202139	Older	AY.103	USA	North America	Connecticut		Homo sapiens	OK520126	7	21J (Delta)		Howard et al IQ				
+USA/KS-CDC-ASC210310863/2021	10/5/21		0.79	202140	Older	AY.103	USA	North America	Kansas		Homo sapiens	OL402375	7	21J (Delta)		Howard et al IR				
+USA/WV-CDC-ASC210524757/2021	11/6/21		0.83	202144	Older	AY.103	USA	North America	West Virginia		Homo sapiens	OL948914	8	21J (Delta)		Howard et al IS		CDC-OAMD	Aegis Sciences Corporation	
+USA/CO-CDC-ASC210459452/2021	11/12/21		0.83	202145	Older	AY.103	USA	North America	Colorado		Homo sapiens	OL733518	8	21J (Delta)		Howard et al IT				
+USA/DC-DFS-PHL-01635/2021	8/19/21		0.83	202133	Older	AY.103	USA	North America	Washington DC		Homo sapiens	OK662860	8	21J (Delta)		Nguyen et al K				
+USA/WV079905/2021	10/11/21		0.83	202141	Older	AY.103	USA	North America	West Virginia		Homo sapiens	OL459150	8	21J (Delta)		Denvir et al H				
+USA/ME-CDC-ASC210487865/2021	11/19/21		0.87	202146	Older	AY.103	USA	North America	Maine		Homo sapiens	OL859882	9	21J (Delta)		Howard et al IU		CDC-OAMD	Aegis Sciences Corporation	
+USA/ND-CDC-QDX31092719/2021	11/10/21		0.82	202145	Older	AY.103	USA	North America	North Dakota		Homo sapiens	OL708576	8	21J (Delta)		Howard et al IV		CDC-OAMD	Quest Diagnostics Incorporated	
+USA/MI-CDC-QDX25620358/2021	6/3/21		0.89	202122	Older	AY.39	USA	North America	Michigan		Homo sapiens	MZ410227	9	21J (Delta)		Howard et al IW				
+USA/GA-GPHL-1153/2021	8/5/21		0.88	202131	Older	AY.39	USA	North America	Georgia		Homo sapiens	MZ905392	9	21J (Delta)		Parrott et al B				
+USA/MT-CDC-STM-000711004/2021	7/25/21		0.9	202130	Older	AY.39	USA	North America	Montana		Homo sapiens	OL526884	9	21J (Delta)		Howard et al IX		CDC-OAMD	'Helix'	
+USA/MI-MDHHS-SC37400/2021	11/18/21		0.9	202146	Older	AY.39	USA	North America	Michigan		Homo sapiens	OM055571	9	21J (Delta)		Blankenship et al G				
+USA/NJ-CDC-LC0292625/2021	9/23/21		0.87	202138	Older	AY.39	USA	North America	New Jersey		Homo sapiens	OK457498	9	21J (Delta)		Howard et al IY				
+USA/LA-BIE-LSUH001681/2021	7/30/21		0.89	202130	Older	AY.39	USA	North America	Louisiana		Homo sapiens	MZ712822	9	21J (Delta)		Feehan et al C				
+USA/NY-CDC-ASC210455491/2021	11/9/21		0.89	202145	Older	AY.39	USA	North America	New York		Homo sapiens	OL921398	10	21J (Delta)		Howard et al IZ		CDC-OAMD	Aegis Sciences Corporation	
+USA/IL-CDC-QDX28939010/2021	9/18/21		0.9	202137	Older	AY.39	USA	North America	Illinois		Homo sapiens	OK443640	9	21J (Delta)		Howard et al JA				
+USA/SD-CDC-ASC210309007/2021	10/4/21		0.87	202140	Older	AY.117	USA	North America	South Dakota		Homo sapiens	OL611794	8	21J (Delta)		Howard et al JB		CDC-OAMD	Aegis Sciences Corporation	
+USA/OR-CDC-LC0365442/2021	11/2/21		0.86	202144	Older	AY.117	USA	North America	Oregon		Homo sapiens	OL558629	9	21J (Delta)		Howard et al JC		CDC-OAMD	Laboratory Corporation of America	
+USA/NMDOH-2021241507/2021	12/29/21		0.85	202152	Older	AY.117	USA	North America	New Mexico		Homo sapiens	OM799786	9	21J (Delta)		Johnson et al E		New Mexico Department of Health Scientific Laboratory	New Mexico Department of Health Scientific Laboratory	
+USA/TG1016054/2021	7/18/21		0.87	202129	Older	AY.116.1	USA	North America	Arizona		Homo sapiens	OK467715	9	21J (Delta)		Bowers et al I		The Translational Genomics Research Institute COVID submission group	Sonora Quest Laboratories - Phoenix	
+USA/ND-CDC-2-4679495/2021	7/19/21		0.93	202129	Older	AY.83	USA	North America	North Dakota		Homo sapiens	OK045195	8	21J (Delta)		Sheth et al AK				
+USA/CA-CDC-FG-138198/2021	9/27/21		0.85	202139	Older	AY.120.1	USA	North America	California		Homo sapiens	OK395046	9	21J (Delta)		Howard et al JD				
+USA/IL-CDC-ASC210456962/2021	11/12/21		0.84	202145	Older	AY.118	USA	North America	Illinois		Homo sapiens	OL733254	9	21J (Delta)		Howard et al JE				
+USA/MS-MSPHL-0605/2021	11/15/21		0.85	202146	Older	AY.118	USA	North America	Mississippi		Homo sapiens	OL841744	8	21J (Delta)		Karolewicz et al C		Mississippi Public Health Lab	MS PHL	
+USA/NY-CDC-ASC210608272/2021	12/8/21		0.84	202149	Older	AY.118	USA	North America	New York		Homo sapiens	OL996660	9	21J (Delta)		Howard et al JF				
+USA/MI-CDC-STM-9XQT3NB7E/2021	12/3/21		0.84	202148	Older	AY.44	USA	North America	Michigan		Homo sapiens	OL932461	9	21J (Delta)		Howard et al JG		CDC-OAMD	'Helix'	
+USA/OKPHLCOV0002418/2021	8/31/21		0.86	202135	Older	AY.119	USA	North America	Oklahoma		Homo sapiens	OL320574	8	21J (Delta)		Grimaldo et al B				
+USA/MT-CDC-LC0357456/2021	10/27/21		0.94	202143	Older	AY.119.2	USA	North America	Montana		Homo sapiens	OL487672	10	21J (Delta)		Howard et al JH				
+USA/NC-CDC-LC0255374/2021	9/2/21		0.86	202135	Older	AY.119	USA	North America	North Carolina		Homo sapiens	OK277860	9	21J (Delta)		Howard et al JI				
+USA/CT-CDC-LC0288278/2021	9/16/21		0.86	202137	Older	AY.119	USA	North America	Connecticut		Homo sapiens	OK453583	9	21J (Delta)		Howard et al JJ				
+USA/SC-CDC-QDX29125024/2021	9/25/21		0.86	202138	Older	AY.119	USA	North America	South Carolina		Homo sapiens	OK447592	9	21J (Delta)		Howard et al JK				
+USA/CT-CDC-QDX30240391/2021	10/18/21		0.9	202142	Older	AY.119	USA	North America	Connecticut		Homo sapiens	OL360211	10	21J (Delta)		Howard et al JL				
+PRI/PR-UPRRP-5006/2021	9/9/21		0.84	202136	Older	AY.43	USA	North America	Puerto Rico		Homo sapiens	ON065308	8	21J (Delta)		Van Belleghem et al B				

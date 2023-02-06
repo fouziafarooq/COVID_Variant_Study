@@ -25,14 +25,13 @@ library(stringr)
 
 READ IN THE DATA FILE:
 ```{r}
-# Read in your specific file with your spevific path to the file here:
+# Read in your specific file with your specific path to the file here:
 df <- read_dta('data/Compiled_IPD_Data_220217.dta') 
-sort(colnames(df))
+
 ```
 
 SUBSET DATASET:
 ```{r}
-
 df <- df %>% dplyr::mutate(date_ym = format(date_onset_or_test, format= "%y-%m"))
 
 df2 <- df %>% dplyr::select(date_ym, ICUadmit1, critcare1, ventilation1, pneumonia1, prdeath1,
