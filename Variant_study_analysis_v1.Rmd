@@ -4,7 +4,7 @@ author: "Fouzia Farooq"
 date: "6/3/2022"
 output: pdf_document
 ---
-NOTE: This is FF's working copy (07/18/2022).
+NOTE: This is FF's working copy (07/18/2022). This is the folder and file that FF will be using.
 
 ```{r, include=FALSE}
 library(dplyr)
@@ -30,9 +30,11 @@ library(patchwork)
 
 NOTES: json file was converted to csv in python (deepnote.com), then copied the code into BBtext and ran at the command line. 
 Then ran the following code. 
-Dates are fractions of a year after "year." We a creating a seperate dataframe into a csv that we will bring in R and use lubridate to read the date properly. 
+Dates are fractions of a year after "year." We a creating a separete dataframe into a csv that we will bring in R and use lubridate to read the date properly. 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+dir.create("data_out", showWarnings = FALSE) # Creating a folder data_out if it doesn't exist
+dir.create("plots", showWarnings = FALSE) # Creating a folder plots if it doesn't exist
 ```
 
 
@@ -55,7 +57,7 @@ pivots <- read.csv('data/Nextstrain_opensource_pivotdates_oct2022.csv', header =
 compiled_ipd_20221130 <- read_dta('data/Compiled_IPD_Data_221130.dta') #Most updated.  This has Brazil (REBRACO data) and I need to remove AMHANII Pakistan for now. 
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
-agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
+# agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
 # country_id <- read.csv('data/country_id_ipd.csv') # FF created this file. This is the original file where I have study_site 38 as WHO Pakistan also. 
 country_id <- read.csv('data/country_id_ipd_2.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
 # country_id_agd <- read.csv('data/country_id_agd.csv')
@@ -109,13 +111,9 @@ country_id <- country_id %>% rbind(c(16, "", "Switzerland", "Switzerland_COVIPRE
 country_id <- country_id %>% rbind(c(16, "", "France", "France_COVIPREG", "Favre, Panchaud, 2022"))
 ```
 
-REMOVING AMHANII PAKISTAN FROM THE DATA:
+REMOVING  PAKISTAN (AMHANII), BRAZIL (REBRACO) FROM THE DATA:THE OVERLAP PAST PreALPHA for rebraco IS NOT ENOUGH.
 ```{r}
 compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=38)
-```
-
-REMOVING BRAZIL (REBRACO) STUDY ALSO - THE OVERLAP PAST PREALPHA IS NOT ENOUGH.
-```{r}
 compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=36)
 ```
 
@@ -123,20 +121,10 @@ compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=36)
 table(compiled_ipd_20221130$site_id)
 ```
 
-*NOTE: This code is taken out mostly b/c the new most updated ipd file (20221109) has all the sites so no need to join old and new compiled files. 
+
 ```{r, include=FALSE}
 site_id_new <- compiled_ipd_20221130$site_id
-# compiled_ipd_data_old_2 <- compiled_ipd_data_old %>% dplyr::filter(!(site_id %in% site_id_new))
-# table(compiled_ipd_data_old_2$site_id)
-# class(compiled_ipd_data_new$neo_death_date3)
-# compiled_ipd_data_old_2$neo_death_date3 <- as.numeric(compiled_ipd_data_old_2$neo_death_date3)
-# compiled_ipd_data_old_2$neo_death_cause_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause_77)
-# compiled_ipd_data_old_2$neo_death_cause2_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause2_77)
-# compiled_ipd_data_old_2$neo_death_cause3_77 <- as.numeric(compiled_ipd_data_old_2$neo_death_cause3_77)
-# table(compiled_ipd_data_old_2$neo_death_date3, useNA = "always")
-# compiled_ipd_data <- full_join(compiled_ipd_data_old_2, compiled_ipd_data_new)
 compiled_ipd_data <- compiled_ipd_20221130
-
 ```
 
 Drop twin and triplet rows that are 2nd/3rd.  Keep the woman though
@@ -854,7 +842,7 @@ metagen_fun <- function(refstr, teststr) {
   #generate forest plot:HERE
   day_string <- format(Sys.time(), "%Y%m%d")
   dir_folder_name <- paste0(day_string,"_domvar_mixed_",as.character(dom_threshold*100))
-  dir.create(paste0("plots/",dir_folder_name))
+  dir.create(paste0("plots/",dir_folder_name), recursvie = TRUE)
   pdf(file=paste0("plots/",dir_folder_name,"/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, comb.random, 
@@ -971,7 +959,7 @@ est_table_df2 <- est_table_df %>%
 
 day_string <- format(Sys.time(), "%Y%m%d")
 dir_folder_name <- paste0(day_string,"_dom_strain_",as.character(dom_threshold*100))
-dir.create(paste0("data_out/pooled_tables/",dir_folder_name))
+dir.create(paste0("data_out/pooled_tables/",dir_folder_name), recursvie = TRUE)
 
 write.csv(est_table_df2, paste0("data_out/pooled_tables/",dir_folder_name,"/Variant_study_pooled_table_", day_string, "_dom_strain_", as.character(dom_threshold*100), ".csv"), row.names = FALSE)
 ```
@@ -1085,7 +1073,7 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
  day_string <- format(Sys.time(), "%Y%m%d")
  
  dir_folder_name <- paste0(day_string,"_dom_strain_",as.character(dom_threshold*100))
-  dir.create(paste0("plots/heatmap/",dir_folder_name))
+  dir.create(paste0("plots/heatmap/",dir_folder_name), recursvie = TRUE)
   
  ggsave(paste0("plots/heatmap/", dir_folder_name, "/variant_study_heatmap_refstrain_", rs, "_n_study>1.pdf"),
         hmap, width = 8, height = 6, units = "in")
