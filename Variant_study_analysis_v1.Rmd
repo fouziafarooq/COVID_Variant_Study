@@ -68,12 +68,14 @@ country_id <- read.csv('data/country_id_ipd_2.csv') # FF created this file. THIS
 
 # New data from COVIPreg - Sites include Switzerland and France (From Favre Guillaume)
 # Newesst data with mistakes fixed sent 12/08/2022
+
+# This is looping through each excel sheet and creating one merged dataset.  
 swiss_sheets_vec <- excel_sheets('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_switzerland.xlsx') # creates a vector.
 swiss_df <- data.frame(month_year = {}, Events={},	Missing={},	Total={})
 for (sheet in swiss_sheets_vec) {
   sheet_df <- read_excel('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_switzerland.xlsx', 
                          sheet=sheet, 
-                         skip=2, 
+                         skip=2, # skips the empty lines.
                          col_names=c("month_year", "Events", "Missing", "Total"))
   sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("swiss - ", "", sheet),
                                          country="Switzerland")
