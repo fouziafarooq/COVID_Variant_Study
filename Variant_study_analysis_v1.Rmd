@@ -91,9 +91,13 @@ mumbai_gajbhiye_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box
 
 india_khoiwal_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/68. AIIMS Rishikesh, India (Khoiwal)/data/PMA_Analysis_Variables_QS2_India_68.dta') # SITE 68
 
-philly_flannery_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/71. Philly (Flannery)/COVID-19 Variant Study_5_31_23_AZB.xlsx') # SITE 71
+# philly_flannery_AGG_df  # SITE 71
 
-japan_shoji_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan.xlsx', sheet = "Japan") # SITE 72
+# japan_shoji_AGG_df <- SITE 72
+
+# usa_setnet_neelam_mat_AGG_df # SITE 73
+
+#usa_setnet_neelam_mat_AGG_df  # INFANT OUTPUT FILE. SITE 73
 
 # Updated country_id 20231114:
 country_id <- read.csv('data/country_id_ipd_3_20231113.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
@@ -168,11 +172,14 @@ df <- bind_rows(df, india_khoiwal_df)
 compiled_ipd_20221130 <- df
 ```
 
-AGGREGATE DATA FROM SWITZERLAND AND FRANCE (GUILLAUME)
+AGGREGATE DATA FROM SWITZERLAND &FRANCE (GUILLAUME); JAPAN (SONJI)
 ```{r}
 # New data from COVIPreg - Sites include Switzerland and France (From Favre Guillaume)
 # Newest data with mistakes fixed sent 12/08/2022
 
+#####################################
+# SWITZERLAND - GUILLAUME (COVIPREG) 
+#####################################
 # This is looping through each excel sheet and creating one merged dataset.  
 swiss_sheets_vec <- excel_sheets('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_switzerland.xlsx') # creates a vector.
 swiss_df <- data.frame(month_year = {}, Events={},	Missing={},	Total={})
@@ -186,7 +193,9 @@ for (sheet in swiss_sheets_vec) {
   swiss_df <- rbind(swiss_df, sheet_df)
 }
 
-# France
+################################
+# FRANCE - GUILLAUME (COVIPREG)
+################################
 france_sheets_vec <- excel_sheets('data/Variant-Swiss-France-Data_20221208/TABLE_outcomes_france.xlsx') # creates a vector.
 france_df <- data.frame(month_year = {}, Events={},	Missing={},	Total={})
 for (sheet in france_sheets_vec) {
@@ -198,6 +207,34 @@ for (sheet in france_sheets_vec) {
                                          country="France")
   france_df <- rbind(france_df, sheet_df)
 }
+
+################
+# JAPAN - SONJI
+################
+japan_sheets_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan_FF_editsForR.xlsx') # creates a vector
+japan_df <- data.frame(month={}, year={}, Events = {}, Missing={}, Total={})  
+for (sheet in japan_sheets_vec) {
+  sheet_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan_FF_editsForR.xlsx',
+                         sheet=sheet,
+                         skip=1,
+                         col_names=c("month_infection", "year_infection", "Events", "Missing", "Total"))
+  sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("Japan-", "", sheet),
+                                         country = "Japan")
+  japan_df <- rbind(japan_df, sheet_df)
+}
+
+####################
+# PHILLY - FLANNERY
+####################
+philly_flannery_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/71. Philly (Flannery)/COVID-19 Variant Study_5_31_23_AZB.xlsx') # SITE 71
+
+
+############################
+# USA - CDC-SETNET - NEELAM
+############################
+usa_setnet_neelam_mat_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Maternal_CDC_SETNET.xlsx') # MATERANAL OUTPUT FILE.  SITE 73
+
+usa_setnet_neelam_mat_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Infant_CDC_SETNET.xlsx') # INFANT OUTPUT FILE. SITE 73
 ```
 
 rbind Swiss and France Data and fix Date:
@@ -216,6 +253,11 @@ Add 2 empty rows in the country_id df to add site num for France and Switzerland
 country_id <- country_id %>% rbind(list(16, "", "Switzerland", "Switzerland_COVIPREG", "Favre, Panchaud, 2022")) %>%
   rbind(c(16, "", "France", "France_COVIPREG", "Favre, Panchaud, 2022")) %>%
   filter(site_name != 'COVIPREG') # 'c()' vector makes all the variables the same type.  Putting a 'list()' keeps the type of variables so later we don't have to do as.numeric later.
+```
+
+ADDING NEW SITES WITH AGGERGATE DATA (DEC 2023)
+```{r}
+
 ```
 
 REMOVING  PAKISTAN (AMHANII), BRAZIL (REBRACO) FROM THE DATA:THE OVERLAP PAST PreALPHA for rebraco IS NOT ENOUGH.
