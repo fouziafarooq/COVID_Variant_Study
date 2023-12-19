@@ -6,7 +6,7 @@ dir.create('data', showWarnings = FALSE)
 
 # Control parameters
 data_source <- 'gisaid' # 'open'
-redownload <- FALSE # switch to TRUE to get fresh data
+redownload <- TRUE # switch to TRUE to get fresh data
 
 if (redownload) {
   # Download data and gunzip
@@ -107,5 +107,5 @@ p1 <- ggplot() +
         axis.text.y = element_text(size = 6)) + 
   facet_wrap(~ country,  nrow = 11, ncol = 1)#, scale = "free_x")
 
-ggsave(filename = paste0("plot1", data_source, ".pdf"), plot = p1,
+ggsave(filename = paste0("plot1-test", data_source, ".pdf"), plot = p1,
        width = 8, height = 20, units = "in")
