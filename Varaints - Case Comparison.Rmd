@@ -24,6 +24,7 @@ library(xlsx)
 library(patchwork)
 library(haven)
 library(meta)
+library(R.utils)
 # library(metafor)
 # library(esc)
 ```
@@ -38,159 +39,213 @@ knitr::opts_chunk$set(echo = TRUE)
 
 OPENSOURCE
 ```{r}
-frequency <- read.csv('data/Nextstrain_opensource_frequenices.csv')
-covid_opensource <- read.csv('data/nextstrain_ncov_open_global_all-time_metadata_20220517.csv')
-pivots <- read.csv('data/Nextstrain_opensource_pivotdates.csv', header = FALSE)
-study_cases <- read.csv('data/variant_study_case_control_COVID_data_ff_20220805.csv') # case-comparison country study dates
-
-# Study files
-# compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
-# compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
-# will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
-# agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
-# agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
-country_id <- read.csv('data/country_id_ipd.csv') # FF created this file
-# country_id_agd <- read.csv('data/country_id_agd.csv')
+# frequency <- read.csv('data/Nextstrain_opensource_frequenices.csv')
+# covid_opensource <- read.csv('data/nextstrain_ncov_open_global_all-time_metadata_20220517.csv')
+# pivots <- read.csv('data/Nextstrain_opensource_pivotdates.csv', header = FALSE)
+# study_cases <- read.csv('data/variant_study_case_control_COVID_data_ff_20220805.csv') # case-comparison country study dates
+# 
+# # Study files
+# # compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
+# # compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
+# # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
+# # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
+# # agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
+# country_id <- read.csv('data/country_id_ipd.csv') # FF created this file
+# # country_id_agd <- read.csv('data/country_id_agd.csv')
 ```
 
 
+GISAID Data
 ```{r}
-opensource.df <- covid_opensource %>% dplyr::select(strain, date, country, clade_membership)
+# Control parameters
+data_source <- 'gisaid' # 'open'
+redownload <- FALSE # switch to TRUE to get fresh data
 
-opensource.df2 <- left_join(frequency, covid_opensource)
+if (redownload) {
+  # Download data and gunzip
+  download.file(url = paste0('https://data.nextstrain.org/files/workflows/forecasts-ncov/',
+                             data_source, '/nextstrain_clades/global.tsv.gz'),
+                destfile = 'data/global.tsv.gz')
+  
+  gunzip('data/global.tsv.gz', remove = FALSE, overwrite = TRUE)
+}
 
-pivot_df <- data.frame(week = 0:(length(pivots$V1)-1), pivot = pivots$V1)
-pivot_df <- pivot_df %>% dplyr::mutate(date = as.Date(date_decimal(pivot))) #converting the dates in decimal in nextstrain dataset to readable dates.
+gisaid_df <- read_delim('data/global_20240319.tsv',
+                 delim = '\t') %>%
+  rename(country = location)
 
-df <- left_join(opensource.df2, pivot_df, by="week")
+# Extract 2-digit year-month (20-12)
+gisaid_df <- gisaid_df %>%
+  mutate(date_ym = substr(date, 3, 7))
+
+# table(gisaid_df$country)
+```
+
+Read in the data file
+```{r}
+CC_data <- read.xlsx('data/Total sample size_11-2024.xlsx', sheetName = 'Sheet1')
 ```
 
 
+***GISAID DATA***
+Nomenclature for new variants still called Omicron by WHO: 
+https://covid.cdc.gov/covid-data-tracker/#variant-summary
 ```{r}
-df2 <- df  %>% dplyr::mutate(variant = case_when(clade_membership %in% 
-                                                   c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E (EU1)") ~ "Pre_alpha",
-                                                 clade_membership %in% 
-                                                   c("20I (Alpha, V1)") ~ "Alpha",
-                                                 clade_membership %in%
-                                                   c("20H (Beta, V2)") ~ "Beta", 
-                                                 clade_membership %in%
-                                                   c("21B (Kappa)") ~ "Kappa", 
-                                                 clade_membership %in%
-                                                   c("21D (Eta)") ~ "Eta",
-                                                 clade_membership %in% 
-                                                   c("21E (Theta)") ~ "Theta",
-                                                 clade_membership %in% 
-                                                   c("20J (Gamma, V3)") ~ "Gamma",
-                                                 clade_membership %in% 
-                                                   c("21A (Delta)", "21I (Delta)", "21J (Delta)") ~ "Delta",
-                                                 clade_membership %in% 
-                                                   c("21C (Epsilon)") ~ "Epsilon",
-                                                 clade_membership %in% 
-                                                   c("21F (Iota)") ~ "Iota",
-                                                 clade_membership %in% 
-                                                   c("21G (Lambda)") ~ "Lambda",
-                                                 clade_membership %in% 
-                                                   c("21H (Mu)") ~ "Mu",
-                                                 clade_membership %in% 
-                                                   c("21K (Omicron)", "21L (Omicron)", "21M (Omicron)", "22C (Omicron)") ~ "Omicron"))
-
-# table(df2$clade_membership, df2$variant, useNA = "always") # These all have a general variant name now. 
+# The clade categories are updated Dec 13, 2023.
+gisaid_df <- gisaid_df %>% 
+  mutate(variant = case_when(clade %in% 
+                               c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E") ~ "Pre_alpha",
+                             clade %in% 
+                               c("20I") ~ "Alpha",
+                             clade %in%
+                               c("20H") ~ "Beta", 
+                             clade %in%
+                               c("21B") ~ "Kappa", 
+                             clade %in%
+                               c("21D") ~ "Eta",
+                             clade %in% 
+                               c("21E") ~ "Theta",
+                             clade %in% 
+                               c("20J", "20J") ~ "Gamma",
+                             clade %in% 
+                               c("21A", "21I", "21J") ~ "Delta",
+                             clade %in% 
+                               c("21C") ~ "Epsilon",
+                             clade %in% 
+                               c("21F") ~ "Iota",
+                             clade %in% 
+                               c("21G") ~ "Lambda",
+                             clade %in% 
+                               c("21H") ~ "Mu",
+                             clade %in% 
+                               c("21K", # BA.1
+                                 "21L", # BA.2
+                                 "21M", # Omicron
+                                 "22A", # BA.4
+                                 "22B", # BA.5
+                                 "22C", # BA.2.12.1
+                                 "22D", # BA.2.75
+                                 "22E", # BQ.1
+                                 "23C", # CH.1.1
+                                 "23I", # BA.2.86 - highly mutated vs. Omicron but emerged late 2023
+                                 
+                                 # These below were set to XBB but I added them to Omicron. 
+                                 "22F", # XBB
+                                 "23A", # XBB.1.5
+                                 "23B", # XBB.1.16
+                                 "23D", # XBB.1.9
+                                 "23E", # XBB.2.3
+                                 "23F", # EG.5.1
+                                 "23G", # XBB.1.5.70
+                                 "23H", # HK.3
+                                 # Added 2024-11-26:
+                                 "24A",
+                                 "24B", 
+                                 "24C",
+                                 "24D",
+                                 "24E",
+                                 "24F",
+                                 "24G",
+                                 "24I")
+                             ~ "Omicron",
+                             clade %in%
+                               c("recombinant") ~ "recombinant"))
 
 ```
 
-NORMALIZE FREQ BY COUNTRY
+# Review missing clade data in GISAID
 ```{r}
-df3 <- df2 %>% group_by(country, week, variant) %>% summarize(freq = sum(frequency))
-check.df <- df3 %>% filter(country=="Africa") # Nextstrain does not have data on DRC, Africa also can't be listed. 
-df4 <- df3 %>% group_by(country, week) %>% 
-  dplyr::mutate(nor = (freq/sum(freq))) %>%
-  dplyr::filter(country %in% c("Kenya", "Uganda", "South Africa", "Ghana", "Nigeria", 
-                               "Spain", "Hong Kong", "Italy", "USA", "Sweden", "Turkey")) # List does not include DRC or Burkina Faso b/c opensource data is not available thorugh Nextstrain.  This list doesn't include all the african countries or the WHO countries. 
-
+temp.df <- gisaid_df %>% filter(is.na(variant)) %>% filter(country %in% CC_data$Country)
+range(as_date(temp.df$date))
 ```
 
 
-```{r}
-df5 <- left_join(df4, pivot_df, by="week")
+# New map with overlaid CC study dates and CC study dates: 11-26-2024 - latest
+```{r fig.height=12, fig.width=8}
 
-df6 <- df5 %>% dplyr::mutate(date_ym = format(date, format= "%y-%m"))
-df7 <- df6 %>% group_by(country, date_ym) %>% dplyr::mutate(max_date = max(date))
-df8 <- df7 %>% dplyr::filter(date == max_date)
-# sort(colnames(compiled_ipd_data))
-```
-
-
-Joining RFA dates only - NO NEED TO RUN FOR RFA ONLY (may need for CC):
-```{r}
-study_cases$date <- mdy(study_cases$date)
-cases <- study_cases %>% dplyr::mutate(date_ym = format(date,format="%y-%m"))
-class(study_cases$date)
-
-variants_cases <- left_join(df8, cases, by=c("country", "date_ym"))
-```
-
-New map with overlayed CC study dates  dates: 06/27/2022 - latest
-```{r}
-studies_df <- variants_cases %>% dplyr::filter(Events>=1) %>% 
-  group_by(country, author_year) %>% # had "site_name" instead of "author_year" before. Also had "study_type" here. 
-  summarize(min_month = min(pandemic_month),
-            max_month = max(pandemic_month)) %>%
+studies_df <- CC_data %>% 
+  mutate(startdate_ym = substr(start_date, 3, 7),
+         enddate_ym = substr(end_date, 3, 7)) %>%
   group_by(country) %>%
   mutate(country_study_number = 1:n(),
          country_total_studies = n())
 # see https://stackoverflow.com/questions/36893957/dplyr-generate-row-number-row-position-in-group-by
 
-gap_betw_studies <- 0.15
 
-# Splitting up into 3 pages.
-page1_df <- studies_df %>% dplyr::filter(country %in% c( "Ghana", "Hong Kong", "Italy", "Kenya"))
-page2_df <- studies_df %>% dplyr::filter(country %in% c("Nigeria", "South Africa", "Spain", "Sweden"))
-page3_df <- studies_df %>% dplyr::filter(country %in% c("Turkey", "Uganda", "USA"))
+# Compute monthly totals by country and variant
+df_monthly <- gisaid_df %>%
+  mutate(date_ym = substr(date, 3, 7)) %>%
+  group_by(date_ym, country, variant) %>%
+  summarize(count = sum(sequences, na.rm = TRUE))
 
-page_list_df <- list(page1_df, page2_df, page3_df)
+# Compute relative ("normalized") variant frequencies per month, location
+df_monthly <- df_monthly %>%
+  group_by(date_ym, country) %>%
+  mutate(nor = round(count/sum(count, na.rm = TRUE), digits = 3))
 
-page1_df8 <- df8 %>% dplyr::filter(country %in% c( "Ghana", "Hong Kong", "Italy", "Kenya"))
-page2_df8 <- df8 %>% dplyr::filter(country %in% c("Nigeria", "South Africa", "Spain", "Sweden"))
-page3_df8 <- df8 %>% dplyr::filter(country %in% c("Turkey", "Uganda", "USA"))
+max(studies_df$enddate_ym) # 23-07
 
-page_list_df8 <- list(page1_df8, page2_df8, page3_df8)
-
-for(page_num in 1:length(page_list_df)) { # will take one df off the list each time. 
-  
-  ggplot() +
-    geom_bar(data = page_list_df8[[page_num]], stat="identity", #pull out either part1,2, or 3. had "df8" here before. 
-             mapping = aes(x = date_ym, fill = variant, y=nor)) +
-    scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
-                                 "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
-                                 "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
-                                 "Theta" = "tomato")) + 
-    theme_light() + 
-    theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
-          axis.text.y = element_text(size = 6)) + 
-    xlab("Year-Month") + 
-    ylab("Relative Frequency") +
-    geom_rect(data = page_list_df[[page_num]], # had studies_df here before.
-              mapping=aes(xmin=min_month-0.5,
-                          xmax=max_month+0.5,
-                          ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) - 0.005,
-                          ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.005)) +
-    geom_text(data = page_list_df[[page_num]], # had studies_df here before.
-              mapping=aes(x = 0.5*(min_month + max_month),
-                          y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) +
-                            gap_betw_studies*(country_study_number - 1) + 0.05,
-                          label = author_year),
-              size = 2) +
-              # label = ifelse(is.na(author_year))),
-              #study_type,
-              # paste(author_year, study_type))),
-              
-    guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
-    theme(aspect.ratio = 0.3) + # makes all the facets the same size (b/c page 3 has only 3 whereas pages 1,2 have 4 facets)
-    facet_wrap(~country, nrow=4, ncol = 1, scale = "free_x", drop=FALSE) #drop
-  
-  ggsave(filename = paste0('data_out/covid_variant_CC-countries_20220809_', page_num, '.pdf'), width = 8.5, height = 11, units = "in") # DON'T NEED TO WRITE THIS OUT EVERYTIME.
-}
-# write.csv(df8, 'data/nextstrain_frequency_data_written_ff_20220610.csv', row.names = FALSE)
+# Truncate strain data after 2023
+df_monthly <- df_monthly %>%
+  filter(date_ym < "24-01") %>%
+  filter(country %in% studies_df$country)
 ```
+
+```{r}
+gap_betw_studies <- 0.17
+studies_y_nudge <- -0.04
+all_dates <- names(table(df_monthly$date_ym))
+
+ym_lookup <- data.frame(date_ym = all_dates, 
+                        pandemic_month = 1:length(all_dates))
+
+studies_df <- left_join(studies_df, ym_lookup, by = c("startdate_ym" = "date_ym")) %>%
+  rename(min_month = pandemic_month)
+
+studies_df <- left_join(studies_df, ym_lookup, by = c("enddate_ym" = "date_ym")) %>%
+  rename(max_month = pandemic_month)
+
+ggplot() +
+  geom_bar(data = df_monthly, 
+           stat="identity",
+           width = 0.8,
+           mapping = aes(x = date_ym, fill = variant, y=nor)) +
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
+                               "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
+                               "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
+                               "Theta" = "tomato")) + 
+  theme_light() + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 5),
+        axis.text.y = element_text(size = 5.5),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) + 
+  xlab("Year-Month") + 
+  ylab("Relative Frequency") +
+  geom_rect(data = studies_df,
+            mapping=aes(xmin=min_month-0.5,
+                        xmax=max_month+0.5,
+                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) - 0.005 + studies_y_nudge,
+                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) + 0.005 + studies_y_nudge)) +
+  geom_text(data = studies_df,
+            mapping=aes(x = 0.5*(min_month + max_month),
+                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) + 0.06 + studies_y_nudge,
+                        label = author_year),
+            size = 1.6) +
+  guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  xlim(all_dates) + 
+  facet_wrap(~country, ncol = 1, scale = "free_x")
+
+today_date <- format(Sys.time(), "%Y%m%d")
+ggsave(filename = paste0('plots/variants_gisaid/covid_variant_country_',today_date, '.pdf'), width = 6, height = 30, units = "in", 
+       limitsize = FALSE) 
+
+#TODO Reroder alpha beta theta legend.
+```
+
+
+
 
 

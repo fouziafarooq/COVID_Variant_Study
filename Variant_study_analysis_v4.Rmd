@@ -4,9 +4,13 @@ author: "Fouzia Farooq"
 date: "6/3/2022"
 output: pdf_document
 ---
-NOTE: This is FF's working copy (07/18/2022). This is the folder and file that FF will be using.
-#TODO: give sample size for each site to Erin at the end for old sites. 
+# This is the working copy as of 03/15/2024
 # This now has GISAID data. This is a copy of Variant_study_analysis_v1.Rmd but _v1 is not pushed to the clound, this _v4 is as of 12/19/2023 
+
+#TODO: give sample size for each site to Erin at the end for old sites. 
+
+%>%: CMD + SHIFT + M
+<-: CMD + SHIFT + L
 
 ```{r, include=FALSE}
 library(dplyr)
@@ -56,7 +60,7 @@ GISAID Data
 ```{r}
 # Control parameters
 data_source <- 'gisaid' # 'open'
-redownload <- TRUE # switch to TRUE to get fresh data
+redownload <- FALSE # switch to TRUE to get fresh data
 
 if (redownload) {
   # Download data and gunzip
@@ -67,9 +71,8 @@ if (redownload) {
   gunzip('data/global.tsv.gz', remove = FALSE, overwrite = TRUE)
 }
 
-gisaid_df <- read.table('data/global.tsv',
-                 sep = '\t',
-                 header = TRUE) %>%
+gisaid_df <- read_delim('data/global.tsv',
+                 delim = '\t') %>%
   rename(country = location)
 
 # Extract 2-digit year-month (20-12)
@@ -86,56 +89,62 @@ table(gisaid_df$country)
 # compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
 # compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
 # compiled_ipd_20221109 <- read_dta('data/Compiled_IPD_Data_221109.dta') # REOMOVE _old and _new.  This has comprehensive data now. 
-compiled_ipd_20221130 <- read_dta('data/Compiled_IPD_Data_221130.dta') #Most updated.  This has Brazil (REBRACO data) and I need to remove AMHANII Pakistan for now. 
+# compiled_ipd_20221130 <- read_dta('data/Compiled_IPD_Data_221130.dta') #Most updated.  This has Brazil (REBRACO data) and I need to remove AMHANII Pakistan for now. 
+compiled_ipd <- read_dta('data/Compiled_IPD_Data_240319.dta') # Most updated
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 # agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
+```
 
-texas_saad_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/44. Texas Medical Branch Galveston (Saad)/data/PMA_Analysis_Variables_QS2_Texas.dta',) # Site 44.
+# NOTE: Erin gave me below files in the compiled_idp_20240319 file. 
+```{r}
+# texas_saad_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/44. Texas Medical Branch Galveston (Saad)/data/PMA_Analysis_Variables_QS2_Texas.dta',) # Site 44.
+# 
+# ny_rommel_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/45. Generation C Study, NY (Rommel)/data/PMA_Analysis_Variables_QS2_NY.dta') # SIITE 45.
+# 
+# france_jozwiak_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/49. COVIDPREG - FR-BE-CH (Jozwiak)/data/PMA_Analysis_Variables_QS2_COVIDPREG.dta') # SITE 49
+# 
+# cdc_espi_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/50. CDC ESPI (Dawood)/data/PMA_Analysis_Variables_QS2_CDC_ESPI.dta') # SITE 50
+# 
+# spain_oros_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/51. Spain (Oros)/data/PMA_Analysis_Variables_QS2_Spain-Oros.dta') # SITE 51
+# 
+# malaysia_wong_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/53. Malaysia (Wong)/data/PMA_Analysis_Variables_QS2_Malaysia_53.dta') # SITE 53
+# 
+# barcelona_surinach_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/56. Barcelona (Surinach)/data/PMA_Analysis_Variables_QS2_Barcelona.dta') # SITE 56
+# 
+# malaysia_lim_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/57. Malaysia (Lim)/data/PMA_Analysis_Variables_QS2_Lim.dta') # SITE 57
+# 
+# turkey_bayraktar_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/58. Turkey (Bayraktar)/data/PMA_Analysis_Variables_QS2_Turkey.dta') # SITE 58
+# 
+# turkey_melekoglu_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/59. Turkey (Melekoglu)/data/PMA_Analysis_Variables_QS2_Turkey-Melekoglu.dta') # SITE 59
+# 
+# saudi_babic_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/60. Saudi Arabia (Babic)/data/PMA_Analysis_Variables_QS2_Saudi.dta') # SITE 60
+# 
+# madrid_casado_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/62. Madrid, Spain (Casado)/data/PMA_Analysis_Variables_QS2_Madrid.dta') # SITE 62
+# 
+# mumbai_gajbhiye_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/66. Mumbai, India (Gajbhiye)/data/PMA_Analysis_Variables_QS2_India.dta') # SITE 66
+# 
+# india_khoiwal_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/68. AIIMS Rishikesh, India (Khoiwal)/data/PMA_Analysis_Variables_QS2_India_68.dta') # SITE 68
+# 
+# # philly_flannery_AGG_df  # SITE 71
+# 
+# # japan_shoji_AGG_df <- SITE 72
+# 
+# # usa_setnet_neelam_mat_AGG_df # SITE 73
+# 
+# #usa_setnet_neelam_mat_AGG_df  # INFANT OUTPUT FILE. SITE 73
+```
 
-ny_rommel_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/45. Generation C Study, NY (Rommel)/data/PMA_Analysis_Variables_QS2_NY.dta') # SIITE 45.
-
-france_jozwiak_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/49. COVIDPREG - FR-BE-CH (Jozwiak)/data/PMA_Analysis_Variables_QS2_COVIDPREG.dta') # SITE 49
-
-cdc_espi_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/50. CDC ESPI (Dawood)/data/PMA_Analysis_Variables_QS2_CDC_ESPI.dta') # SITE 50
-
-spain_oros_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/51. Spain (Oros)/data/PMA_Analysis_Variables_QS2_Spain-Oros.dta') # SITE 51
-
-malaysia_wong_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/53. Malaysia (Wong)/data/PMA_Analysis_Variables_QS2_Malaysia_53.dta') # SITE 53
-
-barcelona_surinach_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/56. Barcelona (Surinach)/data/PMA_Analysis_Variables_QS2_Barcelona.dta') # SITE 56
-
-malaysia_lim_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/57. Malaysia (Lim)/data/PMA_Analysis_Variables_QS2_Lim.dta') # SITE 57
-
-turkey_bayraktar_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/58. Turkey (Bayraktar)/data/PMA_Analysis_Variables_QS2_Turkey.dta') # SITE 58
-
-turkey_melekoglu_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/59. Turkey (Melekoglu)/data/PMA_Analysis_Variables_QS2_Turkey-Melekoglu.dta') # SITE 59
-
-saudi_babic_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/60. Saudi Arabia (Babic)/data/PMA_Analysis_Variables_QS2_Saudi.dta') # SITE 60
-
-madrid_casado_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/62. Madrid, Spain (Casado)/data/PMA_Analysis_Variables_QS2_Madrid.dta') # SITE 62
-
-mumbai_gajbhiye_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/66. Mumbai, India (Gajbhiye)/data/PMA_Analysis_Variables_QS2_India.dta') # SITE 66
-
-india_khoiwal_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/68. AIIMS Rishikesh, India (Khoiwal)/data/PMA_Analysis_Variables_QS2_India_68.dta') # SITE 68
-
-# philly_flannery_AGG_df  # SITE 71
-
-# japan_shoji_AGG_df <- SITE 72
-
-# usa_setnet_neelam_mat_AGG_df # SITE 73
-
-#usa_setnet_neelam_mat_AGG_df  # INFANT OUTPUT FILE. SITE 73
-
+```{r}
 # Updated country_id 20231114:
 country_id <- read.csv('data/country_id_ipd_3_20231113.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
 
 ```
 
-FIX DATE TYPE
+FIX DATE TYPE: 
 ```{r}
 # FIRST CREATE A VECTOR OF ALL THE STUDIES BEING ADDED:
-df_vec <- list(compiled_ipd_20221130, texas_saad_df, ny_rommel_df, france_jozwiak_df, cdc_espi_df, 
+df_vec <- list(compiled_ipd, texas_saad_df, ny_rommel_df, france_jozwiak_df, cdc_espi_df, 
                spain_oros_df, malaysia_wong_df, barcelona_surinach_df,malaysia_lim_df, 
                turkey_bayraktar_df, saudi_babic_df, madrid_casado_df, mumbai_gajbhiye_df, india_khoiwal_df)
 
@@ -145,59 +154,59 @@ fix_dates <- function(df) {
   return(df_fixed)
 }
 # THESE VARS NEED TO BE FIXED TO DATE FORMAT FIRST, THEY SHOW UP AS NUMBERS FROM STATA.
-compiled_ipd_20221130$hemoglobin_date <- as.Date(compiled_ipd_20221130$hemoglobin_date, origin = "1960-01-01")
-compiled_ipd_20221130$vacc_covid1_date <- as.Date(compiled_ipd_20221130$vacc_covid1_date, origin = "1960-01-01")
-compiled_ipd_20221130$vacc_covid2_date <- as.Date(compiled_ipd_20221130$vacc_covid2_date, origin = "1960-01-01")
-compiled_ipd_20221130$vacc_booster_date <- as.Date(compiled_ipd_20221130$vacc_booster_date, origin = "1960-01-01")
-compiled_ipd_20221130$birth_date <- as.Date(compiled_ipd_20221130$birth_date, origin = "1960-01-01")
-str(compiled_ipd_20221130$hemoglobin_date)
+compiled_ipd$hemoglobin_date <- as.Date(compiled_ipd$hemoglobin_date, origin = "1960-01-01")
+compiled_ipd$vacc_covid1_date <- as.Date(compiled_ipd$vacc_covid1_date, origin = "1960-01-01")
+compiled_ipd$vacc_covid2_date <- as.Date(compiled_ipd$vacc_covid2_date, origin = "1960-01-01")
+compiled_ipd$vacc_booster_date <- as.Date(compiled_ipd$vacc_booster_date, origin = "1960-01-01")
+compiled_ipd$birth_date <- as.Date(compiled_ipd$birth_date, origin = "1960-01-01")
+str(compiled_ipd$hemoglobin_date)
 
-ny_rommel_df$person_id <- as.character(ny_rommel_df$person_id)
-spain_oros_df$preg_lmp <- as.Date(spain_oros_df$preg_lmp)
-spain_oros_df$vacc_covid1_type_x <- as.character(spain_oros_df$vacc_covid1_type_x)
-turkey_bayraktar_df$birth_nicu_orig <- as.numeric(turkey_bayraktar_df$birth_nicu_orig)
-madrid_casado_df$person_id <- as.character(madrid_casado_df$person_id)
-madrid_casado_df$vacc_covid1_type_x <- as.character(madrid_casado_df$vacc_covid1_type_x)
-madrid_casado_df$vacc_covid2_type_x <- as.character(madrid_casado_df$vacc_covid2_type_x)
-madrid_casado_df$vacc_booster_type_x <- as.character(madrid_casado_df$vacc_booster_type_x)
-mumbai_gajbhiye_df$person_id <- as.character(mumbai_gajbhiye_df$person_id)
-india_khoiwal_df$person_id <- as.character(india_khoiwal_df$person_id)
+# ny_rommel_df$person_id <- as.character(ny_rommel_df$person_id)
+# spain_oros_df$preg_lmp <- as.Date(spain_oros_df$preg_lmp)
+# spain_oros_df$vacc_covid1_type_x <- as.character(spain_oros_df$vacc_covid1_type_x)
+# turkey_bayraktar_df$birth_nicu_orig <- as.numeric(turkey_bayraktar_df$birth_nicu_orig)
+# madrid_casado_df$person_id <- as.character(madrid_casado_df$person_id)
+# madrid_casado_df$vacc_covid1_type_x <- as.character(madrid_casado_df$vacc_covid1_type_x)
+# madrid_casado_df$vacc_covid2_type_x <- as.character(madrid_casado_df$vacc_covid2_type_x)
+# madrid_casado_df$vacc_booster_type_x <- as.character(madrid_casado_df$vacc_booster_type_x)
+# mumbai_gajbhiye_df$person_id <- as.character(mumbai_gajbhiye_df$person_id)
+# india_khoiwal_df$person_id <- as.character(india_khoiwal_df$person_id)
 
 
-compiled_ipd_20221130 <- fix_dates(compiled_ipd_20221130)
-texas_saad_df <- fix_dates(texas_saad_df)
-ny_rommel_df <- fix_dates((ny_rommel_df)) 
-france_jozwiak_df <- fix_dates(france_jozwiak_df)
-cdc_espi_df <- fix_dates(cdc_espi_df)
-spain_oros_df <- fix_dates(spain_oros_df)
-malaysia_wong_df <- fix_dates(malaysia_wong_df)
-barcelona_surinach_df <- fix_dates(barcelona_surinach_df)
-malaysia_lim_df <- fix_dates(malaysia_lim_df)
-turkey_bayraktar_df <- fix_dates(turkey_bayraktar_df)
-saudi_babic_df <- fix_dates(saudi_babic_df)
-madrid_casado_df <- fix_dates(madrid_casado_df)
-mumbai_gajbhiye_df <- fix_dates(mumbai_gajbhiye_df)
-india_khoiwal_df <- fix_dates(india_khoiwal_df)
+compiled_ipd <- fix_dates(compiled_ipd)
+# texas_saad_df <- fix_dates(texas_saad_df)
+# ny_rommel_df <- fix_dates((ny_rommel_df)) 
+# france_jozwiak_df <- fix_dates(france_jozwiak_df)
+# cdc_espi_df <- fix_dates(cdc_espi_df)
+# spain_oros_df <- fix_dates(spain_oros_df)
+# malaysia_wong_df <- fix_dates(malaysia_wong_df)
+# barcelona_surinach_df <- fix_dates(barcelona_surinach_df)
+# malaysia_lim_df <- fix_dates(malaysia_lim_df)
+# turkey_bayraktar_df <- fix_dates(turkey_bayraktar_df)
+# saudi_babic_df <- fix_dates(saudi_babic_df)
+# madrid_casado_df <- fix_dates(madrid_casado_df)
+# mumbai_gajbhiye_df <- fix_dates(mumbai_gajbhiye_df)
+# india_khoiwal_df <- fix_dates(india_khoiwal_df)
 ```
 
 
 Stacking new studies to the 'compiled' file
 ```{r}
-df <- bind_rows(compiled_ipd_20221130, texas_saad_df)
-df <- bind_rows(df, ny_rommel_df)
-df <- bind_rows(df, france_jozwiak_df)
-df <- bind_rows(df, cdc_espi_df)
-df <- bind_rows(df, spain_oros_df)
-df <- bind_rows(df, malaysia_wong_df)
-df <- bind_rows(df, barcelona_surinach_df)
-df <- bind_rows(df, malaysia_lim_df)
-df <- bind_rows(df, turkey_bayraktar_df)
-df <- bind_rows(df, saudi_babic_df)
-df <- bind_rows(df, madrid_casado_df)
-df <- bind_rows(df, mumbai_gajbhiye_df)
-df <- bind_rows(df, india_khoiwal_df)
+# df <- bind_rows(compiled_ipd, texas_saad_df)
+# df <- bind_rows(df, ny_rommel_df)
+# df <- bind_rows(df, france_jozwiak_df)
+# df <- bind_rows(df, cdc_espi_df)
+# df <- bind_rows(df, spain_oros_df)
+# df <- bind_rows(df, malaysia_wong_df)
+# df <- bind_rows(df, barcelona_surinach_df)
+# df <- bind_rows(df, malaysia_lim_df)
+# df <- bind_rows(df, turkey_bayraktar_df)
+# df <- bind_rows(df, saudi_babic_df)
+# df <- bind_rows(df, madrid_casado_df)
+# df <- bind_rows(df, mumbai_gajbhiye_df)
+# df <- bind_rows(df, india_khoiwal_df)
 
-compiled_ipd_20221130 <- df
+# compiled_ipd <- df
 ```
 
 AGGREGATE DATA FROM SWITZERLAND &FRANCE (GUILLAUME); JAPAN (SONJI)
@@ -217,9 +226,12 @@ for (sheet in swiss_sheets_vec) {
                          skip=2, # skips the empty lines.
                          col_names=c("month_year", "Events", "Missing", "Total"))
   sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("swiss - ", "", sheet),
-                                         country="Switzerland")
+                                         country="Switzerland",
+                                         author = "Guillaume", 
+                                         author_year = "Favre, Panchaud, 2021")
   swiss_df <- rbind(swiss_df, sheet_df)
 }
+
 
 ################################
 # FRANCE - GUILLAUME (COVIPREG)
@@ -232,37 +244,125 @@ for (sheet in france_sheets_vec) {
                          skip=2, 
                          col_names=c("month_year", "Events", "Missing", "Total"))
   sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("france - ", "", sheet),
-                                         country="France")
+                                         country="France",
+                                         author = "Guillaume",
+                                         author_year = "Favre, Panchaud, 2021")
   france_df <- rbind(france_df, sheet_df)
 }
 
 ################
 # JAPAN - SONJI
 ################
-japan_sheets_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan_FF_editsForR.xlsx') # creates a vector
-japan_df <- data.frame(month={}, year={}, Events = {}, Missing={}, Total={})  
+japan_sheets_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan_FF_editsForR.xlsx') # creates a vector, SITE # 72
+japan_shoji_df <- data.frame(month={}, year={}, Events = {}, Missing={}, Total={})  
 for (sheet in japan_sheets_vec) {
   sheet_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/72. Japan (Shoji)/Variant_Study - Shell Table_Aggregate Data Request_Japan_FF_editsForR.xlsx',
                          sheet=sheet,
                          skip=1,
                          col_names=c("month_infection", "year_infection", "Events", "Missing", "Total"))
   sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sub("Japan-", "", sheet),
-                                         country = "Japan")
-  japan_df <- rbind(japan_df, sheet_df)
+                                         country = "Japan",
+                                         author = "Shoji",
+                                         author_year = "Shoji, 2023")
+  japan_shoji_df <- rbind(japan_shoji_df, sheet_df)
 }
+
+# Rename variable names
+japan_shoji_df <- japan_shoji_df %>% mutate(month_year = paste(month_infection, year_infection)) %>%
+  mutate(month_year = gsub(" ","", month_year))
+
+# Function to remove "20" from each element of the column
+remove_20 <- function(month_year) {
+  return(sub("20", "", month_year, fixed = TRUE))
+}
+
+# Apply the function to the entire column
+japan_shoji_df <- japan_shoji_df %>%
+  mutate(month_year = remove_20(month_year)) %>% 
+  select(-month_infection, -year_infection)
 
 ####################
 # PHILLY - FLANNERY
 ####################
-philly_flannery_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/71. Philly (Flannery)/COVID-19 Variant Study_5_31_23_AZB.xlsx') # SITE 71
+philly_flannery_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/71. Philly (Flannery)/COVID-19 Variant Study_5_31_23_AZB_FF_EditsForR.xlsx') # SITE 71
 
+philly_flannery_df <- data.frame(Month={}, Year={}, events={},	missing={},	total={})
+for (sheet in philly_flannery_vec) {
+  sheet_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/71. Philly (Flannery)/COVID-19 Variant Study_5_31_23_AZB_FF_EditsForR.xlsx', 
+                         sheet=sheet, 
+                         skip=2, # skips the empty lines.
+                         col_names=c("Month", "Year", "events", "missing", "total"))
+  sheet_df <- sheet_df %>% dplyr::mutate(Outcome= sheet,
+                                         country="USA",
+                                         author = "Flannery",
+                                         author_year = "Flannery, 2022")
+  philly_flannery_df <- rbind(philly_flannery_df, sheet_df)
+}
+
+# concatenate month/year:
+philly_flannery_df <- philly_flannery_df %>% mutate(month_year = paste(Month, Year)) %>%
+  mutate(month_year = gsub(" ","", month_year)) %>%
+  select(-Month, - Year) %>%
+  rename(Events = events, 
+         Missing = missing,
+         Total = total)
+
+
+# Function to remove "20" from each element of the column
+remove_20 <- function(month_year) {
+  return(sub("20", "", month_year, fixed = TRUE))
+}
+
+# Apply the function to the entire column
+philly_flannery_df <- philly_flannery_df %>%
+  mutate(month_year = remove_20(month_year)) 
 
 ############################
 # USA - CDC-SETNET - NEELAM
 ############################
-usa_setnet_neelam_mat_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Maternal_CDC_SETNET.xlsx') # MATERANAL OUTPUT FILE.  SITE 73
+# maternal data
+usa_neelam_mat_sheet_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Maternal_CDC_SETNET_FF.xlsx') # MATERANAL OUTPUT FILE.  SITE 73
 
-usa_setnet_neelam_mat_AGG_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Infant_CDC_SETNET.xlsx') # INFANT OUTPUT FILE. SITE 73
+usa_neelam_mat_df <- data.frame(month_year={}, Events={},	Total={}, proportion={}, lowerCI={}, upperCI={}, missing_outcome_data={})
+for (sheet in usa_neelam_mat_sheet_vec) {
+  sheet_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Maternal_CDC_SETNET_FF.xlsx', 
+                         sheet=sheet, 
+                         skip=2, # skips the empty lines.
+                         col_names=c("Month_Year", "Events", "Total", "Proportion", "Lower CI", "Upper CI","Missing Outcome Data"))
+  sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sheet,
+                                         country="USA",
+                                         author = "Neelam",
+                                         author_year = "Neelam, 2022")
+  usa_neelam_mat_df <- rbind(usa_neelam_mat_df , sheet_df)
+}
+
+# Infant data
+usa_neelam_infant_sheet_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Infant_CDC_SETNET_FF.xlsx') # INFANT OUTPUT FILE. SITE 73
+
+usa_neelam_infant_df <- data.frame(month_year={}, Events={},	Total={}, proportion={}, lowerCI={}, upperCI={}, missing_outcome_data={})
+for (sheet in usa_neelam_infant_sheet_vec) {
+  sheet_df <- read_excel('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Infant_CDC_SETNET_FF.xlsx', 
+                         sheet=sheet, 
+                         skip=2, # skips the empty lines.
+                         col_names=c("Month_Year", "Events", "Total", "Proportion", "Lower CI", "Upper CI","Missing Outcome Data"))
+  sheet_df <- sheet_df %>% dplyr::mutate(Outcome=sheet,
+                                         country="USA", 
+                                         author = "Neelam",
+                                         author_year = "Neelam, 2022")
+  usa_neelam_infant_df <- rbind(usa_neelam_infant_df , sheet_df)
+}
+
+# Stack maternal and infant data for Neelam CDC SETNET study.
+usa_neelam_df <- rbind(usa_neelam_mat_df, usa_neelam_infant_df)
+
+# rename variables and remove columns that are not needed: 
+usa_neelam_df <- usa_neelam_df %>% rename(month_year = Month_Year,
+                                    Missing = `Missing Outcome Data`) %>% 
+  select(-Proportion, -`Lower CI`, -`Upper CI`)
+
+usa_neelam_df <- usa_neelam_df %>% 
+  mutate(month_year = as.Date(month_year, format = "%y-%m-%d" ), 
+                             month_year = format(month_year, "%B%y"))
 ```
 
 rbind Swiss and France Data and fix Date:
@@ -283,6 +383,20 @@ country_id <- country_id %>% rbind(list(16, "", "Switzerland", "Switzerland_COVI
   filter(site_name != 'COVIPREG') # 'c()' vector makes all the variables the same type.  Putting a 'list()' keeps the type of variables so later we don't have to do as.numeric later.
 ```
 
+rbind other aggregate data sites (Japan (Shoji), Philly (Flannery), CDC-SETNET (Neelam))
+```{r}
+japan_philly_setnet_df <- rbind(japan_shoji_df, philly_flannery_df, usa_neelam_df)
+japan_philly_setnet_df$month_year <- str_to_title(japan_philly_setnet_df$month_year)
+japan_philly_setnet_df <- japan_philly_setnet_df %>%
+  mutate(month_year = format(as.Date(paste0("01-", month_year), format = "%d-%B%y"), "%y-%m")) %>% # "%d-%B%y" is the format of the input string.
+  rename(date_ym = month_year)
+
+```
+
+Now rbind swiss_france_df with japan_philly_setnet_df:
+```{r}
+agg_df <- rbind(swiss_france_df, japan_philly_setnet_df)
+```
 
 REMOVING  PAKISTAN (AMHANII), BRAZIL (REBRACO) FROM THE DATA:THE OVERLAP PAST PreALPHA for rebraco IS NOT ENOUGH.
 ```{r}
@@ -309,28 +423,48 @@ table(compiled_ipd_data$tripletnum, useNA = "always")
 check_df <- compiled_ipd_data %>% select(twin2, site_id, mat_age)
 ```
 
-***ADD IN SWISS/FRANCE DATA HERE***
+***ADD IN aggregate data from Swiss, France, Japan, Philly, and CDC-SETNET***
 ```{r}
 ########## NOTE #############################################################################
 # preterm2 and verypreterm2 (for sensitivity analysis) seem to be only in SWISS/France data.
 #############################################################################################
-sf_df<- swiss_france_df %>% rename(outcome=Outcome, events1=Events,
-                                                                 eventsm=Missing)
-sf_df <- sf_df %>% mutate(site_name = country,
-                          author_year = "Favre, Panchaud, 2021")
+agg_df2<- agg_df %>% rename(outcome=Outcome, 
+                            events1=Events,
+                            eventsm=Missing) %>%
+  mutate(site_name = country)
+```
+
+###############################################################
+###############################################################
+###############################################################
+***STOPPED HERE - Not sure what to do next as of 01/09/2024***
+###############################################################
+###############################################################
+###############################################################
+
+ADD IN -01 TO THE DATE VAR:
+```{r}
+agg_df2 <- agg_df2 %>% dplyr::filter(!is.na(date_ym))
+
+agg_df2 <- agg_df2 %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
+
+agg_fig_df <- agg_df2 %>% group_by(country, date, author_year) %>% 
+  summarize(Events = sum(events1))
+
+agg_fig_df <- agg_fig_df %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
 ```
 
 ADD IN -01 TO THE DATE.
 ```{r}
-sf_df <- sf_df %>% dplyr::filter(!is.na(date_ym))
-sf_df <- sf_df %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
-# sf_df <- sf_df %>% mutate(site_name = country)
-sf_fig_df <- sf_df %>% group_by(country, date) %>% 
-  summarize(Events = sum(events1))
-sf_fig_df <- sf_fig_df %>% mutate(author_year = "Favre, Panchaud, 2022",
-                                  study_type = "RFA",
-                                  study_type_full = "Risk Factor Analysis")
-sf_fig_df <- sf_fig_df %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
+# agg_df2 <- sf_df %>% dplyr::filter(!is.na(date_ym))
+# sf_df <- sf_df %>% mutate(date = as.Date(paste0("20", date_ym, "-01")))
+# # sf_df <- sf_df %>% mutate(site_name = country)
+# sf_fig_df <- sf_df %>% group_by(country, date) %>% 
+#   summarize(Events = sum(events1))
+# sf_fig_df <- sf_fig_df %>% mutate(author_year = "Favre, Panchaud, 2022",
+#                                   study_type = "RFA",
+#                                   study_type_full = "Risk Factor Analysis")
+# sf_fig_df <- sf_fig_df %>% mutate(pandemic_month = interval("2019-12-01", date) %/% months(1))
 ```
 
 ***GISAID DATA***
@@ -390,7 +524,7 @@ gisaid_df2 <- gisaid_df %>%
 
 ```{r}
 gisaid_df2 <- gisaid_df2 %>%
-  filter(country %in% c("Spain", "Mexico", "USA", "Italy", "Kenya", "Hong Kong",
+  filter(country %in% c("Spain", "Mexico", "USA", "Italy", "Kenya", "Hong Kong", "Japan", 
                           "Malaysia", "Turkey", "Saudi Arabia", "India", "Switzerland", "France")) %>%
   
   arrange(country, date, clade)
@@ -718,7 +852,7 @@ df10.8 <- df10.6 %>% arrange(country, study_type, date)
 
 MERGE THE TWO DATASETS HERE (IPD dataset and SWISS/FRANCE) FOR FIGURE.
 ```{r}
-df10.8_sf_df <- rbind(df10.8, sf_fig_df)
+df10.8_agg_df <- rbind(df10.8, agg_fig_df)
 ```
 
 
@@ -727,7 +861,7 @@ df10.8_sf_df <- rbind(df10.8, sf_fig_df)
 ***********************
 New map with overlaid CC study dates and RFA study dates: 06/27/2022 - latest
 ```{r fig.height=12, fig.width=8}
-studies_df <- df10.8_sf_df %>% dplyr::filter(Events>=1) %>% 
+studies_df <- df10.8_agg_df %>% dplyr::filter(Events>=1) %>% 
   group_by(country, author_year, study_type) %>%
   summarize(min_month = min(pandemic_month),
             max_month = max(pandemic_month)) %>%
@@ -957,7 +1091,7 @@ Functions for continuity correction and calc logRR and SEs.
   rr_ff <- function(pos_test, pos_ref, neg_test, neg_ref, adj=0.5){
     useadj <- pos_test==0 | neg_test==0 | pos_ref==0 | neg_ref==0
     
-    a <- pos_test+useadj*adj
+    a <- pos_test+useadj*adj #TODO: This will be 0.
     b <- neg_test+useadj*adj
     c <- pos_ref+useadj*adj
     d <- neg_ref+useadj*adj
