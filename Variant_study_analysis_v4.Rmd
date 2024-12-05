@@ -7,7 +7,10 @@ output: pdf_document
 # This is the working copy as of 03/15/2024
 # This now has GISAID data. This is a copy of Variant_study_analysis_v1.Rmd but _v1 is not pushed to the clound, this _v4 is as of 12/19/2023 
 
-#TODO: give sample size for each site to Erin at the end for old sites. 
+########################################################################
+NOTES:
+# 2024-05-06: PMA_Analysis_Variables_QS2_Toulouse.dta - use this data file to add in France (site 55 to the dataset). NOTE: I do need to remove site 55 from the 'Compiled_IPD_Data_240319.dta' first b/c it has an older version of the data.
+########################################################################
 
 %>%: CMD + SHIFT + M
 <-: CMD + SHIFT + L
@@ -33,6 +36,7 @@ library(patchwork)
 library(metafor)
 library(R.utils) # Needed for gunzip()
 # library(esc)
+library(forcats)
 ```
 
 NOTES: json file was converted to csv in python (deepnote.com), then copied the code into BBtext and ran at the command line. 
@@ -62,6 +66,7 @@ GISAID Data
 data_source <- 'gisaid' # 'open'
 redownload <- FALSE # switch to TRUE to get fresh data
 
+#If redownload this data make sure you rename it with the right date.  I downloaded this for the Variants - case comparison.Rmd work also on 20241126.
 if (redownload) {
   # Download data and gunzip
   download.file(url = paste0('https://data.nextstrain.org/files/workflows/forecasts-ncov/',
@@ -71,7 +76,7 @@ if (redownload) {
   gunzip('data/global.tsv.gz', remove = FALSE, overwrite = TRUE)
 }
 
-gisaid_df <- read_delim('data/global.tsv',
+gisaid_df <- read_delim('data/global_20240319.tsv',
                  delim = '\t') %>%
   rename(country = location)
 
@@ -79,24 +84,69 @@ gisaid_df <- read_delim('data/global.tsv',
 gisaid_df <- gisaid_df %>%
   mutate(date_ym = substr(date, 3, 7))
 
-table(gisaid_df$country)
+# table(gisaid_df$country)
 ```
 
 ```{r}
 ################
 # Study files # 
 ################
-# compiled_ipd_data_old <- read_dta('data/Compiled_IPD_Data_220217.dta') # old ipd data file
-# compiled_ipd_data_new <- read_dta('data/Compiled_IPD_Data_220620.dta') # updated with June 2022 data
-# compiled_ipd_20221109 <- read_dta('data/Compiled_IPD_Data_221109.dta') # REOMOVE _old and _new.  This has comprehensive data now. 
-# compiled_ipd_20221130 <- read_dta('data/Compiled_IPD_Data_221130.dta') #Most updated.  This has Brazil (REBRACO data) and I need to remove AMHANII Pakistan for now. 
-compiled_ipd <- read_dta('data/Compiled_IPD_Data_240319.dta') # Most updated
+compiled_ipd <- read_dta('data/Compiled_IPD_Data_240319.dta') # Most updated from Erin
+
+compiled_ipd <- compiled_ipd %>% filter(site_id!=55)
+
+# Read in the France file (Site 55) and add it onto compiled_ipd.
+france_55 <- read_dta('data/PMA_Analysis_Variables_QS2_Toulouse.dta')
+jozwiak_49 <- read_dta('data/PMA_Analysis_Variables_QS2_COVIDPREG.dta') # I see in the notes that this is data only from France. Belgium and Switzerland were dropped due to small sample size. 
+sort(colnames(jozwiak_49))
+str(france_55$hpd_date)
+france_55$hpd_date <- as.Date(france_55$hpd_date)
+compiled_ipd$neo_death_date3 <- as.Date(compiled_ipd$neo_death_date3)
+
+compiled_ipd <- bind_rows(compiled_ipd, france_55)
+
+sort(colnames(compiled_ipd))
+compiled_ipd$date_onset_or_test
 # will take all the patient IDs from the new file and then add in the missing rows that are in the old file to this file. 
 # agd_wide <- read_dta('data/Compiled_AGD_WIDE_220408.dta') # Has events, country, but no dates.
 # agd_long <- read_dta('data/Compiled_AGD_220408.dta') # Has events, country, but no dates.
+
+# Country ID file: 
+# Updated country_id 20231114:
+country_id <- read.csv('data/country_id_ipd_3_20240320.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
+
 ```
 
-# NOTE: Erin gave me below files in the compiled_idp_20240319 file. 
+# Summary Info for ROB tables - 2024
+```{r}
+temp.df <- compiled_ipd %>%
+  filter(site_id=="68") 
+sum(!is.na(temp.df$covid_testdate))
+
+results <- compiled_ipd %>%
+  filter(twin2==0) %>%
+  filter(triplet==0) %>%
+  group_by(site_id) %>%
+  summarize(
+    total_rows = n(),
+    missing_covid_sympdate = sum(is.na(covid_sympdate)),
+    non_missing_covid_sympdate = sum(!is.na(covid_sympdate)),
+    percent_non_missing_covid_sympdate = sum(!is.na(covid_sympdate)) / n() * 100,
+    missing_covid_testdate = sum(is.na(covid_testdate)),
+    non_missing_covid_testdate = sum(!is.na(covid_testdate)),
+    percent_non_missing_covid_testdate = sum(!is.na(covid_testdate)) / n() * 100
+  )
+
+```
+
+Write out the IPD file for Erin - for Table 1. 
+```{r}
+# write.csv(compiled_ipd, 'data_out/compiled_ipd_20240509.csv')
+# sort(colnames(compiled_ipd))
+```
+
+
+# NOTE: Erin gave me below files in the compiled_idp_20240319 file upstairs!. 
 ```{r}
 # texas_saad_df <- read_dta('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/44. Texas Medical Branch Galveston (Saad)/data/PMA_Analysis_Variables_QS2_Texas.dta',) # Site 44.
 # 
@@ -136,17 +186,16 @@ compiled_ipd <- read_dta('data/Compiled_IPD_Data_240319.dta') # Most updated
 ```
 
 ```{r}
-# Updated country_id 20231114:
-country_id <- read.csv('data/country_id_ipd_3_20231113.csv') # FF created this file. THIS HAS ONLY 1 PAKISTAN SITE (FROM AMHANII)
-
+# sort(colnames(compiled_ipd))
+temp.df <- compiled_ipd  %>% select(site_id)
 ```
 
 FIX DATE TYPE: 
 ```{r}
 # FIRST CREATE A VECTOR OF ALL THE STUDIES BEING ADDED:
-df_vec <- list(compiled_ipd, texas_saad_df, ny_rommel_df, france_jozwiak_df, cdc_espi_df, 
-               spain_oros_df, malaysia_wong_df, barcelona_surinach_df,malaysia_lim_df, 
-               turkey_bayraktar_df, saudi_babic_df, madrid_casado_df, mumbai_gajbhiye_df, india_khoiwal_df)
+# df_vec <- list(compiled_ipd, texas_saad_df, ny_rommel_df, france_jozwiak_df, cdc_espi_df, 
+#                spain_oros_df, malaysia_wong_df, barcelona_surinach_df,malaysia_lim_df, 
+#                turkey_bayraktar_df, saudi_babic_df, madrid_casado_df, mumbai_gajbhiye_df, india_khoiwal_df)
 
 fix_dates <- function(df) {
   df_fixed <- df %>%
@@ -189,7 +238,6 @@ compiled_ipd <- fix_dates(compiled_ipd)
 # india_khoiwal_df <- fix_dates(india_khoiwal_df)
 ```
 
-
 Stacking new studies to the 'compiled' file
 ```{r}
 # df <- bind_rows(compiled_ipd, texas_saad_df)
@@ -209,7 +257,7 @@ Stacking new studies to the 'compiled' file
 # compiled_ipd <- df
 ```
 
-AGGREGATE DATA FROM SWITZERLAND &FRANCE (GUILLAUME); JAPAN (SONJI)
+AGGREGATE DATA FROM SWITZERLAND &FRANCE (GUILLAUME); JAPAN (SONJI); Philly (Flannery); US (Neelam)
 ```{r}
 # New data from COVIPreg - Sites include Switzerland and France (From Favre Guillaume)
 # Newest data with mistakes fixed sent 12/08/2022
@@ -231,7 +279,6 @@ for (sheet in swiss_sheets_vec) {
                                          author_year = "Favre, Panchaud, 2021")
   swiss_df <- rbind(swiss_df, sheet_df)
 }
-
 
 ################################
 # FRANCE - GUILLAUME (COVIPREG)
@@ -318,7 +365,9 @@ philly_flannery_df <- philly_flannery_df %>%
   mutate(month_year = remove_20(month_year)) 
 
 ############################
-# USA - CDC-SETNET - NEELAM
+# USA - CDC-SETNET - NEELAM - 
+# NOTE 20240823: This is study # 73 but was listed in the EPPI reviewer sheet as 54.  
+###### I have updated this in the country_id_ipd_3_20240320.csv file to #73.
 ############################
 # maternal data
 usa_neelam_mat_sheet_vec <- excel_sheets('/Users/fouziafarooq/Library/CloudStorage/Box-Box/Perinatal COVID-19 PMA/Data for Analysis/Round 2 Analysis - January 2021/73. CDC SETNET/output/PMA_variant_SiteEstimates_Maternal_CDC_SETNET_FF.xlsx') # MATERANAL OUTPUT FILE.  SITE 73
@@ -365,6 +414,42 @@ usa_neelam_df <- usa_neelam_df %>%
                              month_year = format(month_year, "%B%y"))
 ```
 
+# For ROB - computing missingness
+```{r}
+##########
+# France #
+##########
+france_missingness <- france_df %>%
+  group_by(Outcome) %>%
+  summarize(missing_pct = round(100*sum(Missing)/sum(Total), digits = 0))
+
+###############
+# Switzerland #
+###############
+swiss_missingness <- swiss_df %>%
+  group_by(Outcome) %>%
+  summarize(missing_pct = round(100*sum(Missing)/sum(Total), digits = 0))
+
+###############
+# Japan #
+###############
+japan_missingness <- japan_shoji_df %>%
+  group_by(Outcome) %>% 
+  filter(!is.na(Missing)) %>%
+  summarize(missing_pct = round(100*sum(Missing)/sum(Total), digits = 0))
+
+#####################
+# Philly - Flannery #
+#####################
+flannery_missingness <- philly_flannery_df %>%
+  group_by(Outcome) %>% 
+  filter(!is.na(Missing)) %>%
+  summarize(missing_pct = round(100*sum(Missing)/sum(Total), digits = 0))
+
+
+```
+
+
 rbind Swiss and France Data and fix Date:
 ```{r}
 swiss_france_df <- rbind(swiss_df, france_df)
@@ -373,8 +458,11 @@ swiss_france_df <- rbind(swiss_df, france_df)
 swiss_france_df <- swiss_france_df %>%
   dplyr::mutate(month_year = lubridate::parse_date_time(month_year, 'my'),
                 date_ym = format(month_year, format= "%y-%m")) %>% 
-  dplyr::select(-month_year)
+  dplyr::select(-month_year) %>% 
+  mutate(Outcome = sub('switzerland - ', "", Outcome))
+table(swiss_france_df$Outcome)
 ```
+
 
 Add 2 empty rows in the country_id df to add site num for France and Switzerland
 ```{r}
@@ -400,18 +488,47 @@ agg_df <- rbind(swiss_france_df, japan_philly_setnet_df)
 
 REMOVING  PAKISTAN (AMHANII), BRAZIL (REBRACO) FROM THE DATA:THE OVERLAP PAST PreALPHA for rebraco IS NOT ENOUGH.
 ```{r}
-compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=38)
-compiled_ipd_20221130 <- compiled_ipd_20221130 %>% dplyr::filter(site_id !=36)
+compiled_ipd <- compiled_ipd %>% dplyr::filter(site_id !=38)
+compiled_ipd <- compiled_ipd %>% dplyr::filter(site_id !=36)
+compiled_ipd <- compiled_ipd %>% dplyr::filter(site_id !=35) # Padua, Italy (doesn't have overlapping data)
 ```
 
 ```{r}
-table(compiled_ipd_20221130$site_id)
+table(compiled_ipd$site_id)
 ```
 
 
 ```{r, include=FALSE}
-site_id_new <- compiled_ipd_20221130$site_id
-compiled_ipd_data <- compiled_ipd_20221130
+site_id_new <- compiled_ipd$site_id
+compiled_ipd_data <- compiled_ipd
+```
+
+# ROB STUFF: 
+```{r}
+# For ROB tables
+temp.df <- compiled_ipd %>%
+  select(site_id, covid_sympdate, covid_testdate, cov_type_test) %>%
+  filter(site_id == 74) 
+
+results <- compiled_ipd %>%
+  filter(twin2==0) %>%
+  filter(triplet==0) %>%
+  group_by(site_id) %>%
+  summarize(
+    total_rows = n(),
+    missing_covid_sympdate = sum(is.na(covid_sympdate)),
+    non_missing_covid_sympdate = sum(!is.na(covid_sympdate)),
+    percent_non_missing_covid_sympdate = sum(!is.na(covid_sympdate)) / n() * 100,
+    missing_covid_testdate = sum(is.na(covid_testdate)),
+    non_missing_covid_testdate = sum(!is.na(covid_testdate)),
+    percent_non_missing_covid_testdate = sum(!is.na(covid_testdate)) / n() * 100
+  )
+
+country_id$site_id <- as.numeric(country_id$site_id)
+results2 <- left_join(results, country_id, by = "site_id")
+results2 <- results2 %>%
+  relocate(site_id, country, site_name, author_year, .before=everything())
+
 ```
 
 Drop twin and triplet rows that are 2nd/3rd.  Keep the woman though
@@ -434,13 +551,6 @@ agg_df2<- agg_df %>% rename(outcome=Outcome,
   mutate(site_name = country)
 ```
 
-###############################################################
-###############################################################
-###############################################################
-***STOPPED HERE - Not sure what to do next as of 01/09/2024***
-###############################################################
-###############################################################
-###############################################################
 
 ADD IN -01 TO THE DATE VAR:
 ```{r}
@@ -469,10 +579,10 @@ ADD IN -01 TO THE DATE.
 
 ***GISAID DATA***
 ```{r}
-# This below is updated Dec 13, 2023.
+# The clade categories are updated Dec 13, 2023.
 gisaid_df2 <- gisaid_df %>% 
   mutate(variant = case_when(clade %in% 
-                               c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E") ~ "Pre_alpha",
+                               c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E") ~ "Pre-alpha",
                              clade %in% 
                                c("20I") ~ "Alpha",
                              clade %in%
@@ -505,10 +615,10 @@ gisaid_df2 <- gisaid_df %>%
                                  "22D", # BA.2.75
                                  "22E", # BQ.1
                                  "23C", # CH.1.1
-                                 "23I") # BA.2.86 - highly mutated vs. Omicron but emerged late 2023
-                             ~ "Omicron",
-                             clade %in%
-                               c("22F", # XBB
+                                 "23I", # BA.2.86 - highly mutated vs. Omicron but emerged late 2023
+                             
+                                 # These below were set to XBB but I added them to Omicron. 
+                               "22F", # XBB
                                  "23A", # XBB.1.5
                                  "23B", # XBB.1.16
                                  "23D", # XBB.1.9
@@ -516,17 +626,44 @@ gisaid_df2 <- gisaid_df %>%
                                  "23F", # EG.5.1
                                  "23G", # XBB.1.5.70
                                  "23H") # HK.3
-                             ~ "XBB",
+                             ~ "Omicron",
                              clade %in%
                                c("recombinant") ~ "recombinant"))
 
 ```
 
 ```{r}
+# 5 = Madrid, Spain (Gil, Fernandez Buhigas, 2021)
+# 10 = Mexico (Martinez-Portilla, 2021)
+# 15 = Kenya (Akelo, Tippett Barr, 2021)
+# 17 = Puertro Rico (Bracero, Valencia, Delgado-Lopez, 2021)
+# 19 = Rome, Italy (Bevilacqua, Laurita Longo, 2020)
+# 20 = Hong Kong (Poon, 2021)
+# 35 = Padua, Italy
+# 37 = Brazil (WHO)
+# 39 = Pakistan (WHO)
+# 44 = Texas (Saad)
+# 45 = NY (Rommel)
+# 46 = Kenya WHO
+# 49 = France Jozwiak
+# 50 = CDC Dawood
+# 51 = Spain (Fabre, 2021)
+# 53 = Malaysia (Wong, 2022)
+# 55 = 
+# 56 = 
+# 57 = 
+# 58 = 
+# 59 = 
+# 60 = 
+# 62 = Madrid (Casado, 2022)
+# 66 = 
+# 68 = 
+# 72 = Japan (Shoji, 2023)
+# 74 = 
 gisaid_df2 <- gisaid_df2 %>%
-  filter(country %in% c("Spain", "Mexico", "USA", "Italy", "Kenya", "Hong Kong", "Japan", 
-                          "Malaysia", "Turkey", "Saudi Arabia", "India", "Switzerland", "France")) %>%
-  
+  filter(country %in% c("Spain", "USA",  "Kenya", "Hong Kong", "Italy", "Brazil", "Japan", 
+                          "Malaysia", "Turkey", "Saudi Arabia", "India", "Switzerland", "France", "Philippines", "Pakistan")) %>% 
+  # Mexico dropped out in 2024 analysis run b/c didn't hav overlapping data.
   arrange(country, date, clade)
 
 # Check: Which clades don't yet have a variant mapped?
@@ -553,7 +690,7 @@ Making frequency dataset wider and then we will join it onto compiled_ipd data
 ##########################
 ### THRESHOLD SETTING ###
 #########################
-dom_threshold <- 0.50
+dom_threshold <- 0.50 # This is 50% prevalence/dominance
 df8.1 <- df_monthly %>% group_by(country, date_ym) %>%
   arrange(desc(count)) %>% # we first ordered the frequency and the highest is on top. 
   mutate(dominant_variant = if_else(first(count)==0,
@@ -576,7 +713,17 @@ df8_wide <- df8.1 %>%
   pivot_wider(names_from = variant, values_from = nor, values_fill = 0, names_prefix = "freq_") # pivot wider and adds a prefix "freq" to the variable in "values_from".
 # Pivot wider comes from tidyr.
 ```
+UPDATE Gajbhiye DATES - based on email communication on 12/05/2024
+```{r}
+compiled_ipd_data <- compiled_ipd_data %>% 
+  mutate(date_onset_or_test = if_else((site_id==66 & date_onset_or_test=="2022-12-29"), ymd("2022-01-29"), date_onset_or_test),
+         date_onset_or_test = if_else((site_id==66 & date_onset_or_test=="2022-11-09"), ymd("2022-01-09"), date_onset_or_test))
 
+temp.df2 <- compiled_ipd_data %>%
+  filter(site_id==66) %>% 
+  select(site_id, SUBJID, date_onset_or_test) 
+
+```
 
 
 ************************
@@ -587,8 +734,8 @@ NOTE: The reason some of the RFA studies show up on covid_variant_country_202207
 ```{r}
 country_id$site_id <- as.numeric(country_id$site_id)
 df9 <- left_join(compiled_ipd_data, country_id, by="site_id")
-df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:35,37, 44, 45, 48:60, 
-                                             62, 66, 68, 71, 72)) %>% # Removed #14 (Africa for now 20220919)
+df10 <- df9 %>% dplyr::filter(site_id %in% c(1:9, 11:13, 15:21,2201,2202,23:35,37, 39, 44:46, 48:60, 
+                                             62, 66, 68, 71, 72, 74)) %>% # Removed #14 (Africa for now 20220919) and Mexico (#10)
   # Added 20, 24, 34, 37 and updated 5,17,10,19
   dplyr::select(site_id, city, country, site_name, author_year, person_id, twin, triplet, twin2, tripletnum, 
                 mat_age, matage_cat, bmi_pre, bmi_pre_cat, bmi_prepreg_under, bmi_prepreg_normal, 
@@ -644,6 +791,8 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:35,37, 44,
                 vacc_covid1_type_x, vacc_covid2, vacc_covid2_date, vacc_covid2_type,
                 vacc_covid2_type_x, vacc_flu, vacc_flu_date, vax_flu1, 
                 vax_flu2, vax_flum, vax_full, vax_m, vax_none, vax_partial) 
+
+temp.df <- compiled_ipd_data %>% select(site_id)
 
 ##############################
 # WHICH DENOMINATORS TO USE #
@@ -728,12 +877,8 @@ df10 <- df9 %>% dplyr::filter(site_id %in% c(1:13, 15:21,2201,2202,23:35,37, 44,
 # extremesga1 = Extreme sga events (<3rd percentile)
 ```
 
-***NEED TO LOOK AT THESE AGAIN.  What is denom_livebirth37 with preterm1?
-```{r}
-################
-#### SOS ######
-###############
 
+```{r}
 df10 <- df10 %>% mutate(preterm21 = if_else((preterm1==1 & denom_livebirth37==1), 1, 0),
                           verypreterm21 = if_else((verypreterm1==1 & denom_livebirth34==1), 1, 0),
                           preterm_labor21 = if_else((preterm_labor1==1 & denom_endpreg37==1), 1,0))
@@ -853,6 +998,9 @@ df10.8 <- df10.6 %>% arrange(country, study_type, date)
 MERGE THE TWO DATASETS HERE (IPD dataset and SWISS/FRANCE) FOR FIGURE.
 ```{r}
 df10.8_agg_df <- rbind(df10.8, agg_fig_df)
+
+colnames(df10.8_agg_df)
+temp.df <- df10.8_agg_df %>% select('country')
 ```
 
 
@@ -870,34 +1018,44 @@ studies_df <- df10.8_agg_df %>% dplyr::filter(Events>=1) %>%
          country_total_studies = n())
 # see https://stackoverflow.com/questions/36893957/dplyr-generate-row-number-row-position-in-group-by
 
-gap_betw_studies <- 0.15
+df_monthly$variant <- fct_relevel(df_monthly$variant,  
+                                  "Pre-alpha", "Alpha", "Beta", "Gamma",  "Delta", "Epsilon", "Eta", "Theta", "Iota", "Lambda", "Mu", "Omicron") # Kappa, recombinant
+
+gap_betw_studies <- 0.17
+studies_y_nudge <- -0.04
+all_dates <- names(table(df_monthly$date_ym))
 
 ggplot() +
-  geom_bar(data = df_monthly, stat="identity",
+  geom_bar(data = df_monthly, 
+           stat="identity",
+           width = 0.8,
            mapping = aes(x = date_ym, fill = variant, y=nor)) +
-  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre-alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
                                "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
                                "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
                                "Theta" = "tomato")) + 
   theme_light() + 
-  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 6),
-        axis.text.y = element_text(size = 6)) + 
+  theme(axis.text.x = element_text(angle=90, vjust = 0.5, hjust=1, size = 5),
+        axis.text.y = element_text(size = 5.5),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) + 
   xlab("Year-Month") + 
   ylab("Relative Frequency") +
   geom_rect(data = studies_df,
             mapping=aes(xmin=min_month-0.5,
                         xmax=max_month+0.5,
-                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) - 0.005,
-                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.005)) +
+                        ymin= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) - 0.005 + studies_y_nudge,
+                        ymax= 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) + 0.005 + studies_y_nudge)) +
   geom_text(data = studies_df,
             mapping=aes(x = 0.5*(min_month + max_month),
-                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + gap_betw_studies*(country_study_number - 1) + 0.05,
+                        y = 0.5 - 0.5*gap_betw_studies*(country_total_studies-1) + 
+                          gap_betw_studies*(country_study_number - 1) + 0.06 + studies_y_nudge,
                         label = author_year),
-                     #   label = ifelse(is.na(site_name),
-                      #                 study_type,
-                       #                paste(site_name, study_type))),
-            size = 2) +
+            size = 1.6) +
   guides(fill = guide_legend(override.aes = list(labels = c("A", "B")))) +
+  xlim(all_dates) + 
   facet_wrap(~country, nrow = 30, ncol = 1, scale = "free_x")
 
 today_date <- format(Sys.time(), "%Y%m%d")
@@ -1022,9 +1180,9 @@ df11m.2_wide<- df11m.2_wide %>% mutate(Total = events0 + events1+ eventsm) # %>%
   # dplyr::select(-events0)
 ```
 
-***ADD IN SWISS/FRANCE DATA HERE***
+***ADD IN Aggregate data here***
 ```{r}
-sf_df4 <- left_join(sf_df, df8_wide, by=c('country', 'date_ym'))
+sf_df4 <- left_join(agg_df2, df8_wide, by=c('country', 'date_ym'))
 
 sf_df5 <- sf_df4 %>% dplyr::select(country, site_name, author_year, outcome, date_ym, dominant_variant, dominant_variant_v1, events1, eventsm, Total)
 ```
@@ -1065,12 +1223,12 @@ merged_df3 <- merged_df2 %>% group_by(country, outcome) %>%
 # This is more useful
 
 merged_df3 %>% 
-  filter(dominant_variant!="Beta") %>% # beta numbers are very low. 
+ # filter(dominant_variant!="Beta") %>% # beta numbers are very low. 
   ggplot() +
   geom_col(aes(x=dominant_variant, y=incidence, fill=outcome), 
            width = 0.65,
            position="dodge") + 
-  scale_x_discrete(limits = c("no_strain", 'mixed', "Pre_alpha", "Alpha", "Beta", "Delta", "Omicron")) + 
+  scale_x_discrete(limits = c("no_strain", 'mixed', "Pre-alpha", "Alpha", "Beta", "Gamma", "Delta", "Omicron")) + # "XBB",
   xlab("Dominant Strain")
 
 
@@ -1091,7 +1249,7 @@ Functions for continuity correction and calc logRR and SEs.
   rr_ff <- function(pos_test, pos_ref, neg_test, neg_ref, adj=0.5){
     useadj <- pos_test==0 | neg_test==0 | pos_ref==0 | neg_ref==0
     
-    a <- pos_test+useadj*adj #TODO: This will be 0.
+    a <- pos_test+useadj*adj 
     b <- neg_test+useadj*adj
     c <- pos_ref+useadj*adj
     d <- neg_ref+useadj*adj
@@ -1201,7 +1359,7 @@ metagen_fun <- function(refstr, teststr) {
   day_string <- format(Sys.time(), "%Y%m%d")
   dir_folder_name <- paste0(day_string,"_domvar_mixed_",as.character(dom_threshold*100))
   dir.create(paste0("plots/",dir_folder_name), recursive = TRUE)
-  pdf(file=paste0("plots/",dir_folder_name,"/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=65) # pdf saving has to go before making the plot and at the end have to say dev.off()
+  pdf(file=paste0("plots/",dir_folder_name,"/VariantStudy_MetaForestPlot_teststr_", teststr, "_refstr_", refstr, ".pdf"), width=10, height=150) # pdf saving has to go before making the plot and at the end have to say dev.off()
   
   forest(mymeta, sortvar=logRR, 
          leftcols = c("studlab", paste0(teststr, "+"), paste0(teststr, "-"), paste0(refstr, "+"),
@@ -1237,7 +1395,13 @@ for (ref.strain in strain_vec) {
 Setting up a big table for heatmap
 ```{r}
 heatmap_data_df2 <- heatmap_data_df %>% 
-  mutate(RR_CI_lab = paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))
+  mutate(RR_CI_lab = paste0(format(round(RR, 2), nsmall=2),
+                            " (", 
+                            format(round(LCI, 2), nsmall=2),
+                            ", ", 
+                            format(round(UCI,2), nsmall=2), 
+                            "), n=",
+                            n_study))
 ```
 
 *NOTE: for the next block: Take out Beta and Epsilon for threhold ≥70%*
@@ -1248,11 +1412,17 @@ THIS WRANGLING IS INSANELY CLEVER!!!!
 est_table_df <- heatmap_data_df %>%
   mutate(RR_CI_lab = if_else(is.na(RR),
                              "n=0",
-                             paste0(round(RR, 2), " (", round(LCI, 2), ", ", round(UCI,2), "), n=", n_study))) %>% 
+                              paste0(format(round(RR, 2), nsmall=2),
+                                    " (",
+                                    format(round(LCI, 2), nsmall=2),
+                                    ", ",
+                                    format(round(UCI,2), nsmall=2),
+                                    "), n=",
+                                    n_study))) %>%
   dplyr::select(-RR, -LCI, -UCI, -n_study) %>%
-  pivot_wider(names_from = Strain, values_from = RR_CI_lab, names_prefix = "Strain_") %>% 
+  pivot_wider(names_from = Strain, values_from = RR_CI_lab, names_prefix = "Strain_") %>%
   pivot_longer(cols = starts_with("Strain_"), names_to = "Strain", values_to = "RR_CI_lab")  %>%
-  mutate(Strain = str_replace(Strain, "Strain_", "")) %>% 
+  mutate(Strain = str_replace(Strain, "Strain_", "")) %>%
   mutate(RR_CI_lab = if_else(Strain==Ref_Strain,
                              "Reference",
                              if_else(is.na(RR_CI_lab),
@@ -1265,8 +1435,8 @@ est_table_df <- heatmap_data_df %>%
 #############################################################################################
 est_table_df2 <- est_table_df %>%
   mutate(Ref_Strain = factor(Ref_Strain, 
-                             levels = c("Pre_alpha", "Alpha","Delta", "Epsilon", "Eta", "Omicron", "mixed", "XBB"), # "Beta"
-                             labels = c("Pre-alpha", "Alpha","Delta", "Epsilon", "Eta", "Omicron", "Mixed", "XBB"))) %>% # "Beta"
+                             levels = c("Pre-alpha", "Alpha" , "Gamma", "Delta", "Omicron","recombinant", "mixed"), # "Beta", "Epsilon", "Eta", "XBB", "recombinant",
+                             labels = c("Pre-alpha", "Alpha", "Gamma",  "Delta", "Omicron", "recombinant", "mixed"))) %>% # "Beta", "Eta", "Epsilon", "XBB", "recombinant",
   mutate(Outcome = recode_factor(Outcome, 
                                  # Adverse Birth outcomes
                                  "verylowbirthweight" = "vLBW", 
@@ -1312,7 +1482,7 @@ est_table_df2 <- est_table_df %>%
 # NOTE that with GISAID data on 12/19/2023, Beta, Epsilon and Eta aren't there even with 50% prevalence. 
 ###############!!!!!!!!!!!!!!!!!!!!!!!!!#####################
   arrange(Outcome, Ref_Strain) %>%
-  select(Outcome, `Reference Strain` = Ref_Strain, `Pre-alpha` = Pre_alpha, Alpha, Delta, Omicron, Mixed = mixed, XBB) # Beta ,Epsilon, Eta,
+  select(Outcome, `Reference Strain` = Ref_Strain, `Pre-alpha` = Pre-alpha, Alpha, Gamma, Delta, Omicron, Mixed = mixed) # Beta, Epsilon, Eta, Eta, Recombinant = recombinant
 # Keep Beta & Epsilon for 50% and 60% prevalence. 
 
 
@@ -1368,8 +1538,8 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
  
   heatmap_data2 <- heatmap_data %>%
   mutate(Strain = factor(Strain, 
-                         levels = c("Pre_alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "mixed", "XBB"),
-                         labels = c("Pre-alpha", "Alpha", "Beta", "Delta", "Epsilon", "Eta", "Omicron", "Mixed", "XBB"))) %>%
+                         levels = c("Pre-alpha", "Alpha", "Beta", "Gamma", "Epsilon", "Eta", "Delta",  "Omicron", "mixed"), # "XBB", "Recombinant", "Epsilon", "Eta",
+                         labels = c("Pre-alpha", "Alpha", "Beta", "Gamma", "Epsilon", "Eta", "Delta", "Omicron", "mixed"))) %>% # "XBB", "Recombinant",
     mutate(Outcome = recode_factor(Outcome, 
                                  # Adverse Birth outcomes
                                  "verylowbirthweight" = "vLBW", 
@@ -1411,23 +1581,25 @@ heatmap_data$Outcome <- factor(heatmap_data$Outcome,
   # "matdeath","stillbirth_site","perinatal_deathsite", "sab_site", "tab_site",
   # "Stillbirth site", "Perinatal death site", "SAB site", "Tab site", "Maternal death", 
 
-  hmap <- heatmap_data2 %>% dplyr::filter(n_study>=1) %>%
-   drop_na(Outcome) %>% # Removes NA estimates
+  hmap <- heatmap_data2 %>% 
+    dplyr::filter(n_study>=1) %>%
+    filter(!(Strain %in% c("Epsilon", "Eta"))) %>%
+    drop_na(Outcome) %>% # Removes NA estimates
     ggplot() +
     aes(x = Strain, y=Outcome, fill=RR_sig) +
     geom_tile(color="white", alpha=0.8)+
     scale_fill_manual(values = colScale) +
-   # geom_text(aes(label=RR_CI_lab), size=2) + 
+    # geom_text(aes(label=RR_CI_lab), size=2) + 
     guides(fill=guide_legend((title = "RR & 95%CI"))) +
     labs(title=paste0("Reference strain: ",rs)) + 
     theme(plot.title = element_text(hjust = 0.5)) +
-       # scale_discrete_manual(levels(heatmap_data2$Strain), drop=FALSE) + 
+    # scale_discrete_manual(levels(heatmap_data2$Strain), drop=FALSE) + 
     xlim(levels(heatmap_data2$Strain)) + # xlim levels of heatmap_df2$Strain retains all strains. 
     ylim(levels(heatmap_data2$Outcome)) + 
     theme(panel.grid.major.x = element_blank(),
           axis.title.x = element_blank(),
           axis.title.y = element_blank())
-          #legend.position="none")
+  #legend.position="none")
      
  
  day_string <- format(Sys.time(), "%Y%m%d")
@@ -1479,7 +1651,7 @@ heatmap_long2$UCI <- gsub("[)]", "", heatmap_long2$UCI)
 heatmap_long2 <- heatmap_long2 %>% 
   mutate(RR_CI_lab = paste0(RR, " (", LCI, ", ", UCI, "), n=", N)) %>%
   mutate(RR = as.numeric(RR), N=as.numeric(N)) %>%
-  mutate(Strain = factor(Strain, levels = c("Prealpha", "Delta", "Epsilon", "Omicron", "Mixed"), ordered = TRUE)) %>%
+  mutate(Strain = factor(Strain, levels = c("Prealpha", "Delta", "Epsilon", "Omicron", "recombinant", "Mixed"), ordered = TRUE)) %>% #  "Recombinant", 
   mutate(Outcome=factor(Outcome, levels = outcome_vec), ordered=TRUE)
 
 heatmap_long2 <- heatmap_long2 %>% dplyr::filter(N>1)
