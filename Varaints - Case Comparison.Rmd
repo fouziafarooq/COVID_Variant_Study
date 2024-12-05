@@ -25,6 +25,7 @@ library(patchwork)
 library(haven)
 library(meta)
 library(R.utils)
+library(forcats) # factoring vars.
 # library(metafor)
 # library(esc)
 ```
@@ -83,7 +84,7 @@ gisaid_df <- gisaid_df %>%
 
 Read in the data file
 ```{r}
-CC_data <- read.xlsx('data/Total sample size_11-2024.xlsx', sheetName = 'Sheet1')
+CC_data <- read.xlsx('data/Case-Comparison_2024-11.xlsx', sheetName = 'Sheet1') # This is the file that Erin O shared with me over slack on Nov 23, 2024.
 ```
 
 
@@ -94,7 +95,7 @@ https://covid.cdc.gov/covid-data-tracker/#variant-summary
 # The clade categories are updated Dec 13, 2023.
 gisaid_df <- gisaid_df %>% 
   mutate(variant = case_when(clade %in% 
-                               c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E") ~ "Pre_alpha",
+                               c("19A", "19B", "20A", "20B", "20C", "20D", "20F", "20G", "20E") ~ "Pre-alpha",
                              clade %in% 
                                c("20I") ~ "Alpha",
                              clade %in%
@@ -160,6 +161,7 @@ range(as_date(temp.df$date))
 ```
 
 
+
 # New map with overlaid CC study dates and CC study dates: 11-26-2024 - latest
 ```{r fig.height=12, fig.width=8}
 
@@ -188,7 +190,13 @@ max(studies_df$enddate_ym) # 23-07
 # Truncate strain data after 2023
 df_monthly <- df_monthly %>%
   filter(date_ym < "24-01") %>%
-  filter(country %in% studies_df$country)
+  filter(country %in% studies_df$country) #TODO why is Hong Kong getting dropped here.
+```
+
+```{r}
+df_monthly$variant <- fct_relevel(df_monthly$variant,  
+                                  "Pre-alpha", "Alpha", "Beta", "Gamma",  "Delta", "Epsilon", "Eta", "Theta", "Iota", "Kappa", "Lambda", "Mu", "Omicron", "recombinant")
+
 ```
 
 ```{r}
@@ -210,7 +218,7 @@ ggplot() +
            stat="identity",
            width = 0.8,
            mapping = aes(x = date_ym, fill = variant, y=nor)) +
-  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre_alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
+  scale_fill_manual(values = c("Alpha" = "deepskyblue2", "Pre-alpha" = "lightsteelblue1", "Beta" = "darkseagreen1",
                                "Delta" = "gold", "Epsilon" = "burlywood", "Eta" = "cadetblue2", "Gamma" = "darkgoldenrod1",
                                "Iota" = "cyan3", "Lambda" = "gray70", "Mu" = "peachpuff1", "Omicron" = "plum2",
                                "Theta" = "tomato")) + 
@@ -239,7 +247,7 @@ ggplot() +
   facet_wrap(~country, ncol = 1, scale = "free_x")
 
 today_date <- format(Sys.time(), "%Y%m%d")
-ggsave(filename = paste0('plots/variants_gisaid/covid_variant_country_',today_date, '.pdf'), width = 6, height = 30, units = "in", 
+ggsave(filename = paste0('plots/variants_gisaid/covid_variants_CaseComparison_',today_date, '.pdf'), width = 6, height = 28, units = "in", 
        limitsize = FALSE) 
 
 #TODO Reroder alpha beta theta legend.
